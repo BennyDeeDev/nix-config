@@ -60,6 +60,17 @@ in
   config = lib.mkIf (cfg != { }) {
     sops.secrets."restic-repo-password" = { };
 
+    # Auto-declare one external-endpoint per backup set so the dashboard
+    # tracks heartbeat failures (missed daily runs).
+    services.gatus.settings.external-endpoints = lib.mkIf config.services.gatus.enable (
+      lib.mapAttrsToList (name: _: {
+        inherit name;
+        token = "\${GATUS_EXTERNAL_TOKEN}";
+        heartbeat.interval = "25h";
+        alerts = [ { type = "ntfy"; } ];
+      }) cfg
+    );
+
     services.restic.backups = lib.mapAttrs (name: value: {
       inherit (value) repository paths timerConfig;
       passwordFile = config.sops.secrets."restic-repo-password".path;
@@ -71,9 +82,15 @@ in
       backupPrepareCommand = lib.optionalString (value.services != [ ]) ''
         ${pkgs.systemd}/bin/systemctl stop ${lib.concatStringsSep " " value.services}
       '';
-      backupCleanupCommand = lib.optionalString (value.services != [ ]) ''
-        ${pkgs.systemd}/bin/systemctl start ${lib.concatStringsSep " " value.services}
-      '';
+      backupCleanupCommand =
+        lib.optionalString (value.services != [ ]) ''
+          ${pkgs.systemd}/bin/systemctl start ${lib.concatStringsSep " " value.services}
+        ''
+        + lib.optionalString config.services.gatus.enable ''
+          ${pkgs.curl}/bin/curl -fsS -X POST \
+            -H "Authorization: Bearer $GATUS_EXTERNAL_TOKEN" \
+            "http://127.0.0.1:8080/api/v1/endpoints/backups_backup-${name}/external?success=true" || true
+        '';
     }) cfg;
 
     systemd.services = lib.mkMerge (
@@ -126,9 +143,14 @@ in
             ];
           };
 
-          "restic-backups-${name}" = lib.optionalAttrs (value.mountPoint != null) {
-            unitConfig.RequiresMountsFor = [ "${value.mountPoint}" ];
-          };
+          "restic-backups-${name}" = lib.mkMerge [
+            (lib.optionalAttrs (value.mountPoint != null) {
+              unitConfig.RequiresMountsFor = [ "${value.mountPoint}" ];
+            })
+            (lib.optionalAttrs config.services.gatus.enable {
+              serviceConfig.EnvironmentFile = config.sops.templates."gatus-env".path;
+            })
+          ];
         }
         // lib.genAttrs (map (s: lib.removeSuffix ".service" s) value.services) (_: {
           after = [ "${restoreName}.service" ];
