@@ -42,7 +42,7 @@
   };
 
   outputs =
-    {
+    inputs@{
       nixpkgs,
       nixpkgs-unstable,
       home-manager,
@@ -58,6 +58,15 @@
       ...
     }:
     let
+      profileArgs = {
+        inherit inputs;
+        lib = nixpkgs.lib;
+        repoRoot = ./.;
+      };
+      systemProfile = import ./profiles/system profileArgs;
+      workstationProfile = import ./profiles/workstation (
+        profileArgs // { inherit systemProfile; }
+      );
       dotfiles = "/home/benjamin/Repos/dotfiles";
       homeManagerModule = {
         home-manager.useGlobalPkgs = true;
@@ -137,6 +146,7 @@
         }).config.system.build.sdImage;
 
       darwinConfigurations.mbp-personal = darwin.lib.darwinSystem {
+        specialArgs = { inherit workstationProfile; };
         modules = [
           home-manager.darwinModules.home-manager
           darwinHomeManagerModule

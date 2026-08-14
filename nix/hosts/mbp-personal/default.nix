@@ -1,7 +1,7 @@
-{ pkgs, ... }:
+{ pkgs, workstationProfile, ... }:
 
 {
-  imports = [ ../../system/darwin.nix ];
+  imports = [ workstationProfile.darwin ];
 
   nixpkgs.hostPlatform = "aarch64-darwin";
 
@@ -37,7 +37,7 @@
   };
 
   home-manager.users.benjaminderksen = {
-    imports = [ ../../home/darwin.nix ];
+    imports = [ workstationProfile.homeManager ];
     home.stateVersion = "26.05";
     # sops.defaultSopsFile = ../../secrets/desktop.yaml;
     dotfiles.sops.yubikeyIdentity = "AGE-PLUGIN-YUBIKEY-19TEYVQ5ZLFFEFYSGZHTZ3";
