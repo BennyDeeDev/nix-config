@@ -8,7 +8,7 @@ Build the bootstrap SD image, flash it, boot the Pi, then deploy a role
 The build machine must register binfmt for aarch64 so it can cross-compile.
 On the desktop host in this repo this is already set via
 `boot.binfmt.emulatedSystems = [ "aarch64-linux" ]` in
-`nix/hosts/desktop/default.nix`.
+`hosts/desktop/default.nix`.
 
 ## Build the bootstrap SD image
 
@@ -26,7 +26,7 @@ Replace `/dev/sdX` with the SD card device — verify with `lsblk` first.
 
 The bootstrap image sets `hostName = "pi5"`, runs sshd with password
 authentication disabled, and provisions the SSH public key from
-`nix/modules/pi5.nix` into the `benjamin` user's `authorized_keys`. SSH in
+`modules/pi5.nix` into the `benjamin` user's `authorized_keys`. SSH in
 from any host holding the matching private key:
 
 ```bash
@@ -55,12 +55,12 @@ sudo nix shell nixpkgs#age -c age-keygen -y /var/lib/sops-nix/key.txt
 
 Back on your desktop, add the printed `age1...` string to `.sops.yaml` as
 a new anchor (e.g. `- &pi5 age1...`) and append `*pi5` to the `age:`
-recipients under `nix/secrets/common.yaml`'s `creation_rules`. Then
+recipients under `secrets/common.yaml`'s `creation_rules`. Then
 re-encrypt the file to the expanded recipient set and commit:
 
 ```sh
-sops updatekeys nix/secrets/common.yaml
-git add .sops.yaml nix/secrets/common.yaml
+sops updatekeys secrets/common.yaml
+git add .sops.yaml secrets/common.yaml
 git commit
 ```
 

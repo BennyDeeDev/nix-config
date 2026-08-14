@@ -28,14 +28,14 @@ git clone https://github.com/BennyDeeDev/dotfiles /tmp/dotfiles
 
 ```bash
 sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko/latest -- \
-  --mode destroy,format,mount /tmp/dotfiles/nix/hosts/desktop/disko.nix
+  --mode destroy,format,mount /tmp/dotfiles/hosts/desktop/disko.nix
 ```
 
 **3. Generate hardware configuration**
 
 ```bash
 sudo nixos-generate-config --no-filesystems --root /mnt
-sudo cp /mnt/etc/nixos/hardware-configuration.nix /tmp/dotfiles/nix/hosts/desktop/
+sudo cp /mnt/etc/nixos/hardware-configuration.nix /tmp/dotfiles/hosts/desktop/
 ```
 
 **4. Set `neededForBoot` on `/var/log`**
@@ -74,7 +74,7 @@ sudo chmod 600 /mnt/etc/nixos/smb-secrets
 **6. Install**
 
 ```bash
-sudo nixos-install --flake /tmp/dotfiles/nix#desktop --root /mnt
+sudo nixos-install --flake /tmp/dotfiles#desktop --root /mnt
 ```
 
 **7. Reboot**
@@ -96,7 +96,7 @@ lsblk -o NAME,SIZE,SERIAL
 
 ## Secure Boot (Lanzaboote)
 
-Signs all boot artifacts and enforces Secure Boot via the lanzaboote module configured in `nix/hosts/desktop/default.nix`. Keys auto-generate at `/var/lib/sbctl` and auto-enroll alongside Microsoft's UEFI CA on the first Setup-Mode boot. The steps below are the manual BIOS flow required on MSI boards to actually flip Secure Boot on.
+Signs all boot artifacts and enforces Secure Boot via `profiles/workstation/boot.nix`. Keys auto-generate at `/var/lib/sbctl` and auto-enroll alongside Microsoft's UEFI CA on the first Setup-Mode boot. The steps below are the manual BIOS flow required on MSI boards to actually flip Secure Boot on.
 
 **1. Rebuild and install the signed bootloader**
 
