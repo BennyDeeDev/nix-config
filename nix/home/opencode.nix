@@ -8,6 +8,7 @@
   };
 
   xdg.configFile."opencode/opencode.json".source = ../../opencode/opencode.json;
+  xdg.configFile."opencode/tui.json".source = ../../opencode/tui.json;
   xdg.configFile."opencode/AGENTS.md".source = ../../opencode/AGENTS.md;
   xdg.configFile."opencode/agents".source = ../../opencode/agents;
 }
