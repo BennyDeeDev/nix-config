@@ -5,7 +5,7 @@ keys:
   - &desktop_hm age14gqtkkews0ttelvsuy0dky33q67jrv3vtyluun4te2zmymzp3uxs9qu4yt
   - &pi5-server age13sgj756jngug94tf3gcnjg79dsqcqm08x3tgrzphp2wj8gcd2ppqq3vucp
 creation_rules:
-  - path_regex: nix/secrets/common\.ya?ml$
+  - path_regex: secrets/common\.ya?ml$
     key_groups:
       - age:
           - *yk-5-nfc
@@ -13,14 +13,14 @@ creation_rules:
           - *desktop
           - *desktop_hm
           - *pi5-server
-  - path_regex: nix/secrets/desktop\.ya?ml$
+  - path_regex: secrets/desktop\.ya?ml$
     key_groups:
       - age:
           - *yk-5-nfc
           - *yk-5c-nano
           - *desktop
           - *desktop_hm
-  - path_regex: nix/secrets/pi5-server\.ya?ml$
+  - path_regex: secrets/pi5-server\.ya?ml$
     key_groups:
       - age:
           - *yk-5-nfc

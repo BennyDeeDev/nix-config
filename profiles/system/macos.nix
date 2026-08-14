@@ -1,10 +1,17 @@
-{ ... }:
+{ inputs, ... }:
 
 {
   darwin =
     { config, lib, ... }:
     {
+      imports = [ inputs.home-manager.darwinModules.home-manager ];
+
       nixpkgs.config.allowUnfree = true;
+
+      home-manager = {
+        useGlobalPkgs = true;
+        useUserPackages = true;
+      };
 
       system.defaults = {
         NSGlobalDomain = {
@@ -227,7 +234,6 @@
   homeManager =
     { lib, pkgs, ... }:
     {
-      imports = [ ../../nix/home/sops.nix ];
       home.packages = lib.optionals pkgs.stdenv.isDarwin (with pkgs; [
         appcleaner
         caffeine

@@ -1,6 +1,8 @@
 {
+  config,
   inputs,
   lib,
+  moduleSet,
   pkgs,
   repoRoot,
   workstationProfile,
@@ -8,27 +10,43 @@
 }:
 
 let
-  gaming = import ../../../hosts/desktop/gaming {
+  gaming = import ./gaming {
     inherit inputs lib repoRoot;
   };
 in
 {
   imports = [
-    ../../system/base.nix
-    ../../system/desktop.nix
+    workstationProfile.nixos
+    moduleSet.sops.nixos
+    moduleSet.nas.nixos
+    gaming.nixos
+    inputs.disko.nixosModules.disko
     ./disko.nix
     ./hardware-configuration.nix
-    ../../modules/sops.nix
-    ../../modules/nas.nix
   ];
 
   networking.hostName = "nixos";
 
-  environment.systemPackages = with pkgs; [
-    sbctl
-  ];
+  sops = {
+    defaultSopsFile = ../../secrets/desktop.yaml;
+    secrets."benjamin-password" = {
+      sopsFile = ../../secrets/common.yaml;
+      neededForUsers = true;
+    };
+  };
 
-  sops.defaultSopsFile = ../../secrets/desktop.yaml;
+  dotfiles.sops.smartcard.enable = true;
+
+  users.users.benjamin = {
+    isNormalUser = true;
+    shell = pkgs.zsh;
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "libvirtd"
+    ];
+    hashedPasswordFile = config.sops.secrets."benjamin-password".path;
+  };
 
   host.nas = {
     uid = 1000;
@@ -41,51 +59,18 @@ in
     ];
   };
 
-  # Lanzaboote replaces systemd-boot and signs boot artifacts.
-  # Keys are provisioned at /var/lib/sbctl via `sudo sbctl create-keys`.
   boot = {
-    loader.systemd-boot.enable = lib.mkForce false;
-    lanzaboote = {
-      enable = true;
-      pkiBundle = "/var/lib/sbctl";
-      configurationLimit = 10;
-      autoGenerateKeys.enable = true;
-      autoEnrollKeys = {
-        enable = true;
-        autoReboot = true;
-      };
-    };
     binfmt.emulatedSystems = [ "aarch64-linux" ];
+    supportedFilesystems = [ "btrfs" ];
   };
 
-  boot.supportedFilesystems = [
-    "btrfs"
-  ];
-
-  hardware.bluetooth.enable = true;
-  hardware.bluetooth.powerOnBoot = true;
-  hardware.bluetooth.settings = {
-    General = {
-      Experimental = true;
-      FastConnectable = true;
-    };
-    Policy.AutoEnable = true;
-  };
-  services.blueman.enable = true;
-  services.pcscd.enable = true;
+  hardware.keyboard.zsa.enable = true;
+  services.udev.packages = [ pkgs.asdbctl ];
 
   hardware.cpu.amd.updateMicrocode = true;
   hardware.enableRedistributableFirmware = true;
   hardware.amdgpu.initrd.enable = true;
 
-  programs.niri = {
-    enable = true;
-    package = pkgs.niri;
-  };
-
-  services.displayManager.defaultSession = "niri";
-
-  # TODO: remove once nixos is stable
   fileSystems."/mnt/bazzite" = {
     device = "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_1TB_S7HDNJ0Y413952T-part3";
     fsType = "btrfs";
@@ -106,24 +91,46 @@ in
     fileSystems = [ "/" ];
   };
 
-  virtualisation.docker.enable = true;
-  virtualisation.docker.storageDriver = "btrfs";
+  environment.systemPackages = [ pkgs.efibootmgr ];
+  security.sudo.extraRules = [
+    {
+      users = [ "benjamin" ];
+      commands = [
+        {
+          command = "/run/current-system/sw/bin/efibootmgr";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
+  ];
 
-  virtualisation.libvirtd.enable = true;
+  services.displayManager.sessionPackages = [
+    (pkgs.makeDesktopItem {
+      name = "windows";
+      destination = "/share/wayland-sessions";
+      desktopName = "Windows";
+      comment = "Reboot to Windows Boot Manager";
+      exec = ''/home/benjamin/Repos/dotfiles/files/bin/reboot-to "Windows Boot Manager" reboot'';
+      type = "Application";
+      categories = [ "System" ];
+      extraConfig = {
+        "X-DesktopNames" = "Windows";
+      };
+    } // { providedSessions = [ "windows" ]; })
+  ];
 
   home-manager.users.benjamin = { dotfiles, ... }: {
     imports = [
       workstationProfile.homeManager
+      moduleSet.sops.homeManager
       gaming.homeManager
-      ../../home/sops.nix
     ];
     home.packages = with pkgs; [
       keymapp
       asdbctl
     ];
     sops.defaultSopsFile = ../../secrets/desktop.yaml;
-    dotfiles.sops.yubikeyIdentity =
-      "AGE-PLUGIN-YUBIKEY-17Z2J5Q5Z709P64S7VFQZT";
+    dotfiles.sops.yubikeyIdentity = "AGE-PLUGIN-YUBIKEY-17Z2J5Q5Z709P64S7VFQZT";
     home.username = "benjamin";
     home.homeDirectory = "/home/benjamin";
     home.stateVersion = "25.11";
@@ -142,4 +149,6 @@ in
       settings."X-DesktopNames" = "Windows";
     };
   };
+
+  system.stateVersion = "25.11";
 }

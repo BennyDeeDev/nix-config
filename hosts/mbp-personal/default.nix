@@ -1,4 +1,9 @@
-{ pkgs, workstationProfile, ... }:
+{
+  moduleSet,
+  pkgs,
+  workstationProfile,
+  ...
+}:
 
 {
   imports = [ workstationProfile.darwin ];
@@ -37,7 +42,10 @@
   };
 
   home-manager.users.benjaminderksen = {
-    imports = [ workstationProfile.homeManager ];
+    imports = [
+      workstationProfile.homeManager
+      moduleSet.sops.homeManager
+    ];
     home.stateVersion = "26.05";
     dotfiles.sops.yubikeyIdentity = "AGE-PLUGIN-YUBIKEY-19TEYVQ5ZLFFEFYSGZHTZ3";
     programs.zsh.shellAliases.drs = "sudo darwin-rebuild switch --flake ~/Repos/dotfiles#mbp-personal";

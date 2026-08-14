@@ -1,8 +1,15 @@
-{ modulesPath, ... }:
+{
+  moduleSet,
+  modulesPath,
+  systemProfile,
+  ...
+}:
 
 {
   imports = [
-    ../modules/pi5.nix
+    systemProfile.nixos
+    moduleSet.sops.nixos
+    moduleSet.pi5.nixos
     "${modulesPath}/installer/sd-card/sd-image-aarch64.nix"
   ];
 

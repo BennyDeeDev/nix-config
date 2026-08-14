@@ -63,100 +63,54 @@
         lib = nixpkgs.lib;
         repoRoot = ./.;
       };
+      moduleSet = import ./modules profileArgs;
       systemProfile = import ./profiles/system profileArgs;
       workstationProfile = import ./profiles/workstation (
         profileArgs // { inherit systemProfile; }
       );
-      dotfiles = "/home/benjamin/Repos/dotfiles";
-      homeManagerModule = {
-        home-manager.useGlobalPkgs = true;
-        home-manager.useUserPackages = true;
-        home-manager.sharedModules = [ sops-nix.homeManagerModules.sops ];
-        home-manager.extraSpecialArgs = {
-          inherit
-            dms
-            dgop
-            dms-plugin-registry
-            nix-flatpak
-            dotfiles
-            ;
-        };
-      };
-      darwinHomeManagerModule = {
-        home-manager.useGlobalPkgs = true;
-        home-manager.useUserPackages = true;
-        home-manager.sharedModules = [ sops-nix.homeManagerModules.sops ];
-        home-manager.extraSpecialArgs = {
-          inherit
-            dms
-            dgop
-            dms-plugin-registry
-            nix-flatpak
-            ;
-        };
+      specialArgs = {
+        inherit
+          inputs
+          moduleSet
+          systemProfile
+          workstationProfile
+          ;
+        repoRoot = ./.;
       };
     in
     {
       nixosConfigurations = {
         vm = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          specialArgs = { inherit workstationProfile; };
-          modules = [
-            nix-flatpak.nixosModules.nix-flatpak
-            home-manager.nixosModules.home-manager
-            homeManagerModule
-            ./nix/hosts/vm
-          ];
+          inherit specialArgs;
+          modules = [ ./hosts/vm ];
         };
         desktop = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          specialArgs = {
-            inherit inputs workstationProfile;
-            repoRoot = ./.;
-          };
-          modules = [
-            disko.nixosModules.disko
-            lanzaboote.nixosModules.lanzaboote
-            sops-nix.nixosModules.sops
-            nix-flatpak.nixosModules.nix-flatpak
-            home-manager.nixosModules.home-manager
-            homeManagerModule
-            ./nix/hosts/desktop
-          ];
+          inherit specialArgs;
+          modules = [ ./hosts/desktop ];
         };
         pi5-server = nixpkgs-unstable.lib.nixosSystem {
           system = "aarch64-linux";
-          modules = [
-            nixos-hardware.nixosModules.raspberry-pi-5
-            sops-nix.nixosModules.sops
-            ./nix/hosts/pi5-server
-          ];
+          inherit specialArgs;
+          modules = [ ./hosts/pi5-server ];
         };
         pi5-kiosk = nixpkgs-unstable.lib.nixosSystem {
           system = "aarch64-linux";
-          modules = [
-            nixos-hardware.nixosModules.raspberry-pi-5
-            sops-nix.nixosModules.sops
-            ./nix/hosts/pi5-kiosk
-          ];
+          inherit specialArgs;
+          modules = [ ./hosts/pi5-kiosk ];
         };
       };
       images.pi5-bootstrap =
         (nixpkgs-unstable.lib.nixosSystem {
           system = "aarch64-linux";
-          modules = [
-            sops-nix.nixosModules.sops
-            ./nix/images/pi5-bootstrap.nix
-          ];
+          inherit specialArgs;
+          modules = [ ./images/pi5-bootstrap.nix ];
         }).config.system.build.sdImage;
 
       darwinConfigurations.mbp-personal = darwin.lib.darwinSystem {
-        specialArgs = { inherit workstationProfile; };
-        modules = [
-          home-manager.darwinModules.home-manager
-          darwinHomeManagerModule
-          ./hosts/mbp-personal/default.nix
-        ];
+        inherit specialArgs;
+        modules = [ ./hosts/mbp-personal ];
       };
     };
 }
