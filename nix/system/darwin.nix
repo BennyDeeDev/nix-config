@@ -22,6 +22,11 @@
       show-recents = false;
     };
 
+    trackpad = {
+      TrackpadThreeFingerHorizSwipeGesture = 2;
+      TrackpadThreeFingerVertSwipeGesture = 2;
+    };
+
     finder = {
       _FXShowPosixPathInTitle = true;
       AppleShowAllExtensions = true;
