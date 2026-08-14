@@ -39,7 +39,6 @@
   home-manager.users.benjaminderksen = {
     imports = [ workstationProfile.homeManager ];
     home.stateVersion = "26.05";
-    # sops.defaultSopsFile = ../../secrets/desktop.yaml;
     dotfiles.sops.yubikeyIdentity = "AGE-PLUGIN-YUBIKEY-19TEYVQ5ZLFFEFYSGZHTZ3";
     programs.zsh.shellAliases.drs = "sudo darwin-rebuild switch --flake ~/Repos/dotfiles#mbp-personal";
     programs.git.settings.user = {

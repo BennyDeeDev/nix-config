@@ -155,7 +155,7 @@
         modules = [
           home-manager.darwinModules.home-manager
           darwinHomeManagerModule
-          ./nix/hosts/mbp-personal/default.nix
+          ./hosts/mbp-personal/default.nix
         ];
       };
     };

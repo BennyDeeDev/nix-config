@@ -32,11 +32,6 @@
         godot-mono
         dotnet-sdk
         rpi-imager
-      ])
-      ++ lib.optionals pkgs.stdenv.isDarwin (with pkgs; [
-        appcleaner
-        caffeine
-        the-unarchiver
       ]);
   };
 }
