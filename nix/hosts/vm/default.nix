@@ -1,4 +1,4 @@
-{ ... }:
+{ workstationProfile, ... }:
 
 {
   imports = [
@@ -15,11 +15,7 @@
   services.spice-vdagentd.enable = true;
 
   home-manager.users.benjamin = {
-    imports = [
-      ../../home/linux.nix
-      ../../home/wayland
-      ../../home/gamescope
-    ];
+    imports = [ workstationProfile.homeManager ];
     home.username = "benjamin";
     home.homeDirectory = "/home/benjamin";
     home.stateVersion = "25.11";

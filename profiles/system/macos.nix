@@ -2,5 +2,7 @@
 
 {
   darwin = ../../nix/system/darwin.nix;
-  homeManager = ../../nix/home/darwin.nix;
+  homeManager = {
+    imports = [ ../../nix/home/sops.nix ];
+  };
 }

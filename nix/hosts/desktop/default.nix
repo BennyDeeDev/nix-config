@@ -1,5 +1,17 @@
-{ pkgs, lib, ... }:
+{
+  inputs,
+  lib,
+  pkgs,
+  repoRoot,
+  workstationProfile,
+  ...
+}:
 
+let
+  gaming = import ../../../hosts/desktop/gaming {
+    inherit inputs lib repoRoot;
+  };
+in
 {
   imports = [
     ../../system/base.nix
@@ -101,10 +113,13 @@
 
   home-manager.users.benjamin = { dotfiles, ... }: {
     imports = [
-      ../../home/linux.nix
-      ../../home/wayland
-      ../../home/gamescope
+      workstationProfile.homeManager
+      gaming.homeManager
       ../../home/sops.nix
+    ];
+    home.packages = with pkgs; [
+      keymapp
+      asdbctl
     ];
     sops.defaultSopsFile = ../../secrets/desktop.yaml;
     dotfiles.sops.yubikeyIdentity =
@@ -116,6 +131,15 @@
     programs.git.settings.user = {
       name = "BennyDeeDev";
       email = "45900418+BennyDeeDev@users.noreply.github.com";
+    };
+    xdg.desktopEntries.windows = {
+      name = "Windows";
+      exec = ''${dotfiles}/files/bin/reboot-to "Windows Boot Manager" reboot'';
+      comment = "Reboot to Windows Boot Manager";
+      icon = "system-reboot-symbolic";
+      type = "Application";
+      categories = [ "System" ];
+      settings."X-DesktopNames" = "Windows";
     };
   };
 }

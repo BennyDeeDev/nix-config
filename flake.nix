@@ -100,6 +100,7 @@
       nixosConfigurations = {
         vm = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
+          specialArgs = { inherit workstationProfile; };
           modules = [
             nix-flatpak.nixosModules.nix-flatpak
             home-manager.nixosModules.home-manager
@@ -109,6 +110,10 @@
         };
         desktop = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
+          specialArgs = {
+            inherit inputs workstationProfile;
+            repoRoot = ./.;
+          };
           modules = [
             disko.nixosModules.disko
             lanzaboote.nixosModules.lanzaboote
