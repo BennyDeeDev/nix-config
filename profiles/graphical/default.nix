@@ -18,6 +18,7 @@ let
   input = import ./input.nix;
   nautilus = import ./nautilus.nix;
   niri = import ./niri.nix;
+  shares = import ./shares.nix;
   studioDisplay = import ./studio-display.nix;
   vscode = import ./vscode.nix;
   xdg = import ./xdg.nix;
@@ -36,6 +37,7 @@ in
         input.nixos
         nautilus.nixos
         niri.nixos
+        shares.nixos
         studioDisplay.nixos
         xdg.nixos
         zsa.nixos
@@ -58,6 +60,7 @@ in
         input.homeManager
         nautilus.homeManager
         niri.homeManager
+        shares.homeManager
         studioDisplay.homeManager
         vscode.homeManager
         xdg.homeManager

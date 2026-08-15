@@ -137,6 +137,11 @@ Keep singleton paths dotted:
 programs.helix.enable = true;
 ```
 
+### Let Bindings
+
+Use a `let` binding only when the bound value is used more than once. Keep
+one-off expressions inline instead of introducing a local name.
+
 ### Custom Module Options
 
 Options declared by modules in this repository use the `my.*` namespace to
@@ -154,6 +159,13 @@ Prefer `config.lib.file.mkOutOfStoreSymlink` for configuration files that need
 to remain editable at runtime, especially when theme switches or other live
 changes are expected. Link those files from the mutable dotfiles checkout
 instead of copying them into the Nix store.
+
+### File Size
+
+Keep files glanceable. Around 100 lines is a useful signal to reconsider the
+structure and split a file into sensible, cohesive files, but it is not a
+hard limit. Do not fragment tightly coupled configuration merely to reduce
+the line count.
 
 ## Validation
 

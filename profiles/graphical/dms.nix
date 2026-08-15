@@ -5,22 +5,35 @@
 }:
 
 {
-  nixos = {
-    imports = [ dms.nixosModules.greeter ];
+  nixos =
+    { config, ... }:
+    let
+      configHome = config.users.users.benjamin.home;
+    in
+    {
+      imports = [ dms.nixosModules.greeter ];
 
-    users.groups.greeter = { };
-    users.users.greeter = {
-      isSystemUser = true;
-      group = "greeter";
+      assertions = [
+        {
+          assertion = configHome == "/home/benjamin";
+          message = "DankMaterialShell requires benjamin's home directory to be /home/benjamin.";
+        }
+      ];
+
+      users.groups.greeter = { };
+      users.users.greeter = {
+        isSystemUser = true;
+        group = "greeter";
+      };
+
+      services.greetd.settings.default_session.user = "greeter";
+
+      programs.dank-material-shell.greeter = {
+        enable = true;
+        compositor.name = "niri";
+        configHome = configHome;
+      };
     };
-
-    services.greetd.settings.default_session.user = "greeter";
-
-    programs.dank-material-shell.greeter = {
-      enable = true;
-      compositor.name = "niri";
-    };
-  };
 
   homeManager =
     {

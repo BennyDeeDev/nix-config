@@ -17,6 +17,7 @@ in
     nas.nixos
     container-backup.nixos
     nixos-hardware.nixosModules.raspberry-pi-5
+    ./secrets.nix
     ./home-assistant.nix
   ];
 
@@ -31,6 +32,4 @@ in
       "Restic"
     ];
   };
-
-  sops.defaultSopsFile = ../../secrets/pi5-server.yaml;
 }

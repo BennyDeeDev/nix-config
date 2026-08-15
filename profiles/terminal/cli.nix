@@ -2,6 +2,8 @@
   homeManager =
     {
       config,
+      dotfiles,
+      flakeHost,
       lib,
       pkgs,
       ...
@@ -28,6 +30,8 @@
             lta = "lt -a";
             cat = "bat";
             ff = "fzf --preview 'bat --style=numbers --color=always {}'";
+            nrs = "sudo nixos-rebuild switch --flake ${dotfiles}#${flakeHost}";
+            drs = "sudo darwin-rebuild switch --flake ${dotfiles}#${flakeHost}";
             ".." = "cd ..";
             "..." = "cd ../..";
             "...." = "cd ../../..";
