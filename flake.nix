@@ -57,10 +57,6 @@
       ] (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
 
       nixosConfigurations = {
-        vm = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          modules = [ (import ./hosts/vm inputs) ];
-        };
         desktop = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [ (import ./hosts/desktop inputs) ];

@@ -8,7 +8,7 @@ Build the bootstrap SD image, flash it, boot the Pi, then deploy a role
 The build machine must register binfmt for aarch64 so it can cross-compile.
 On the desktop host in this repo this is already set via
 `boot.binfmt.emulatedSystems = [ "aarch64-linux" ]` in
-`hosts/desktop/default.nix`.
+`profiles/system/nixos.nix`.
 
 ## Build the bootstrap SD image
 

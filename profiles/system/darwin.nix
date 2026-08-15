@@ -1,17 +1,10 @@
-{ home-manager }:
+{ ... }:
 
 {
   darwin =
     { config, lib, ... }:
     {
-      imports = [ home-manager.darwinModules.home-manager ];
-
       nixpkgs.config.allowUnfree = true;
-
-      home-manager = {
-        useGlobalPkgs = true;
-        useUserPackages = true;
-      };
 
       system.defaults = {
         NSGlobalDomain = {

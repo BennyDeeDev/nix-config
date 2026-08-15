@@ -3,23 +3,27 @@
   dms,
   dms-plugin-registry,
   home-manager,
+  lanzaboote,
   sops-nix,
   ...
 }:
 
 let
-  systemProfile = import ../../profiles/system { inherit home-manager; };
+  baseProfile = import ../../profiles/base { inherit home-manager; };
+  systemProfile = import ../../profiles/system { inherit lanzaboote; };
   terminalProfile = import ../../profiles/terminal { };
   graphicalProfile = import ../../profiles/graphical {
     inherit dgop dms dms-plugin-registry;
   };
-  podman = import ../../profiles/system/podman.nix { };
   sops = import ../../modules/sops.nix { inherit sops-nix; };
 in
 { ... }:
 
 {
-  imports = [ systemProfile.darwin ];
+  imports = [
+    baseProfile.darwin
+    systemProfile.darwin
+  ];
 
   nixpkgs.hostPlatform = "aarch64-darwin";
 
@@ -56,7 +60,6 @@ in
       systemProfile.homeManager
       terminalProfile.homeManager
       graphicalProfile.homeManager
-      podman.homeManager
       sops.homeManager
     ];
 

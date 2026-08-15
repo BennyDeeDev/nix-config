@@ -11,19 +11,12 @@
 }:
 
 let
-  systemProfile = import ../../profiles/system { inherit home-manager; };
+  baseProfile = import ../../profiles/base { inherit home-manager; };
+  systemProfile = import ../../profiles/system { inherit lanzaboote; };
   terminalProfile = import ../../profiles/terminal { };
   graphicalProfile = import ../../profiles/graphical {
     inherit dgop dms dms-plugin-registry;
   };
-
-  audio = import ../../profiles/system/audio.nix { };
-  bluetooth = import ../../profiles/system/bluetooth.nix { };
-  boot = import ../../profiles/system/boot.nix { inherit lanzaboote; };
-  libvirt = import ../../profiles/system/libvirt.nix { };
-  networkmanager = import ../../profiles/system/networkmanager.nix { };
-  podman = import ../../profiles/system/podman.nix { };
-  printing = import ../../profiles/system/printing.nix { };
 
   sops = import ../../modules/sops.nix { inherit sops-nix; };
   nas = import ../../modules/nas.nix { };
@@ -37,16 +30,9 @@ in
 
 {
   imports = [
+    baseProfile.nixos
     systemProfile.nixos
-    terminalProfile.nixos
     graphicalProfile.nixos
-    audio.nixos
-    bluetooth.nixos
-    boot.nixos
-    libvirt.nixos
-    networkmanager.nixos
-    podman.nixos
-    printing.nixos
     sops.nixos
     nas.nixos
     gaming.nixos
@@ -89,11 +75,6 @@ in
     ];
   };
 
-  boot = {
-    binfmt.emulatedSystems = [ "aarch64-linux" ];
-    supportedFilesystems = [ "btrfs" ];
-  };
-
   hardware.keyboard.zsa.enable = true;
   services.udev.packages = [ pkgs.asdbctl ];
 
@@ -113,12 +94,6 @@ in
       "space_cache=v2"
       "nofail"
     ];
-  };
-
-  services.btrfs.autoScrub = {
-    enable = true;
-    interval = "monthly";
-    fileSystems = [ "/" ];
   };
 
   environment.systemPackages = [ pkgs.efibootmgr ];
@@ -156,12 +131,9 @@ in
 
   home-manager.users.benjamin = { dotfiles, ... }: {
     imports = [
+      systemProfile.homeManager
       terminalProfile.homeManager
       graphicalProfile.homeManager
-      audio.homeManager
-      bluetooth.homeManager
-      networkmanager.homeManager
-      podman.homeManager
       sops.homeManager
       gaming.homeManager
     ];

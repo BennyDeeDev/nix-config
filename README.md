@@ -9,7 +9,6 @@ NixOS, nix-darwin, and Home Manager configuration for the machines below.
 | `pi5-server` | Home automation server |
 | `pi5-kiosk` | Planned kiosk |
 | `images.pi5-bootstrap` | Raspberry Pi 5 bootstrap image |
-| `vm` | Development VM |
 
 ## Architecture
 
@@ -20,15 +19,16 @@ files/       Application payloads
 hosts/       Machine identity, hardware, disks, and unique policy
 images/      Image outputs
 modules/     Reusable modules selected explicitly
-profiles/    Explicit system, terminal, and graphical contexts
+profiles/    Explicit base, system, terminal, and graphical bundles
 secrets/     Encrypted SOPS documents
 ```
 
-Profile composition is explicit. Terminal and graphical entry points list
-their features, the system entry point combines platform foundations, and
-each host selects its profiles and capabilities:
+Profile composition is explicit. `base` provides the universal foundation;
+`system`, `terminal`, and `graphical` are complete opinionated bundles. Each
+host selects whole profiles and reusable host modules:
 
 ```text
+profiles/base/default.nix
 profiles/system/default.nix
 profiles/terminal/default.nix
 profiles/graphical/default.nix
@@ -53,19 +53,25 @@ only the mutable checkout path is passed to Home Manager through
 
 ## Ownership
 
-`profiles/system/` contains the operating-system foundation and explicitly
-selected capabilities such as boot, audio, networking, printing, containers,
-and virtualization.
+`profiles/base/` contains the NixOS and nix-darwin foundation shared by
+workstations, servers, and images.
+
+`profiles/system/` is the complete daily-machine system policy. Its NixOS
+facet requires Btrfs and UEFI Secure Boot and enables audio, Bluetooth,
+networking, printing, containers, and virtualization. Its Darwin facet owns
+the corresponding opinionated macOS system policy.
 
 `profiles/terminal/` contains the shell, command-line tools, and terminal
 editors. `profiles/graphical/` contains the Niri desktop, GUI applications,
 fonts, and desktop integration.
 
-`hosts/<name>/` selects profiles and capabilities and contains machine facts:
-hostnames, hardware, disks, users, state versions, secret files, and unique
-mounts or applications.
+`hosts/<name>/` selects whole profiles and contains machine facts: hostnames,
+hardware, disks, users, state versions, secret files, and unique mounts or
+applications.
 
 `hosts/desktop/gaming/` is intentionally private to the physical desktop.
+`hosts/vm/` is retained but has no flake output until the ext4 VM is rebuilt
+with the Btrfs system-profile contract.
 
 ## Feature Granularity
 
@@ -102,9 +108,8 @@ A terminal Home Manager feature uses the same facet shape:
 }
 ```
 
-Add the facet explicitly to `profiles/terminal/default.nix`. System
-capabilities and machine-specific behavior remain explicit in the relevant
-host.
+Add the facet explicitly to `profiles/terminal/default.nix`. Machine-specific
+behavior remains explicit in the relevant host.
 
 ## Validation
 
@@ -120,7 +125,6 @@ Evaluate the active outputs without activating them:
 ```sh
 nix eval --raw .#darwinConfigurations.mbp-personal.system.drvPath
 nix eval --raw .#nixosConfigurations.desktop.config.system.build.toplevel.drvPath
-nix eval --raw .#nixosConfigurations.vm.config.system.build.toplevel.drvPath
 nix eval --raw .#nixosConfigurations.pi5-server.config.system.build.toplevel.drvPath
 nix eval --raw .#images.pi5-bootstrap.drvPath
 ```
