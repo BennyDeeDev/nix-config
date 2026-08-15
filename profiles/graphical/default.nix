@@ -21,6 +21,7 @@ let
   studioDisplay = import ./studio-display.nix;
   vscode = import ./vscode.nix;
   xdg = import ./xdg.nix;
+  zsa = import ./zsa.nix;
 in
 {
   nixos =
@@ -37,6 +38,7 @@ in
       niri.nixos
       studioDisplay.nixos
       xdg.nixos
+      zsa.nixos
     ];
 
   };
@@ -59,6 +61,7 @@ in
         studioDisplay.homeManager
         vscode.homeManager
         xdg.homeManager
+        zsa.homeManager
       ];
     };
 }

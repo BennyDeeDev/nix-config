@@ -66,7 +66,6 @@ in
     ];
   };
 
-  hardware.keyboard.zsa.enable = true;
   hardware.cpu.amd.updateMicrocode = true;
   hardware.enableRedistributableFirmware = true;
   hardware.amdgpu.initrd.enable = true;
