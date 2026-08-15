@@ -77,6 +77,5 @@
         the-unarchiver
       ]
     );
-
   };
 }

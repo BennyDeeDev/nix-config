@@ -14,7 +14,6 @@ let
   gnomeKeyring = import ./gnome-keyring.nix;
   gnomeDisks = import ./gnome-disks.nix;
   ghostty = import ./ghostty.nix;
-  godot = import ./godot.nix;
   input = import ./input.nix;
   nautilus = import ./nautilus.nix;
   niri = import ./niri.nix;
@@ -56,7 +55,6 @@ in
         fonts.homeManager
         ghostty.homeManager
         gnomeKeyring.homeManager
-        godot.homeManager
         input.homeManager
         nautilus.homeManager
         niri.homeManager
@@ -64,7 +62,6 @@ in
         studioDisplay.homeManager
         vscode.homeManager
         xdg.homeManager
-        zsa.homeManager
       ];
     };
 }
