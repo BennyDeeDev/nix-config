@@ -1,4 +1,35 @@
 {
+  dgop,
+  disko,
+  dms,
+  dms-plugin-registry,
+  home-manager,
+  lanzaboote,
+  nix-flatpak,
+  sops-nix,
+  ...
+}:
+
+let
+  systemProfile = import ../../profiles/system { inherit home-manager; };
+  terminalProfile = import ../../profiles/terminal { };
+  graphicalProfile = import ../../profiles/graphical {
+    inherit dgop dms dms-plugin-registry;
+  };
+
+  audio = import ../../profiles/system/audio.nix { };
+  bluetooth = import ../../profiles/system/bluetooth.nix { };
+  boot = import ../../profiles/system/boot.nix { inherit lanzaboote; };
+  libvirt = import ../../profiles/system/libvirt.nix { };
+  networkmanager = import ../../profiles/system/networkmanager.nix { };
+  podman = import ../../profiles/system/podman.nix { };
+  printing = import ../../profiles/system/printing.nix { };
+
+  sops = import ../../modules/sops.nix { inherit sops-nix; };
+  nas = import ../../modules/nas.nix { };
+  gaming = import ./gaming { inherit nix-flatpak; };
+in
+{
   config,
   pkgs,
   ...
@@ -6,6 +37,20 @@
 
 {
   imports = [
+    systemProfile.nixos
+    terminalProfile.nixos
+    graphicalProfile.nixos
+    audio.nixos
+    bluetooth.nixos
+    boot.nixos
+    libvirt.nixos
+    networkmanager.nixos
+    podman.nixos
+    printing.nixos
+    sops.nixos
+    nas.nixos
+    gaming.nixos
+    disko.nixosModules.disko
     ./disko.nix
     ./hardware-configuration.nix
   ];
@@ -110,6 +155,17 @@
   ];
 
   home-manager.users.benjamin = { dotfiles, ... }: {
+    imports = [
+      terminalProfile.homeManager
+      graphicalProfile.homeManager
+      audio.homeManager
+      bluetooth.homeManager
+      networkmanager.homeManager
+      podman.homeManager
+      sops.homeManager
+      gaming.homeManager
+    ];
+
     home.packages = with pkgs; [
       keymapp
       asdbctl

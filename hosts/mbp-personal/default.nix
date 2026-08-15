@@ -1,6 +1,26 @@
+{
+  dgop,
+  dms,
+  dms-plugin-registry,
+  home-manager,
+  sops-nix,
+  ...
+}:
+
+let
+  systemProfile = import ../../profiles/system { inherit home-manager; };
+  terminalProfile = import ../../profiles/terminal { };
+  graphicalProfile = import ../../profiles/graphical {
+    inherit dgop dms dms-plugin-registry;
+  };
+  podman = import ../../profiles/system/podman.nix { };
+  sops = import ../../modules/sops.nix { inherit sops-nix; };
+in
 { ... }:
 
 {
+  imports = [ systemProfile.darwin ];
+
   nixpkgs.hostPlatform = "aarch64-darwin";
 
   nix.settings.experimental-features = "nix-command flakes";
@@ -32,6 +52,14 @@
   };
 
   home-manager.users.benjaminderksen = {
+    imports = [
+      systemProfile.homeManager
+      terminalProfile.homeManager
+      graphicalProfile.homeManager
+      podman.homeManager
+      sops.homeManager
+    ];
+
     home.stateVersion = "26.05";
     dotfiles.sops.yubikeyIdentity = "AGE-PLUGIN-YUBIKEY-19TEYVQ5ZLFFEFYSGZHTZ3";
     programs.zsh.shellAliases.drs = "sudo darwin-rebuild switch --flake ~/Repos/dotfiles#mbp-personal";

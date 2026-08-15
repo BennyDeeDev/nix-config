@@ -1,4 +1,23 @@
 {
+  dgop,
+  dms,
+  dms-plugin-registry,
+  home-manager,
+  sops-nix,
+  ...
+}:
+
+let
+  systemProfile = import ../../profiles/system { inherit home-manager; };
+  terminalProfile = import ../../profiles/terminal { };
+  graphicalProfile = import ../../profiles/graphical {
+    inherit dgop dms dms-plugin-registry;
+  };
+  audio = import ../../profiles/system/audio.nix { };
+  networkmanager = import ../../profiles/system/networkmanager.nix { };
+  sops = import ../../modules/sops.nix { inherit sops-nix; };
+in
+{
   config,
   pkgs,
   ...
@@ -6,6 +25,12 @@
 
 {
   imports = [
+    systemProfile.nixos
+    terminalProfile.nixos
+    graphicalProfile.nixos
+    audio.nixos
+    networkmanager.nixos
+    sops.nixos
     ./hardware-configuration.nix
   ];
 
@@ -35,6 +60,13 @@
   services.spice-vdagentd.enable = true;
 
   home-manager.users.benjamin = {
+    imports = [
+      terminalProfile.homeManager
+      graphicalProfile.homeManager
+      audio.homeManager
+      networkmanager.homeManager
+    ];
+
     home.username = "benjamin";
     home.homeDirectory = "/home/benjamin";
     home.stateVersion = "25.11";

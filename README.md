@@ -25,8 +25,8 @@ secrets/     Encrypted SOPS documents
 ```
 
 Profile composition is explicit. Terminal and graphical entry points list
-their features, while the system entry point combines platform foundations
-and `flake.nix` selects host capabilities:
+their features, the system entry point combines platform foundations, and
+each host selects its profiles and capabilities:
 
 ```text
 profiles/system/default.nix
@@ -45,8 +45,9 @@ Feature files return the module-system facets they support:
 ```
 
 Unsupported facets are omitted. Home Manager facets shared between Linux and
-macOS use `pkgs.stdenv.isLinux` or `pkgs.stdenv.isDarwin` where needed. The
-flake composes profile facets, reusable modules, and host modules directly;
+macOS use `pkgs.stdenv.isLinux` or `pkgs.stdenv.isDarwin` where needed. Host
+modules compose profile facets and reusable modules directly. `flake.nix`
+only instantiates outputs and provides their external flake dependencies;
 only the mutable checkout path is passed to Home Manager through
 `extraSpecialArgs`.
 
@@ -60,8 +61,9 @@ and virtualization.
 editors. `profiles/graphical/` contains the Niri desktop, GUI applications,
 fonts, and desktop integration.
 
-`hosts/<name>/` contains machine facts: hostnames, hardware, disks, users,
-state versions, secret files, and unique mounts or applications.
+`hosts/<name>/` selects profiles and capabilities and contains machine facts:
+hostnames, hardware, disks, users, state versions, secret files, and unique
+mounts or applications.
 
 `hosts/desktop/gaming/` is intentionally private to the physical desktop.
 
@@ -101,8 +103,8 @@ A terminal Home Manager feature uses the same facet shape:
 ```
 
 Add the facet explicitly to `profiles/terminal/default.nix`. System
-capabilities and machine-specific behavior remain explicit in `flake.nix` or
-the relevant host.
+capabilities and machine-specific behavior remain explicit in the relevant
+host.
 
 ## Validation
 
