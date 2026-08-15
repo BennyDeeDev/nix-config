@@ -20,6 +20,7 @@
           github.copilot-chat
           catppuccin.catppuccin-vsc
           catppuccin.catppuccin-vsc-icons
+          esbenp.prettier-vscode
           jnoortheen.nix-ide
         ];
       };

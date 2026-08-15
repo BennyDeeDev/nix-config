@@ -188,6 +188,56 @@ nix eval --raw .#images.pi5-bootstrap.drvPath
 
 Build an output with `nix build --no-link <installable>`.
 
+### Compare Hosts Without Building
+
+Nix can evaluate a system to its `.drv` path without realizing the system
+closure. A derivation is the build recipe: it records the builder, inputs, and
+environment, so `nix-diff` can compare two configurations before either one is
+built.
+
+Fetch the branch you want to compare first:
+
+```sh
+git fetch origin master
+```
+
+Then compare the current checkout with `origin/master`. For NixOS hosts:
+
+```sh
+host=desktop
+
+master_drv=$(nix eval --raw \
+  "git+file://$PWD?ref=refs/remotes/origin/master#nixosConfigurations.$host.config.system.build.toplevel.drvPath")
+current_drv=$(nix eval --raw \
+  ".#nixosConfigurations.$host.config.system.build.toplevel.drvPath")
+
+nix run nixpkgs#nix-diff -- \
+  "$master_drv" "$current_drv" \
+  --skip-already-compared --color auto --context 1
+```
+
+Use `host=pi5-server` for the Pi. For nix-darwin, use its `system` output:
+
+```sh
+host=mbp-personal
+
+master_drv=$(nix eval --raw \
+  "git+file://$PWD?ref=refs/remotes/origin/master#darwinConfigurations.$host.system.drvPath")
+current_drv=$(nix eval --raw \
+  ".#darwinConfigurations.$host.system.drvPath")
+
+nix run nixpkgs#nix-diff -- \
+  "$master_drv" "$current_drv" \
+  --skip-already-compared --color auto --context 1
+```
+
+This compares the dependency graph and generated configuration, not the final
+store closures. It works from a different architecture because evaluation is
+not execution: an `aarch64-darwin` machine can inspect an `x86_64-linux` or
+`aarch64-linux` derivation, but it cannot build that closure without a suitable
+builder. Use `nix store diff-closures` only after both system outputs have been
+realized; it compares resulting closures and therefore does require builds.
+
 ## Installation
 
 - [Desktop installation and Secure Boot](hosts/desktop/README.md)

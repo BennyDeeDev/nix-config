@@ -10,7 +10,6 @@ let
     inherit dgop dms dms-plugin-registry;
   };
   fonts = import ./fonts.nix;
-  graphical = import ./graphical.nix;
   gnomeKeyring = import ./gnome-keyring.nix;
   gnomeDisks = import ./gnome-disks.nix;
   ghostty = import ./ghostty.nix;
@@ -24,24 +23,29 @@ let
   zsa = import ./zsa.nix;
 in
 {
-  nixos =
-    { pkgs, ... }:
-    {
-      imports = [
-        apps.nixos
-        dmsFeature.nixos
-        graphical.nixos
-        gnomeKeyring.nixos
-        gnomeDisks.nixos
-        input.nixos
-        nautilus.nixos
-        niri.nixos
-        shares.nixos
-        studioDisplay.nixos
-        xdg.nixos
-        zsa.nixos
-      ];
+  nixos = {
+    hardware.graphics = {
+      enable = true;
+      enable32Bit = true;
     };
+
+    programs.dconf.enable = true;
+    security.polkit.enable = true;
+
+    imports = [
+      apps.nixos
+      dmsFeature.nixos
+      gnomeKeyring.nixos
+      gnomeDisks.nixos
+      input.nixos
+      nautilus.nixos
+      niri.nixos
+      shares.nixos
+      studioDisplay.nixos
+      xdg.nixos
+      zsa.nixos
+    ];
+  };
 
   inherit (apps) darwin;
 

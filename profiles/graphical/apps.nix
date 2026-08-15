@@ -33,7 +33,7 @@
       brave.enable = true;
       google-chrome.enable = true;
       keepassxc.enable = true;
-      obs-studio.enable = true;
+      obs-studio.enable = pkgs.stdenv.isLinux;
       swappy.enable = pkgs.stdenv.isLinux;
     };
 
