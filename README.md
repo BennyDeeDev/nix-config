@@ -137,6 +137,17 @@ Keep singleton paths dotted:
 programs.helix.enable = true;
 ```
 
+### Configuration Style
+
+Prefer the application's native configuration format when configuration is
+substantial or likely to grow. For example, use a real Lua file for Neovim
+instead of encoding the configuration through Nix attrset hacks.
+
+Prefer `config.lib.file.mkOutOfStoreSymlink` for configuration files that need
+to remain editable at runtime, especially when theme switches or other live
+changes are expected. Link those files from the mutable dotfiles checkout
+instead of copying them into the Nix store.
+
 ## Validation
 
 Format the Nix tree and verify that formatting is clean:
