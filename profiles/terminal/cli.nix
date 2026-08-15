@@ -18,57 +18,44 @@
           ignoreDups = true;
           ignoreSpace = true;
         };
-        initContent = ''
-          # File system
-          if command -v eza &> /dev/null; then
-            alias ls='eza -lh --group-directories-first --icons=auto'
-            alias lsa='ls -a'
-            alias lt='eza --tree --level=2 --long --icons --git'
-            alias lta='lt -a'
-          fi
+        shellAliases = {
+          ls = "eza -lh --group-directories-first --icons=auto";
+          lsa = "ls -a";
+          lt = "eza --tree --level=2 --long --icons --git";
+          lta = "lt -a";
+          cat = "bat";
+          ff = "fzf --preview 'bat --style=numbers --color=always {}'";
+          ".." = "cd ..";
+          "..." = "cd ../..";
+          "...." = "cd ../../..";
+        };
+        initContent = lib.mkOrder 1300 ''
+          zd() {
+            if (( $# == 0 )); then
+              builtin cd ~
+            elif [[ -d "$1" ]]; then
+              builtin cd -- "$1"
+            else
+              z "$@" && printf '\U000F17A9 ' && pwd ||
+                print -u2 "Error: Directory not found"
+            fi
+          }
 
-          if command -v bat &> /dev/null; then
-            alias cat='bat'
-          fi
+          alias cd=zd
 
-          alias ff="fzf --preview 'bat --style=numbers --color=always {}'"
-
-          if command -v zoxide &> /dev/null; then
-            alias cd="zd"
-            zd() {
-              if [ $# -eq 0 ]; then
-                builtin cd ~ && return
-              elif [ -d "$1" ]; then
-                builtin cd "$1"
-              else
-                z "$@" && printf "\U000F17A9 " && pwd || echo "Error: Directory not found"
-              fi
-            }
-          fi
-
-          # Directories
-          alias ..='cd ..'
-          alias ...='cd ../..'
-          alias ....='cd ../../..'
-
-          autoload -U up-line-or-beginning-search
-          autoload -U down-line-or-beginning-search
+          autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
           zle -N up-line-or-beginning-search
           zle -N down-line-or-beginning-search
-          bindkey "^[[A" up-line-or-beginning-search
-          bindkey "^[OA" up-line-or-beginning-search
-          bindkey "^[[B" down-line-or-beginning-search
-          bindkey "^[OB" down-line-or-beginning-search
+          bindkey '^[[A' up-line-or-beginning-search
+          bindkey '^[OA' up-line-or-beginning-search
+          bindkey '^[[B' down-line-or-beginning-search
+          bindkey '^[OB' down-line-or-beginning-search
 
-          bindkey "^[[1;5C" forward-word
-          bindkey "^[[1;5D" backward-word
-
-          bindkey "^[[H" beginning-of-line
-          bindkey "^[[F" end-of-line
-
-          bindkey "^[[3~" delete-char
-
-          [[ $TERM != "linux" ]] && eval "$(starship init zsh)"
+          bindkey '^[[1;5C' forward-word
+          bindkey '^[[1;5D' backward-word
+          bindkey '^[[H' beginning-of-line
+          bindkey '^[[F' end-of-line
+          bindkey '^[[3~' delete-char
         '';
       };
 
@@ -76,7 +63,7 @@
 
       programs.starship = {
         enable = true;
-        enableZshIntegration = false;
+        enableZshIntegration = true;
       };
       programs.fzf = {
         enable = true;
@@ -94,7 +81,11 @@
 
       programs.bat.enable = true;
       programs.btop.enable = true;
-      programs.eza.enable = true;
+      programs.eza = {
+        enable = true;
+        enableZshIntegration = true;
+        icons = "auto";
+      };
       programs.fastfetch.enable = true;
       programs.fd.enable = true;
       programs.jq.enable = true;
