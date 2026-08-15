@@ -15,19 +15,19 @@ let
 in
 {
   nixos = {
-      imports = [
-        audio.nixos
-        bluetooth.nixos
-        boot.nixos
-        btrfs.nixos
-        libvirt.nixos
-        networkmanager.nixos
-        nixos.nixos
-        podman.nixos
-        printing.nixos
-        security.nixos
-      ];
-    };
+    imports = [
+      audio.nixos
+      bluetooth.nixos
+      boot.nixos
+      btrfs.nixos
+      libvirt.nixos
+      networkmanager.nixos
+      nixos.nixos
+      podman.nixos
+      printing.nixos
+      security.nixos
+    ];
+  };
 
   darwin = {
     imports = [

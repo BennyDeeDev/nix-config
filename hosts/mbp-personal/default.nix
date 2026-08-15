@@ -36,28 +36,31 @@ in
     ];
   };
 
-  home-manager.extraSpecialArgs.dotfiles = "/Users/benjaminderksen/Repos/dotfiles";
+  home-manager = {
+    extraSpecialArgs.dotfiles = "/Users/benjaminderksen/Repos/dotfiles";
+    users.benjaminderksen = {
+      imports = [
+        profiles.system.homeManager
+        profiles.terminal.homeManager
+        profiles.graphical.homeManager
+        sops.homeManager
+      ];
+
+      home.stateVersion = "26.05";
+      dotfiles.sops.yubikeyIdentity = "AGE-PLUGIN-YUBIKEY-19TEYVQ5ZLFFEFYSGZHTZ3";
+      programs = {
+        zsh.shellAliases.drs = "sudo darwin-rebuild switch --flake ~/Repos/dotfiles#mbp-personal";
+        git.settings.user = {
+          name = "BennyDeeDev";
+          email = "45900418+BennyDeeDev@users.noreply.github.com";
+        };
+      };
+    };
+  };
 
   users.users.benjaminderksen = {
     name = "benjaminderksen";
     home = "/Users/benjaminderksen";
-  };
-
-  home-manager.users.benjaminderksen = {
-    imports = [
-      profiles.system.homeManager
-      profiles.terminal.homeManager
-      profiles.graphical.homeManager
-      sops.homeManager
-    ];
-
-    home.stateVersion = "26.05";
-    dotfiles.sops.yubikeyIdentity = "AGE-PLUGIN-YUBIKEY-19TEYVQ5ZLFFEFYSGZHTZ3";
-    programs.zsh.shellAliases.drs = "sudo darwin-rebuild switch --flake ~/Repos/dotfiles#mbp-personal";
-    programs.git.settings.user = {
-      name = "BennyDeeDev";
-      email = "45900418+BennyDeeDev@users.noreply.github.com";
-    };
   };
 
   system.stateVersion = 5;

@@ -37,14 +37,16 @@
         boot.supportedFilesystems = [ "cifs" ];
         environment.systemPackages = [ pkgs.cifs-utils ];
 
-        sops.secrets."smb-username" = { };
-        sops.secrets."smb-password" = { };
-        sops.templates."smb-creds" = {
-          content = ''
-            username=${config.sops.placeholder."smb-username"}
-            password=${config.sops.placeholder."smb-password"}
-            domain=${cfg.domain}
-          '';
+        sops = {
+          secrets."smb-username" = { };
+          secrets."smb-password" = { };
+          templates."smb-creds" = {
+            content = ''
+              username=${config.sops.placeholder."smb-username"}
+              password=${config.sops.placeholder."smb-password"}
+              domain=${cfg.domain}
+            '';
+          };
         };
 
         fileSystems = builtins.listToAttrs (

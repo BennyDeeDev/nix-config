@@ -3,8 +3,12 @@
     programs.git = {
       enable = true;
       settings = {
-        init.defaultBranch = "master";
-        pull.rebase = true;
+        init = {
+          defaultBranch = "master";
+        };
+        pull = {
+          rebase = true;
+        };
       };
     };
 

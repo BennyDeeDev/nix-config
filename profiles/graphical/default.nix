@@ -27,21 +27,21 @@ in
   nixos =
     { pkgs, ... }:
     {
-    imports = [
-      apps.nixos
-      dmsFeature.nixos
-      graphical.nixos
-      gnomeKeyring.nixos
-      gnomeDisks.nixos
-      input.nixos
-      nautilus.nixos
-      niri.nixos
-      studioDisplay.nixos
-      xdg.nixos
-      zsa.nixos
-    ];
+      imports = [
+        apps.nixos
+        dmsFeature.nixos
+        graphical.nixos
+        gnomeKeyring.nixos
+        gnomeDisks.nixos
+        input.nixos
+        nautilus.nixos
+        niri.nixos
+        studioDisplay.nixos
+        xdg.nixos
+        zsa.nixos
+      ];
 
-  };
+    };
 
   inherit (apps) darwin;
 

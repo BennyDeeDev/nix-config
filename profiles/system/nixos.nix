@@ -2,8 +2,14 @@
   nixos =
     { ... }:
     {
-      programs.fuse.enable = true;
+      programs = {
+        fuse = {
+          enable = true;
+        };
+        nix-ld = {
+          enable = true;
+        };
+      };
       services.envfs.enable = true;
-      programs.nix-ld.enable = true;
     };
 }

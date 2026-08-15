@@ -19,7 +19,26 @@ in
 
   networking.hostName = "nixos-vm";
 
-  home-manager.extraSpecialArgs.dotfiles = "/home/benjamin/Repos/dotfiles";
+  home-manager = {
+    extraSpecialArgs.dotfiles = "/home/benjamin/Repos/dotfiles";
+    users.benjamin = {
+      imports = [
+        profiles.system.homeManager
+        profiles.terminal.homeManager
+        profiles.graphical.homeManager
+      ];
+
+      home = {
+        username = "benjamin";
+        homeDirectory = "/home/benjamin";
+        stateVersion = "25.11";
+      };
+      programs.git.settings.user = {
+        name = "BennyDeeDev";
+        email = "45900418+BennyDeeDev@users.noreply.github.com";
+      };
+    };
+  };
 
   sops.secrets."benjamin-password" = {
     sopsFile = ../../secrets/common.yaml;
@@ -36,23 +55,9 @@ in
     hashedPasswordFile = config.sops.secrets."benjamin-password".path;
   };
 
-  services.openssh.enable = true;
-  services.spice-vdagentd.enable = true;
-
-  home-manager.users.benjamin = {
-    imports = [
-      profiles.system.homeManager
-      profiles.terminal.homeManager
-      profiles.graphical.homeManager
-    ];
-
-    home.username = "benjamin";
-    home.homeDirectory = "/home/benjamin";
-    home.stateVersion = "25.11";
-    programs.git.settings.user = {
-      name = "BennyDeeDev";
-      email = "45900418+BennyDeeDev@users.noreply.github.com";
-    };
+  services = {
+    openssh.enable = true;
+    spice-vdagentd.enable = true;
   };
 
   system.stateVersion = "25.11";

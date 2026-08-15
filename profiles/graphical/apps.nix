@@ -2,14 +2,13 @@
   nixos =
     { pkgs, ... }:
     {
-    programs = {
-      localsend = {
-        enable = true;
-        openFirewall = true;
+      programs = {
+        localsend = {
+          enable = true;
+          openFirewall = true;
+        };
       };
     };
-
-  };
 
   darwin = {
     homebrew = {

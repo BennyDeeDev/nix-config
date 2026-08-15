@@ -31,7 +31,55 @@ in
 
   networking.hostName = "nixos";
 
-  home-manager.extraSpecialArgs.dotfiles = "/home/benjamin/Repos/dotfiles";
+  home-manager = {
+    extraSpecialArgs.dotfiles = "/home/benjamin/Repos/dotfiles";
+    users.benjamin =
+      { dotfiles, lib, ... }:
+      {
+        imports = [
+          profiles.system.homeManager
+          profiles.terminal.homeManager
+          profiles.graphical.homeManager
+          sops.homeManager
+          gaming.homeManager
+        ];
+
+        home.packages = with pkgs; [
+          keymapp
+        ];
+
+        xdg.configFile."gtk-3.0/bookmarks".text = lib.mkAfter ''
+          file:///mnt/nas/benjamin NAS - Benjamin
+          file:///mnt/nas/homelab NAS - Homelab
+          file:///mnt/nas/ludusavi NAS - Ludusavi
+          file:///mnt/nas/restic NAS - Restic
+        '';
+
+        sops.defaultSopsFile = ../../secrets/desktop.yaml;
+        dotfiles.sops.yubikeyIdentity = "AGE-PLUGIN-YUBIKEY-17Z2J5Q5Z709P64S7VFQZT";
+        home = {
+          username = "benjamin";
+          homeDirectory = "/home/benjamin";
+          stateVersion = "25.11";
+        };
+        programs = {
+          zsh.shellAliases.nrs = "sudo nixos-rebuild switch --flake ${dotfiles}#desktop";
+          git.settings.user = {
+            name = "BennyDeeDev";
+            email = "45900418+BennyDeeDev@users.noreply.github.com";
+          };
+        };
+        xdg.desktopEntries.windows = {
+          name = "Windows";
+          exec = ''${dotfiles}/files/bin/reboot-to "Windows Boot Manager" reboot'';
+          comment = "Reboot to Windows Boot Manager";
+          icon = "system-reboot-symbolic";
+          type = "Application";
+          categories = [ "System" ];
+          settings."X-DesktopNames" = "Windows";
+        };
+      };
+  };
   programs.dank-material-shell.greeter.configHome = "/home/benjamin";
 
   sops = {
@@ -66,25 +114,28 @@ in
     ];
   };
 
-  hardware.cpu.amd.updateMicrocode = true;
-  hardware.enableRedistributableFirmware = true;
-  hardware.amdgpu.initrd.enable = true;
-
-  fileSystems."/mnt/bazzite" = {
-    device = "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_1TB_S7HDNJ0Y413952T-part3";
-    fsType = "btrfs";
-    options = [
-      "rw"
-      "subvol=/home"
-      "relatime"
-      "ssd"
-      "discard=async"
-      "space_cache=v2"
-      "nofail"
-    ];
+  hardware = {
+    cpu.amd.updateMicrocode = true;
+    enableRedistributableFirmware = true;
+    amdgpu.initrd.enable = true;
   };
 
-  fileSystems."/var/log".neededForBoot = true;
+  fileSystems = {
+    "/mnt/bazzite" = {
+      device = "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_1TB_S7HDNJ0Y413952T-part3";
+      fsType = "btrfs";
+      options = [
+        "rw"
+        "subvol=/home"
+        "relatime"
+        "ssd"
+        "discard=async"
+        "space_cache=v2"
+        "nofail"
+      ];
+    };
+    "/var/log".neededForBoot = true;
+  };
 
   environment.systemPackages = [ pkgs.efibootmgr ];
   security.sudo.extraRules = [
@@ -118,47 +169,6 @@ in
       }
     )
   ];
-
-  home-manager.users.benjamin = { dotfiles, lib, ... }: {
-    imports = [
-      profiles.system.homeManager
-      profiles.terminal.homeManager
-      profiles.graphical.homeManager
-      sops.homeManager
-      gaming.homeManager
-    ];
-
-    home.packages = with pkgs; [
-      keymapp
-    ];
-
-    xdg.configFile."gtk-3.0/bookmarks".text = lib.mkAfter ''
-      file:///mnt/nas/benjamin NAS - Benjamin
-      file:///mnt/nas/homelab NAS - Homelab
-      file:///mnt/nas/ludusavi NAS - Ludusavi
-      file:///mnt/nas/restic NAS - Restic
-    '';
-
-    sops.defaultSopsFile = ../../secrets/desktop.yaml;
-    dotfiles.sops.yubikeyIdentity = "AGE-PLUGIN-YUBIKEY-17Z2J5Q5Z709P64S7VFQZT";
-    home.username = "benjamin";
-    home.homeDirectory = "/home/benjamin";
-    home.stateVersion = "25.11";
-    programs.zsh.shellAliases.nrs = "sudo nixos-rebuild switch --flake ${dotfiles}#desktop";
-    programs.git.settings.user = {
-      name = "BennyDeeDev";
-      email = "45900418+BennyDeeDev@users.noreply.github.com";
-    };
-    xdg.desktopEntries.windows = {
-      name = "Windows";
-      exec = ''${dotfiles}/files/bin/reboot-to "Windows Boot Manager" reboot'';
-      comment = "Reboot to Windows Boot Manager";
-      icon = "system-reboot-symbolic";
-      type = "Application";
-      categories = [ "System" ];
-      settings."X-DesktopNames" = "Windows";
-    };
-  };
 
   system.stateVersion = "25.11";
 }

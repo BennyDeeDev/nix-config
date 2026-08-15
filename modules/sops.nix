@@ -18,9 +18,11 @@
       config = {
         users.mutableUsers = false;
 
-        sops.age.keyFile = "/var/lib/sops-nix/key.txt";
-        sops.age.generateKey = true;
-        sops.age.sshKeyPaths = [ ];
+        sops.age = {
+          keyFile = "/var/lib/sops-nix/key.txt";
+          generateKey = true;
+          sshKeyPaths = [ ];
+        };
 
         services.pcscd.enable = cfg.smartcard.enable;
       };
@@ -53,8 +55,10 @@
           yubikey-manager
         ];
 
-        sops.age.keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
-        sops.age.generateKey = true;
+        sops.age = {
+          keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
+          generateKey = true;
+        };
 
         xdg.configFile."sops/age/identity.txt" = {
           text = cfg.yubikeyIdentity;

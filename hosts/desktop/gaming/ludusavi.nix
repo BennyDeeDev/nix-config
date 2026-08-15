@@ -26,23 +26,24 @@
         fi
       '';
 
-      systemd.user.services.ludusavi-backup = {
-        Unit.Description = "Ludusavi backup (NAS sync via Cloud settings)";
-        Service = {
-          Type = "oneshot";
-          ExecStart = "${pkgs.ludusavi}/bin/ludusavi backup --force";
-          ExecStartPost = "${pkgs.ludusavi}/bin/ludusavi cloud upload --force";
+      systemd.user = {
+        services.ludusavi-backup = {
+          Unit.Description = "Ludusavi backup (NAS sync via Cloud settings)";
+          Service = {
+            Type = "oneshot";
+            ExecStart = "${pkgs.ludusavi}/bin/ludusavi backup --force";
+            ExecStartPost = "${pkgs.ludusavi}/bin/ludusavi cloud upload --force";
+          };
         };
-      };
-
-      systemd.user.timers.ludusavi-backup = {
-        Unit.Description = "Run Ludusavi backup on a timer";
-        Timer = {
-          OnCalendar = "*:0/15";
-          Persistent = true;
-          RandomizedDelaySec = "2m";
+        timers.ludusavi-backup = {
+          Unit.Description = "Run Ludusavi backup on a timer";
+          Timer = {
+            OnCalendar = "*:0/15";
+            Persistent = true;
+            RandomizedDelaySec = "2m";
+          };
+          Install.WantedBy = [ "timers.target" ];
         };
-        Install.WantedBy = [ "timers.target" ];
       };
     };
 }
