@@ -1,23 +1,19 @@
 inputs@{
   nixos-hardware,
-  sops-nix,
   ...
 }:
 
 let
   profiles = import ../../profiles inputs;
-  sops = import ../../modules/sops.nix { inherit sops-nix; };
-  pi5 = import ../../modules/pi5.nix { };
-  nas = import ../../modules/nas.nix { };
-  container-backup = import ../../modules/container-backup.nix { };
+  nas = import ../../modules/nas.nix;
+  container-backup = import ../../modules/container-backup.nix;
 in
 { ... }:
 
 {
   imports = [
     profiles.base.nixos
-    sops.nixos
-    pi5.nixos
+    profiles.pi5.nixos
     nas.nixos
     container-backup.nixos
     nixos-hardware.nixosModules.raspberry-pi-5
@@ -26,11 +22,8 @@ in
 
   networking.hostName = "pi5-server";
 
-  # Firewall disabled temporarily
+  # Trusted-LAN appliance: all listening services are intentionally exposed.
   networking.firewall.enable = false;
-
-  virtualisation.podman.enable = true;
-  virtualisation.oci-containers.backend = "podman";
 
   host.nas = {
     shares = [

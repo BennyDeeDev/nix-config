@@ -8,7 +8,7 @@ inputs@{
 let
   profiles = import ../../profiles inputs;
   sops = import ../../modules/sops.nix { inherit sops-nix; };
-  nas = import ../../modules/nas.nix { };
+  nas = import ../../modules/nas.nix;
   gaming = import ./gaming { inherit nix-flatpak; };
 in
 {
@@ -22,7 +22,6 @@ in
     profiles.base.nixos
     profiles.system.nixos
     profiles.graphical.nixos
-    sops.nixos
     nas.nixos
     gaming.nixos
     disko.nixosModules.disko
@@ -85,6 +84,8 @@ in
       "nofail"
     ];
   };
+
+  fileSystems."/var/log".neededForBoot = true;
 
   environment.systemPackages = [ pkgs.efibootmgr ];
   security.sudo.extraRules = [

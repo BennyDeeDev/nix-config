@@ -1,6 +1,9 @@
 { ... }:
 
 {
+  virtualisation.podman.enable = true;
+  virtualisation.oci-containers.backend = "podman";
+
   systemd.tmpfiles.rules = [
     "d /var/lib/homeassistant 0755 root root -"
     "d /var/lib/otbr 0755 root root -"

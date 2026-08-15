@@ -1,20 +1,14 @@
-inputs@{
-  sops-nix,
-  ...
-}:
+inputs:
 
 let
   profiles = import ../profiles inputs;
-  sops = import ../modules/sops.nix { inherit sops-nix; };
-  pi5 = import ../modules/pi5.nix { };
 in
 { modulesPath, ... }:
 
 {
   imports = [
     profiles.base.nixos
-    sops.nixos
-    pi5.nixos
+    profiles.pi5.nixos
     "${modulesPath}/installer/sd-card/sd-image-aarch64.nix"
   ];
 

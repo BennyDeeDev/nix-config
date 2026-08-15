@@ -1,11 +1,7 @@
-inputs@{
-  sops-nix,
-  ...
-}:
+inputs:
 
 let
   profiles = import ../../profiles inputs;
-  sops = import ../../modules/sops.nix { inherit sops-nix; };
 in
 {
   config,
@@ -18,7 +14,6 @@ in
     profiles.base.nixos
     profiles.system.nixos
     profiles.graphical.nixos
-    sops.nixos
     ./hardware-configuration.nix
   ];
 

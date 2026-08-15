@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   nixos =
     { pkgs, config, ... }:
@@ -22,7 +20,7 @@
       };
 
       sops.secrets."benjamin-password" = {
-        sopsFile = ../secrets/common.yaml;
+        sopsFile = ../../secrets/common.yaml;
         neededForUsers = true;
       };
 

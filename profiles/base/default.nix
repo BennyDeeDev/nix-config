@@ -1,6 +1,10 @@
-{ home-manager }:
+{
+  home-manager,
+  sops-nix,
+}:
 
 let
+  sops = import ../../modules/sops.nix { inherit sops-nix; };
   common = {
     nixpkgs.config.allowUnfree = true;
 
@@ -20,6 +24,7 @@ in
     imports = [
       common
       home-manager.nixosModules.home-manager
+      sops.nixos
     ];
 
     time.timeZone = "Europe/Berlin";
