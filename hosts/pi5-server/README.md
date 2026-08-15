@@ -5,14 +5,14 @@ Build the bootstrap SD image, flash it, boot the Pi, then deploy a role
 
 ## Prerequisites (build box)
 
-The build machine must register binfmt for aarch64 so it can execute aarch64
-builders through emulation. On the desktop host this is already set via
+The build machine must register binfmt for aarch64 so it can cross-compile.
+On the desktop host in this repo this is already set via
 `boot.binfmt.emulatedSystems = [ "aarch64-linux" ]` in
 `profiles/system/boot.nix`.
 
 ## Build the bootstrap SD image
 
-From the emulating build box (your desktop):
+From the cross-compile build box (your desktop):
 
 ```bash
 nix build .#images.pi5-bootstrap
@@ -24,19 +24,17 @@ Replace `/dev/sdX` with the SD card device — verify with `lsblk` first.
 
 ## First boot
 
-The bootstrap image intentionally uses the generic SD-image hardware path;
-deployed roles additionally import the Raspberry Pi 5 nixos-hardware module.
-It sets `hostName = "pi5"`, runs sshd with password
+The bootstrap image sets `hostName = "pi5"`, runs sshd with password
 authentication disabled, and provisions the SSH public key from
 `profiles/pi5/default.nix` into the `benjamin` user's `authorized_keys`. SSH in
 from any host holding the matching private key:
 
 ```bash
-ssh benjamin@pi5.fritz.box
+ssh ssh benjamin@pi5.fritz.box
 ```
 
-`benjamin` is in `wheel`; the user password hash comes from
-`secrets/common.yaml` through SOPS.
+`benjamin` is in `wheel`; sudo prompts for the user password (set via
+`/etc/nixos/password-hash` on the host).
 
 ## Sops age key enrollment
 
@@ -56,23 +54,19 @@ sudo nix shell nixpkgs#age -c age-keygen -y /var/lib/sops-nix/key.txt
 ```
 
 Back on your desktop, add the printed `age1...` string to `.sops.yaml` as
-a new anchor (e.g. `- &pi5 age1...`) and append `*pi5` to the recipient lists
-for both `secrets/common.yaml` and `secrets/pi5-server.yaml`. Re-encrypt each
-file separately and commit:
+a new anchor (e.g. `- &pi5 age1...`) and append `*pi5` to the `age:`
+recipients under `secrets/common.yaml`'s `creation_rules`. Then
+re-encrypt the file to the expanded recipient set and commit:
 
 ```sh
 sops updatekeys secrets/common.yaml
-sops updatekeys secrets/pi5-server.yaml
-git add .sops.yaml secrets/common.yaml secrets/pi5-server.yaml
+git add .sops.yaml secrets/common.yaml
 git commit
 ```
 
 ## Deploy a role configuration
 
 First-time role switch (bootstrap still running):
-
-These commands build natively on the Pi through `--build-host`; desktop binfmt
-is only required when building the bootstrap image locally.
 
 ```bash
 nixos-rebuild switch --flake .#pi5-server \
@@ -89,9 +83,6 @@ nixos-rebuild switch --flake .#pi5-server \
   --build-host benjamin@pi5.fritz.box \
   --sudo --ask-sudo-password
 ```
-
-The server is treated as a trusted-LAN appliance and intentionally disables
-the NixOS firewall, exposing every listening service to that network.
 
 ## Flash ZBT-2 to OpenThread firmware (one-time, host-agnostic)
 

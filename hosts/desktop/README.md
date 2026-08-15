@@ -31,37 +31,48 @@ sudo nix --experimental-features "nix-command flakes" run github:nix-community/d
   --mode destroy,format,mount /tmp/dotfiles/hosts/desktop/disko.nix
 ```
 
-**3. Restore the host SOPS key**
+**3. Generate hardware configuration**
 
 ```bash
-sudo install -Dm600 /path/to/desktop-age-key /mnt/var/lib/sops-nix/key.txt
+sudo nixos-generate-config --no-filesystems --root /mnt
+sudo cp /mnt/etc/nixos/hardware-configuration.nix /tmp/dotfiles/hosts/desktop/
 ```
 
-The password hash and NAS credentials are encrypted in `secrets/`. See
-[`secrets/README.md`](../../secrets/README.md) before enrolling a replacement
-host key.
+**4. Set `neededForBoot` on `/var/log`**
 
-**4. Install**
+Open the copied `hardware-configuration.nix` and add `neededForBoot = true;` to
+the `/var/log` filesystem entry:
+
+```nix
+fileSystems."/var/log" = {
+  # ... existing generated content ...
+  neededForBoot = true;
+};
+```
+
+This ensures `/var/log` is mounted before the systemd journal starts, so no
+early boot logs are lost.
+
+**5. Install**
+
+The password hash and NAS credentials are decrypted from `secrets/` by SOPS.
+sops-nix automatically generates the host age key at
+`/var/lib/sops-nix/key.txt` during the first activation; do not create
+`password-hash`, `smb-secrets`, or the key manually. See
+[`secrets/README.md`](../../secrets/README.md) for host-key enrollment if the
+new key is not yet an encrypted-file recipient.
 
 ```bash
 sudo nixos-install --flake /tmp/dotfiles#desktop --root /mnt
 ```
 
-**5. Reboot**
+**6. Reboot**
 
 ```bash
 sudo reboot
 ```
 
-**6. Create the persistent checkout**
-
-The Home Manager configuration intentionally links selected application files
-to this checkout:
-
-```bash
-mkdir -p ~/Repos
-git clone https://github.com/BennyDeeDev/dotfiles ~/Repos/dotfiles
-```
+After first boot, commit the generated `hardware-configuration.nix` to the repo.
 
 ## Identifying the correct drive
 

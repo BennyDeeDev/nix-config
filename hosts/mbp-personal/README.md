@@ -6,15 +6,7 @@
 curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install | sh
 ```
 
-## 2. Clone dotfiles
-
-```sh
-mkdir -p ~/Repos
-nix --extra-experimental-features 'nix-command flakes' shell nixpkgs#git -c \
-  git clone https://github.com/BennyDeeDev/dotfiles ~/Repos/dotfiles
-```
-
-## 3. First switch
+## 2. First switch
 
 ```sh
 sudo nix --extra-experimental-features 'nix-command flakes' \
@@ -40,7 +32,7 @@ Enable it in **System Settings → Privacy & Security → Full Disk Access** for
 the terminal application you use, such as Terminal, Ghostty, or Visual Studio
 Code. Quit and reopen that application afterward, then run the rebuild again.
 
-## 4. Subsequent rebuilds
+## 3. Subsequent rebuilds
 
 ```sh
 darwin-rebuild switch --flake ~/Repos/dotfiles#mbp-personal

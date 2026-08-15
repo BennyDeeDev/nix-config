@@ -43,10 +43,7 @@ One-time per host. Two phases: get an age key onto the host, then extract its pu
 
 ### Phase 1: Bootstrap the age key
 
-The first activation of a configured host generates
-`/var/lib/sops-nix/key.txt` because the active roles declare SOPS secrets. The
-activation initially fails to decrypt them because the new key is not yet a
-recipient. If activation cannot create the key, generate it manually:
+**First host only (fleet bootstrap)**: sops-nix's `generate-age-key` activation script is gated behind `cfg.secrets != {}` (see `modules/sops/default.nix`). With zero secrets declared, it never fires. So the very first host needs manual keygen to break the chicken-and-egg — this happens exactly once across the lifetime of the fleet:
 
 ```
 ssh <host>
@@ -56,6 +53,8 @@ sudo chown root:root /var/lib/sops-nix/key.txt
 sudo chmod 600 /var/lib/sops-nix/key.txt
 ```
 
+**Subsequent hosts**: once `sops.secrets.*` is declared on the host and deployed, `sops.age.generateKey = true` auto-generates `/var/lib/sops-nix/key.txt` on first activation. No manual `age-keygen` needed. The first deploy will fail to decrypt (host's pubkey isn't in `.sops.yaml` yet — expected); the key file IS created during that deploy, so proceed to Phase 2 to extract and enroll.
+
 ### Phase 2: Extract pubkey and enroll
 
 ```
@@ -63,35 +62,15 @@ ssh <host>
 sudo nix shell nixpkgs#age -c age-keygen -y /var/lib/sops-nix/key.txt
 ```
 
-This prints the host's `age1...` public key. Paste it into `.sops.yaml`, add
-the anchor to every creation rule used by the host, and update each encrypted
-file separately:
+This prints the host's `age1...` public key. Paste it into `.sops.yaml` under the matching `&<host>` anchor:
 
 ```
-sops updatekeys secrets/common.yaml
-sops updatekeys secrets/desktop.yaml
+sops updatekeys secrets/common.yaml secrets/desktop.yaml    # run on dev with YubiKey plugged in
 git add .sops.yaml secrets/*.yaml
 git commit
 ```
 
 Redeploy the host. Decryption now succeeds.
-
-Hosts with Home Manager use a second key. After its first activation creates
-`~/.config/sops/age/keys.txt`, extract that public key as the user:
-
-```
-nix shell nixpkgs#age -c age-keygen -y ~/.config/sops/age/keys.txt
-```
-
-Add a separate anchor for this key to every creation rule used by Home Manager
-and run `sops updatekeys` for those files. If activation cannot create the key,
-generate it manually without `sudo`:
-
-```
-mkdir -p ~/.config/sops/age
-nix shell nixpkgs#age -c age-keygen -o ~/.config/sops/age/keys.txt
-chmod 600 ~/.config/sops/age/keys.txt
-```
 
 ## Edit a secret
 
@@ -105,9 +84,32 @@ git add secrets/common.yaml
 git commit
 ```
 
-## YubiKey scope
+## Higher-security variant: desktop decrypts via YubiKey
 
-YubiKeys are edit identities for this repository. System and Home Manager
-activation use standalone age keys so boot-critical `neededForUsers` secrets
-can decrypt non-interactively. Direct YubiKey decryption is not supported by
-this configuration because early activation cannot prompt reliably for a PIN.
+The default config uses each host's standalone age key at `/var/lib/sops-nix/key.txt` for unattended decryption (`sops.age.keyFile + sops.age.generateKey`). For desktop, you can instead require the YubiKey to be present at every rebuild/reboot by overriding `sops.age.keyFile` to point at the age-plugin-yubikey identity. Trade-off: YubiKey must be physically inserted + PIN typed at every decrypt, including boot-time `neededForUsers` (no YubiKey at boot = user creation fails = login impossible). Only worth it for a workstation you sit at and treat as high-security.
+
+### To enable on desktop
+
+In `hosts/desktop/default.nix`, override the shared `sops.age.keyFile` from `modules/sops.nix`:
+
+```nix
+{ pkgs, lib, ... }:
+{
+  sops.age.keyFile = lib.mkForce null;
+  sops.age.generateKey = lib.mkForce false;
+  sops.age.sshKeyPaths = lib.mkForce [];   # already empty, but explicit
+  environment.etc."sops/age/identity.txt".text =
+    "AGE-PLUGIN-YUBIKEY-17Z2J5Q5Z709P64S7VFQZT";
+  environment.systemPackages = [ pkgs.age-plugin-yubikey ];
+  services.pcscd.enable = true;             # already enabled
+  sops.age.keyFile = "/etc/sops/age/identity.txt";   # point at the yubikey identity
+}
+```
+
+Then enroll desktop's YubiKey identity as a recipient in `.sops.yaml` — the `age1yubikey1q...` already listed under `&dev` serves this purpose. No separate recipient needed; the same YubiKey pubkey does double duty as both the admin edit identity AND desktop's decryption identity.
+
+### Operational impact
+
+- `nixos-rebuild switch` on desktop: YubiKey plugged in, PIN typed at activation prompt.
+- `reboot` on desktop: YubiKey must be inserted before boot reaches user-creation phase. Forget → boot fails with "no matching identity found" in the activation log.
+- Lose the YubiKey: desktop can't boot. Recovery requires either a pre-registered second YubiKey or a rollback to the standalone-keyFile configuration on desktop.
