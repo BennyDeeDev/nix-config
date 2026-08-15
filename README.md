@@ -1,3 +1,5 @@
+## Nix Config
+
 This Nix config is a black hole for wasted time, water, and money: personal costs are probably over 500 EUR because I am a lazy fuck and couldn't be bothered, while the unsubsidized AI bill is over 9000 (Vegeta meme goes here); the machinery's water use has real environmental costs, multiple people in Africa died of thirst because AI used all the water for this, and it just keeps going. The robot tells me it doesn't want to stop.
 
 The Dendritic pattern is already an overengineered piece of software for people who don't know how to import things, but apparently it was not extravagant enough for me. I looked at it and thought, "I can waste even more time than this," so I created my own version.
