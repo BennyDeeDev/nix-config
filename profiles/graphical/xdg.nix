@@ -1,4 +1,13 @@
 {
+  nixos =
+    { pkgs, ... }:
+    {
+      xdg.portal = {
+        enable = true;
+        extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+      };
+    };
+
   homeManager =
     {
       config,
@@ -39,6 +48,8 @@
       xdg.mimeApps = {
         enable = true;
         defaultApplications = {
+          "inode/directory" = "org.gnome.Nautilus.desktop";
+          
           "text/html" = "brave-browser.desktop";
           "x-scheme-handler/http" = "brave-browser.desktop";
           "x-scheme-handler/https" = "brave-browser.desktop";

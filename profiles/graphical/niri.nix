@@ -5,13 +5,14 @@
       package = pkgs.niri;
     };
     services.displayManager.defaultSession = "niri";
-    services.udev.packages = [ pkgs.asdbctl ];
   };
 
   homeManager =
     { lib, pkgs, ... }:
     lib.mkIf pkgs.stdenv.isLinux {
-      home.packages = [ pkgs.asdbctl ];
+      home.packages = [
+        pkgs.xwayland-satellite
+      ];
 
       xdg.configFile = {
         "niri/config.kdl".source = ../../files/niri/config.kdl;

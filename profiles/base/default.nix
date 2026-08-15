@@ -7,6 +7,7 @@ let
   sops = import ../../modules/sops.nix { inherit sops-nix; };
   common = {
     nixpkgs.config.allowUnfree = true;
+    nix.settings.auto-optimise-store = true;
 
     nix.settings.experimental-features = [
       "nix-command"
@@ -26,6 +27,14 @@ in
       home-manager.nixosModules.home-manager
       sops.nixos
     ];
+
+    nix.gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 30d";
+    };
+
+    zramSwap.enable = true;
 
     time.timeZone = "Europe/Berlin";
 
@@ -47,6 +56,7 @@ in
     programs.zsh.enable = true;
     programs.git.enable = true;
     programs.vim.enable = true;
+    programs.vim.defaultEditor = true;
   };
 
   darwin = {
@@ -54,5 +64,16 @@ in
       common
       home-manager.darwinModules.home-manager
     ];
+
+    nix.gc = {
+      automatic = true;
+      # nix-darwin uses launchd calendar fields instead of NixOS's systemd calendar string.
+      interval = {
+        Weekday = 1;
+        Hour = 0;
+        Minute = 0;
+      };
+      options = "--delete-older-than 30d";
+    };
   };
 }

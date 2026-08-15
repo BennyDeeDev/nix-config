@@ -202,10 +202,5 @@
         sudo -u ${config.system.primaryUser} \
           /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
       '';
-
-      homebrew = {
-        enable = true;
-        onActivation.cleanup = "uninstall";
-      };
     };
 }

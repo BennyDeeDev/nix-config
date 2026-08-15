@@ -51,33 +51,6 @@
           alias ...='cd ../..'
           alias ....='cd ../../..'
 
-          __cd_and_exec() {
-            local dirs=(~/Repos)
-
-            local selected
-            selected=$(find "''${dirs[@]}" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | fzf)
-
-            [[ -z "$selected" ]] && {
-              echo "No directory selected."
-              return 0
-            }
-
-            cd "$selected" || return 1
-            [[ $# -gt 0 ]] && "$@"
-          }
-
-          ccd() { __cd_and_exec "$@"; }
-
-          prettierrc() {
-            cat > .prettierrc << 'EOF'
-          {
-            "printWidth": 80,
-            "proseWrap": "always",
-            "trailingComma": "none"
-          }
-          EOF
-          }
-
           autoload -U up-line-or-beginning-search
           autoload -U down-line-or-beginning-search
           zle -N up-line-or-beginning-search

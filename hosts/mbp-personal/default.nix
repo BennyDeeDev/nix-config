@@ -20,8 +20,6 @@ in
 
   system.primaryUser = "benjaminderksen";
 
-  security.pam.services.sudo_local.touchIdAuth = true;
-
   homebrew = {
     brews = [ "mas" ];
     masApps = {

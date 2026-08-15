@@ -8,13 +8,13 @@ let
   btrfs = import ./btrfs.nix;
   libvirt = import ./libvirt.nix;
   networkmanager = import ./networkmanager.nix;
+  nixos = import ./nixos.nix;
   podman = import ./podman.nix;
   printing = import ./printing.nix;
+  security = import ./security.nix;
 in
 {
-  nixos =
-    { pkgs, ... }:
-    {
+  nixos = {
       imports = [
         audio.nixos
         bluetooth.nixos
@@ -22,30 +22,19 @@ in
         btrfs.nixos
         libvirt.nixos
         networkmanager.nixos
+        nixos.nixos
         podman.nixos
         printing.nixos
+        security.nixos
       ];
-
-      nix.settings.auto-optimise-store = true;
-      nix.gc = {
-        automatic = true;
-        dates = "weekly";
-        options = "--delete-older-than 30d";
-      };
-
-      programs.fuse.enable = true;
-      programs.vim.defaultEditor = true;
-      zramSwap.enable = true;
-      services.envfs.enable = true;
-      programs.nix-ld.enable = true;
-
-      environment.systemPackages = [ pkgs.gcc ];
-      security.sudo.extraConfig = ''
-        Defaults timestamp_type=tty,timestamp_timeout=-1
-      '';
     };
 
-  inherit (darwin) darwin;
+  darwin = {
+    imports = [
+      darwin.darwin
+      security.darwin
+    ];
+  };
 
   homeManager = {
     imports = [
