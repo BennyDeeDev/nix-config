@@ -39,6 +39,8 @@
       };
 
       home.packages = with pkgs; [
+        zig
+        prettier
         nixd
         lua-language-server
         zls
@@ -52,12 +54,18 @@
         gdtoolkit_4
         csharpier
 
-        fd
-        ripgrep
-        bat
         # Delta is retained for editor Git previews rather than as a general CLI dependency.
         delta
       ];
+
+      programs.zsh = {
+        shellAliases.n = "nvim";
+        initContent = ''
+          ncd() { __cd_and_exec nvim .; }
+        '';
+      };
+
+      home.sessionVariables.SUDO_EDITOR = "nvim";
 
       xdg.configFile."nvim/init.lua".source =
         config.lib.file.mkOutOfStoreSymlink "${dotfiles}/files/neovim/init.lua";

@@ -100,24 +100,6 @@ local vjust = Terminal:new({
 		end
 	end,
 })
-local claude = Terminal:new({
-	cmd = "claude --continue 2>/dev/null || claude",
-	direction = "float",
-	hidden = true,
-	close_on_exit = false,
-})
-local vclaude = Terminal:new({
-	cmd = "claude --continue 2>/dev/null || claude",
-	direction = "vertical",
-	hidden = true,
-	close_on_exit = false,
-	on_close = function()
-		if _G.NoNeckPain and not _G.NoNeckPain.state.enabled then
-			vim.cmd("NoNeckPain")
-		end
-	end,
-})
-
 neckpain.setup({
 	width = 120,
 	autocmds = {
@@ -220,13 +202,6 @@ end)
 vim.keymap.set("n", "<leader>G", function()
 	vlazygit:toggle(vim.o.columns * 0.5)
 end)
-vim.keymap.set("n", "<leader>c", function()
-	claude:toggle()
-end)
-vim.keymap.set("n", "<leader>C", function()
-	vclaude:toggle(vim.o.columns * 0.5)
-end)
-
 vim.keymap.set("n", "<leader>s", "<cmd>FzfLua git_status<cr>")
 
 vim.keymap.set("n", "<leader>Y", ":%y+<cr>")

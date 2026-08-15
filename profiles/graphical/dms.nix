@@ -19,7 +19,6 @@
     programs.dank-material-shell.greeter = {
       enable = true;
       compositor.name = "niri";
-      configHome = "/home/benjamin";
     };
   };
 
@@ -61,7 +60,6 @@
           enableDynamicTheming = false;
           enableAudioWavelength = true;
           enableCalendarEvents = true;
-          plugins = { };
         };
       };
     };

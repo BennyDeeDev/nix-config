@@ -1,7 +1,4 @@
 binds {
-    // `include` DMS binds above your own to let your binds override defaults.
-    // include "~/.config/niri/dms/binds.kdl"
-
     // === Application Launchers ===
     Ctrl+Shift+T { spawn "ghostty"; }
     Ctrl+Shift+F { spawn "nautilus"; }

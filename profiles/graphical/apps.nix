@@ -28,11 +28,9 @@
         gnome-weather
         loupe
         papers
-        lldb
-        aseprite
-        godot-mono
-        dotnet-sdk
         rpi-imager
+        simple-scan
+        system-config-printer
       ]
     );
   };

@@ -18,5 +18,11 @@
       enable = true;
       enableZshIntegration = true;
     };
+
+    programs.zsh.shellAliases = {
+      g = "git";
+      gcm = "git commit -m";
+      gcam = "git commit -a -m";
+    };
   };
 }

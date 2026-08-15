@@ -10,5 +10,6 @@
     };
 
     home.sessionVariables.OPENCODE_MODEL = "openai/gpt-5.6-luna#xhigh";
+    programs.zsh.shellAliases.o = "OPENCODE_ENABLE_EXA=1 opencode";
   };
 }

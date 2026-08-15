@@ -33,10 +33,6 @@
           file://${config.home.homeDirectory}/Pictures
           file://${config.home.homeDirectory}/Repos
           file://${config.home.homeDirectory}/Backups
-          file:///mnt/nas/benjamin NAS - Benjamin
-          file:///mnt/nas/homelab NAS - Homelab
-          file:///mnt/nas/ludusavi NAS - Ludusavi
-          file:///mnt/nas/restic NAS - Restic
         '';
       };
 

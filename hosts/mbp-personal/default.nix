@@ -13,6 +13,7 @@ in
   imports = [
     profiles.base.darwin
     profiles.system.darwin
+    profiles.graphical.darwin
   ];
 
   nixpkgs.hostPlatform = "aarch64-darwin";

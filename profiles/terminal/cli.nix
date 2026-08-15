@@ -51,16 +51,6 @@
           alias ...='cd ../..'
           alias ....='cd ../../..'
 
-          # Tools
-          alias o='OPENCODE_ENABLE_EXA=1 opencode'
-          alias d='podman'
-          alias n='nvim'
-
-          # Git
-          alias g='git'
-          alias gcm='git commit -m'
-          alias gcam='git commit -a -m'
-
           __cd_and_exec() {
             local dirs=(~/Repos)
 
@@ -77,33 +67,6 @@
           }
 
           ccd() { __cd_and_exec "$@"; }
-          ncd() { __cd_and_exec nvim .; }
-          vcd() { __cd_and_exec code -r .; }
-          vcda() { __cd_and_exec code --add .; }
-
-          vcdr() {
-            local folders selected full_path
-            folders=$(code --status 2>/dev/null | grep -oP '(?<=Folder \().*(?=\):)')
-
-            [[ -z "$folders" ]] && {
-              echo "No workspace folders found."
-              return 0
-            }
-
-            selected=$(echo "$folders" | fzf) || return 0
-            [[ -z "$selected" ]] && return 0
-
-            if [[ -d "$HOME/Repos/$selected" ]]; then
-              full_path="$HOME/Repos/$selected"
-            elif [[ -d "$HOME/.config/$selected" ]]; then
-              full_path="$HOME/.config/$selected"
-            else
-              echo "Could not find: $selected"
-              return 1
-            fi
-
-            code --remove "$full_path"
-          }
 
           prettierrc() {
             cat > .prettierrc << 'EOF'
@@ -111,23 +74,6 @@
             "printWidth": 80,
             "proseWrap": "always",
             "trailingComma": "none"
-          }
-          EOF
-          }
-
-          tasksjson() {
-            mkdir -p .vscode
-            cat > .vscode/tasks.json << 'EOF'
-          {
-            "version": "2.0.0",
-            "tasks": [
-              {
-                "label": "My Placeholder Task",
-                "type": "shell",
-                "command": "echo 'Hello, World!'",
-                "problemMatcher": []
-              }
-            ]
           }
           EOF
           }
@@ -182,7 +128,6 @@
       programs.ripgrep.enable = true;
 
       home.sessionVariables = {
-        SUDO_EDITOR = "nvim";
         BAT_THEME = "ansi";
         BAT_PAGER = "";
         DOTFILES = "${config.home.homeDirectory}/Repos/dotfiles";

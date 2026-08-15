@@ -205,31 +205,7 @@
 
       homebrew = {
         enable = true;
-        taps = [
-          {
-            name = "TheBoredTeam/boring-notch";
-            trusted = true;
-          }
-        ];
-        casks = [
-          "boring-notch"
-          "ghostty"
-          "stats"
-        ];
         onActivation.cleanup = "uninstall";
       };
-    };
-
-  homeManager =
-    { lib, pkgs, ... }:
-    {
-      home.packages = lib.optionals pkgs.stdenv.isDarwin (
-        with pkgs;
-        [
-          appcleaner
-          caffeine
-          the-unarchiver
-        ]
-      );
     };
 }

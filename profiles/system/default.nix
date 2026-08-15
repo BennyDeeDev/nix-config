@@ -49,7 +49,6 @@ in
 
   homeManager = {
     imports = [
-      darwin.homeManager
       audio.homeManager
       bluetooth.homeManager
       networkmanager.homeManager

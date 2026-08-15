@@ -6,11 +6,13 @@
 
 let
   apps = import ./apps.nix;
+  darwin = import ./darwin.nix;
   dmsFeature = import ./dms.nix {
     inherit dgop dms dms-plugin-registry;
   };
   fonts = import ./fonts.nix;
   ghostty = import ./ghostty.nix;
+  godot = import ./godot.nix;
   input = import ./input.nix;
   nautilus = import ./nautilus.nix;
   niri = import ./niri.nix;
@@ -30,12 +32,16 @@ in
     ];
   };
 
+  inherit (darwin) darwin;
+
   homeManager = {
     imports = [
       apps.homeManager
+      darwin.homeManager
       dmsFeature.homeManager
       fonts.homeManager
       ghostty.homeManager
+      godot.homeManager
       input.homeManager
       nautilus.homeManager
       niri.homeManager

@@ -33,6 +33,7 @@ in
   networking.hostName = "nixos";
 
   home-manager.extraSpecialArgs.dotfiles = "/home/benjamin/Repos/dotfiles";
+  programs.dank-material-shell.greeter.configHome = "/home/benjamin";
 
   sops = {
     defaultSopsFile = ../../secrets/desktop.yaml;
@@ -67,8 +68,6 @@ in
   };
 
   hardware.keyboard.zsa.enable = true;
-  services.udev.packages = [ pkgs.asdbctl ];
-
   hardware.cpu.amd.updateMicrocode = true;
   hardware.enableRedistributableFirmware = true;
   hardware.amdgpu.initrd.enable = true;
@@ -120,7 +119,7 @@ in
     )
   ];
 
-  home-manager.users.benjamin = { dotfiles, ... }: {
+  home-manager.users.benjamin = { dotfiles, lib, ... }: {
     imports = [
       profiles.system.homeManager
       profiles.terminal.homeManager
@@ -131,8 +130,15 @@ in
 
     home.packages = with pkgs; [
       keymapp
-      asdbctl
     ];
+
+    xdg.configFile."gtk-3.0/bookmarks".text = lib.mkAfter ''
+      file:///mnt/nas/benjamin NAS - Benjamin
+      file:///mnt/nas/homelab NAS - Homelab
+      file:///mnt/nas/ludusavi NAS - Ludusavi
+      file:///mnt/nas/restic NAS - Restic
+    '';
+
     sops.defaultSopsFile = ../../secrets/desktop.yaml;
     dotfiles.sops.yubikeyIdentity = "AGE-PLUGIN-YUBIKEY-17Z2J5Q5Z709P64S7VFQZT";
     home.username = "benjamin";
