@@ -25,7 +25,7 @@ in
   # Trusted-LAN appliance: all listening services are intentionally exposed.
   networking.firewall.enable = false;
 
-  host.nas = {
+  my.nas = {
     shares = [
       "Homelab"
       "Restic"

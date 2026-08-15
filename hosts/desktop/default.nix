@@ -56,7 +56,7 @@ in
         '';
 
         sops.defaultSopsFile = ../../secrets/desktop.yaml;
-        dotfiles.sops.yubikeyIdentity = "AGE-PLUGIN-YUBIKEY-17Z2J5Q5Z709P64S7VFQZT";
+        my.sops.yubikeyIdentity = "AGE-PLUGIN-YUBIKEY-17Z2J5Q5Z709P64S7VFQZT";
         home = {
           username = "benjamin";
           homeDirectory = "/home/benjamin";
@@ -90,7 +90,7 @@ in
     };
   };
 
-  dotfiles.sops.smartcard.enable = true;
+  my.sops.smartcard.enable = true;
 
   users.users.benjamin = {
     isNormalUser = true;
@@ -103,7 +103,7 @@ in
     hashedPasswordFile = config.sops.secrets."benjamin-password".path;
   };
 
-  host.nas = {
+  my.nas = {
     uid = 1000;
     gid = 100;
     shares = [

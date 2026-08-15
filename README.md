@@ -137,6 +137,13 @@ Keep singleton paths dotted:
 programs.helix.enable = true;
 ```
 
+### Custom Module Options
+
+Options declared by modules in this repository use the `my.*` namespace to
+separate them from built-in NixOS, nix-darwin, Home Manager, and upstream
+module options. Current examples include `my.sops`, `my.nas`, and
+`my.containerBackups`.
+
 ### Configuration Style
 
 Prefer the application's native configuration format when configuration is

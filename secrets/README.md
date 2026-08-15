@@ -35,7 +35,7 @@ age-plugin-yubikey --generate
 
 Output (save both):
 - `age1yubikey1...` line — the recipient (public key). Goes into `.sops.yaml`.
-- `AGE-PLUGIN-YUBIKEY-1...` line — the identity (pointer to slot, NOT the private key). Set it as `dotfiles.sops.yubikeyIdentity` in the host configuration.
+- `AGE-PLUGIN-YUBIKEY-1...` line — the identity (pointer to slot, NOT the private key). Set it as `my.sops.yubikeyIdentity` in the host configuration.
 
 ## Enroll a new host
 

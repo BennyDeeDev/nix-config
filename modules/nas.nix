@@ -7,10 +7,10 @@
       ...
     }:
     let
-      cfg = config.host.nas;
+      cfg = config.my.nas;
     in
     {
-      options.host.nas = {
+      options.my.nas = {
         server = lib.mkOption {
           type = lib.types.str;
           default = "192.168.178.254";

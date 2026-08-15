@@ -8,10 +8,10 @@
       ...
     }:
     let
-      cfg = config.host.containerBackups;
+      cfg = config.my.containerBackups;
     in
     {
-      options.host.containerBackups = lib.mkOption {
+      options.my.containerBackups = lib.mkOption {
         type = lib.types.attrsOf (
           lib.types.submodule (
             { name, ... }:

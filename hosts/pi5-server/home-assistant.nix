@@ -65,7 +65,7 @@
 
   networking.firewall.allowedTCPPorts = [ 8123 ];
 
-  host.containerBackups = {
+  my.containerBackups = {
     ha = {
       repository = "/mnt/nas/restic/ha-restic";
       paths = [ "/var/lib/homeassistant" ];

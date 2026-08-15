@@ -4,12 +4,12 @@
   nixos =
     { config, lib, ... }:
     let
-      cfg = config.dotfiles.sops;
+      cfg = config.my.sops;
     in
     {
       imports = [ sops-nix.nixosModules.sops ];
 
-      options.dotfiles.sops.smartcard.enable = lib.mkOption {
+      options.my.sops.smartcard.enable = lib.mkOption {
         type = lib.types.bool;
         default = false;
         description = "Enable PC/SC smartcard support for SOPS.";
@@ -36,13 +36,13 @@
       ...
     }:
     let
-      cfg = config.dotfiles.sops;
+      cfg = config.my.sops;
       identityFile = "${config.xdg.configHome}/sops/age/identity.txt";
     in
     {
       imports = [ sops-nix.homeManagerModules.sops ];
 
-      options.dotfiles.sops.yubikeyIdentity = lib.mkOption {
+      options.my.sops.yubikeyIdentity = lib.mkOption {
         type = lib.types.str;
         description = "age-plugin-yubikey identity pointer.";
       };
