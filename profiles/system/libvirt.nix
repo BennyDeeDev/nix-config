@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   nixos = { ... }: {
     virtualisation.libvirtd.enable = true;

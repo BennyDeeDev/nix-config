@@ -1,11 +1,7 @@
-{ ... }:
-
 {
   darwin =
     { config, lib, ... }:
     {
-      nixpkgs.config.allowUnfree = true;
-
       system.defaults = {
         NSGlobalDomain = {
           AppleIconAppearanceTheme = "RegularAutomatic";

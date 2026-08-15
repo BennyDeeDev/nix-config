@@ -1,20 +1,10 @@
-{
-  dgop,
-  dms,
-  dms-plugin-registry,
-  home-manager,
-  lanzaboote,
+inputs@{
   sops-nix,
   ...
 }:
 
 let
-  baseProfile = import ../../profiles/base { inherit home-manager; };
-  systemProfile = import ../../profiles/system { inherit lanzaboote; };
-  terminalProfile = import ../../profiles/terminal { };
-  graphicalProfile = import ../../profiles/graphical {
-    inherit dgop dms dms-plugin-registry;
-  };
+  profiles = import ../../profiles inputs;
   sops = import ../../modules/sops.nix { inherit sops-nix; };
 in
 {
@@ -25,14 +15,16 @@ in
 
 {
   imports = [
-    baseProfile.nixos
-    systemProfile.nixos
-    graphicalProfile.nixos
+    profiles.base.nixos
+    profiles.system.nixos
+    profiles.graphical.nixos
     sops.nixos
     ./hardware-configuration.nix
   ];
 
   networking.hostName = "nixos-vm";
+
+  home-manager.extraSpecialArgs.dotfiles = "/home/benjamin/Repos/dotfiles";
 
   sops.secrets."benjamin-password" = {
     sopsFile = ../../secrets/common.yaml;
@@ -54,9 +46,9 @@ in
 
   home-manager.users.benjamin = {
     imports = [
-      systemProfile.homeManager
-      terminalProfile.homeManager
-      graphicalProfile.homeManager
+      profiles.system.homeManager
+      profiles.terminal.homeManager
+      profiles.graphical.homeManager
     ];
 
     home.username = "benjamin";

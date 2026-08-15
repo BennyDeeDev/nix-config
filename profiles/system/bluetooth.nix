@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   nixos = { ... }: {
     hardware.bluetooth = {

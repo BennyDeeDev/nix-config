@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   homeManager = { ... }: {
     programs.git = {

@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   nixos = { ... }: {
     services.xserver.xkb = {

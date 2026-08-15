@@ -1,33 +1,22 @@
-{
-  dgop,
-  dms,
-  dms-plugin-registry,
-  home-manager,
-  lanzaboote,
+inputs@{
   sops-nix,
   ...
 }:
 
 let
-  baseProfile = import ../../profiles/base { inherit home-manager; };
-  systemProfile = import ../../profiles/system { inherit lanzaboote; };
-  terminalProfile = import ../../profiles/terminal { };
-  graphicalProfile = import ../../profiles/graphical {
-    inherit dgop dms dms-plugin-registry;
-  };
+  profiles = import ../../profiles inputs;
   sops = import ../../modules/sops.nix { inherit sops-nix; };
 in
 { ... }:
 
 {
   imports = [
-    baseProfile.darwin
-    systemProfile.darwin
+    profiles.base.darwin
+    profiles.system.darwin
   ];
 
   nixpkgs.hostPlatform = "aarch64-darwin";
 
-  nix.settings.experimental-features = "nix-command flakes";
   system.primaryUser = "benjaminderksen";
 
   security.pam.services.sudo_local.touchIdAuth = true;
@@ -57,9 +46,9 @@ in
 
   home-manager.users.benjaminderksen = {
     imports = [
-      systemProfile.homeManager
-      terminalProfile.homeManager
-      graphicalProfile.homeManager
+      profiles.system.homeManager
+      profiles.terminal.homeManager
+      profiles.graphical.homeManager
       sops.homeManager
     ];
 

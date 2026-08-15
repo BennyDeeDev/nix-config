@@ -1,11 +1,9 @@
-{ ... }:
-
 let
-  cli = import ./cli.nix { };
-  git = import ./git.nix { };
-  helix = import ./helix.nix { };
-  neovim = import ./neovim.nix { };
-  opencode = import ./opencode.nix { };
+  cli = import ./cli.nix;
+  git = import ./git.nix;
+  helix = import ./helix.nix;
+  neovim = import ./neovim.nix;
+  opencode = import ./opencode.nix;
 in
 {
   homeManager = {

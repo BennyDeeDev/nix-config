@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   homeManager = { pkgs, lib, ... }: {
     programs.ghostty = {

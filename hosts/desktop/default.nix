@@ -1,23 +1,12 @@
-{
-  dgop,
+inputs@{
   disko,
-  dms,
-  dms-plugin-registry,
-  home-manager,
-  lanzaboote,
   nix-flatpak,
   sops-nix,
   ...
 }:
 
 let
-  baseProfile = import ../../profiles/base { inherit home-manager; };
-  systemProfile = import ../../profiles/system { inherit lanzaboote; };
-  terminalProfile = import ../../profiles/terminal { };
-  graphicalProfile = import ../../profiles/graphical {
-    inherit dgop dms dms-plugin-registry;
-  };
-
+  profiles = import ../../profiles inputs;
   sops = import ../../modules/sops.nix { inherit sops-nix; };
   nas = import ../../modules/nas.nix { };
   gaming = import ./gaming { inherit nix-flatpak; };
@@ -30,9 +19,9 @@ in
 
 {
   imports = [
-    baseProfile.nixos
-    systemProfile.nixos
-    graphicalProfile.nixos
+    profiles.base.nixos
+    profiles.system.nixos
+    profiles.graphical.nixos
     sops.nixos
     nas.nixos
     gaming.nixos
@@ -42,6 +31,8 @@ in
   ];
 
   networking.hostName = "nixos";
+
+  home-manager.extraSpecialArgs.dotfiles = "/home/benjamin/Repos/dotfiles";
 
   sops = {
     defaultSopsFile = ../../secrets/desktop.yaml;
@@ -131,9 +122,9 @@ in
 
   home-manager.users.benjamin = { dotfiles, ... }: {
     imports = [
-      systemProfile.homeManager
-      terminalProfile.homeManager
-      graphicalProfile.homeManager
+      profiles.system.homeManager
+      profiles.terminal.homeManager
+      profiles.graphical.homeManager
       sops.homeManager
       gaming.homeManager
     ];
