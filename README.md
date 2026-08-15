@@ -1,4 +1,14 @@
-# Dotfiles
+# Overengineered, time-swallowing, absolutely unmaintainable AI-written Nix config (use at your own risk; I wouldn't trade it for anything else)
+
+This Nix config is a black hole for wasted time, water, and money: personal costs are probably over 500 EUR because I am a lazy fuck and couldn't be bothered, while the unsubsidized AI bill is over 9000 (Vegeta meme goes here); the machinery's water use has real environmental costs, multiple people in Africa died of thirst because AI used all the water for this, and it just keeps going. The robot tells me it doesn't want to stop.
+
+The Dendritic pattern is already an overengineered piece of software for people who don't know how to import things, but apparently it was not extravagant enough for me. I looked at it and thought, "I can waste even more time than this," so I created my own version.
+
+My wife keeps wondering where all the money goes and why I am not walking the dog, because I am eternally tied to maintaining this Nix config: it has to be "pure". Have you heard of Nix Impermanence? It is even more pure, so pure it is like Dana White's bald head.
+
+Right as I am writing this, I am dropping into the next Nix rabbit hole. It is in my blood to fight the everlasting impurity of applications, so we write yet another wrapper in Nix.
+
+## Boring Documentation for Lunatics and Robots
 
 NixOS, nix-darwin, and Home Manager configuration for the machines below.
 
@@ -72,10 +82,6 @@ SSH, filesystem, and lifecycle policy.
 hardware, disks, users, state versions, secret files, and unique mounts or
 applications.
 
-`hosts/desktop/gaming/` is intentionally private to the physical desktop.
-`hosts/vm/` is retained but has no flake output until the ext4 VM is rebuilt
-with the Btrfs system-profile contract.
-
 ## Feature Granularity
 
 A configured feature owns a dedicated file. Features may be combined only
@@ -84,19 +90,7 @@ within one clear usage domain.
 
 Dedicated files are appropriate when a feature owns settings, payloads,
 plugins, services, timers, permissions, firewall policy, coordinated
-dependencies, activation behavior, or an independent lifecycle. For example,
-`nautilus.nix` owns Nautilus together with GVFS, GNOME Disks, thumbnailing,
-and directory MIME handling.
-
-Simple GUI applications live in `apps.nix`. Simple command-line programs and
-shell integrations live in `cli.nix`. Helix has its own file because its
-editor configuration is expected to grow.
-
-Application payloads intentionally use mixed update semantics. DMS, Neovim,
-VS Code, and gaming files link to the mutable checkout for rapid iteration;
-Niri, Ghostty, OpenCode, and other system-owned files are store-backed and
-require a rebuild. Workstation hosts therefore require the repository at
-`~/Repos/dotfiles`.
+dependencies, activation behavior, or an independent lifecycle.
 
 Prefer upstream `programs.*`, `services.*`, and `virtualisation.*` modules
 when they represent the intended behavior. When a direct package is retained
@@ -117,6 +111,31 @@ A terminal Home Manager feature uses the same facet shape:
 
 Add the facet explicitly to `profiles/terminal/default.nix`. Machine-specific
 behavior remains explicit in the relevant host.
+
+### Attrset Style
+
+Collapse a dotted path only when that path has multiple child keys in the same
+attrset. For example:
+
+```nix
+programs.vim.enable = true;
+programs.vim.defaultEditor = true;
+```
+
+becomes:
+
+```nix
+programs.vim = {
+  enable = true;
+  defaultEditor = true;
+};
+```
+
+Keep singleton paths dotted:
+
+```nix
+programs.helix.enable = true;
+```
 
 ## Validation
 
