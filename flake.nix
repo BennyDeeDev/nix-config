@@ -42,106 +42,43 @@
   };
 
   outputs =
-    {
+    inputs@{
       nixpkgs,
       nixpkgs-unstable,
-      home-manager,
       darwin,
-      disko,
-      lanzaboote,
-      sops-nix,
-      nixos-hardware,
-      nix-flatpak,
-      dms,
-      dgop,
-      dms-plugin-registry,
       ...
     }:
-    let
-      dotfiles = "/home/benjamin/Repos/dotfiles";
-      homeManagerModule = {
-        home-manager.useGlobalPkgs = true;
-        home-manager.useUserPackages = true;
-        home-manager.sharedModules = [ sops-nix.homeManagerModules.sops ];
-        home-manager.extraSpecialArgs = {
-          inherit
-            dms
-            dgop
-            dms-plugin-registry
-            nix-flatpak
-            dotfiles
-            ;
-        };
-      };
-      darwinHomeManagerModule = {
-        home-manager.useGlobalPkgs = true;
-        home-manager.useUserPackages = true;
-        home-manager.sharedModules = [ sops-nix.homeManagerModules.sops ];
-        home-manager.extraSpecialArgs = {
-          inherit
-            dms
-            dgop
-            dms-plugin-registry
-            nix-flatpak
-            ;
-        };
-      };
-    in
     {
+      formatter = nixpkgs.lib.genAttrs [
+        "aarch64-darwin"
+        "aarch64-linux"
+        "x86_64-darwin"
+        "x86_64-linux"
+      ] (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
+
       nixosConfigurations = {
-        vm = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          modules = [
-            nix-flatpak.nixosModules.nix-flatpak
-            home-manager.nixosModules.home-manager
-            homeManagerModule
-            ./nix/hosts/vm
-          ];
-        };
         desktop = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          modules = [
-            disko.nixosModules.disko
-            lanzaboote.nixosModules.lanzaboote
-            sops-nix.nixosModules.sops
-            nix-flatpak.nixosModules.nix-flatpak
-            home-manager.nixosModules.home-manager
-            homeManagerModule
-            ./nix/hosts/desktop
-          ];
+          modules = [ (import ./hosts/desktop inputs) ];
         };
         pi5-server = nixpkgs-unstable.lib.nixosSystem {
           system = "aarch64-linux";
-          modules = [
-            nixos-hardware.nixosModules.raspberry-pi-5
-            sops-nix.nixosModules.sops
-            ./nix/hosts/pi5-server
-          ];
+          modules = [ (import ./hosts/pi5-server inputs) ];
         };
         pi5-kiosk = nixpkgs-unstable.lib.nixosSystem {
           system = "aarch64-linux";
-          modules = [
-            nixos-hardware.nixosModules.raspberry-pi-5
-            sops-nix.nixosModules.sops
-            ./nix/hosts/pi5-kiosk
-          ];
+          modules = [ (import ./hosts/pi5-kiosk inputs) ];
         };
       };
+
+      darwinConfigurations.mbp-personal = darwin.lib.darwinSystem {
+        modules = [ (import ./hosts/mbp-personal inputs) ];
+      };
+
       images.pi5-bootstrap =
         (nixpkgs-unstable.lib.nixosSystem {
           system = "aarch64-linux";
-          modules = [
-            sops-nix.nixosModules.sops
-            ./nix/images/pi5-bootstrap.nix
-          ];
+          modules = [ (import ./images/pi5-bootstrap.nix inputs) ];
         }).config.system.build.sdImage;
-
-      darwinConfigurations.mbp-personal = darwin.lib.darwinSystem {
-        modules = [
-          home-manager.darwinModules.home-manager
-          darwinHomeManagerModule
-          ./nix/hosts/mbp-personal/default.nix
-        ];
-      };
     };
 }

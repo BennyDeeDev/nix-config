@@ -1,7 +1,0 @@
-# Editor used by CLI
-export SUDO_EDITOR="$EDITOR"
-export BAT_THEME=ansi
-export BAT_PAGER=""
-
-# Dotfiles bin in PATH
-export DOTFILES="$HOME/Repos/dotfiles"

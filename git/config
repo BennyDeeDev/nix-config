@@ -1,9 +1,0 @@
-[user]
-	name = BennyDeeDev
-	email = 45900418+BennyDeeDev@users.noreply.github.com
-
-[init]
-	defaultBranch = master
-
-[pull]
-	rebase = true
