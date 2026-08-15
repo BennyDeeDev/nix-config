@@ -41,7 +41,6 @@ in
         xdg.nixos
         zsa.nixos
       ];
-
     };
 
   inherit (apps) darwin;
