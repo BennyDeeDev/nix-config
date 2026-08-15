@@ -48,13 +48,7 @@ in
 
       home.stateVersion = "26.05";
       my.sops.yubikeyIdentity = "AGE-PLUGIN-YUBIKEY-19TEYVQ5ZLFFEFYSGZHTZ3";
-      programs = {
-        zsh.shellAliases.drs = "sudo darwin-rebuild switch --flake ~/Repos/dotfiles#mbp-personal";
-        git.settings.user = {
-          name = "BennyDeeDev";
-          email = "45900418+BennyDeeDev@users.noreply.github.com";
-        };
-      };
+      programs.zsh.shellAliases.drs = "sudo darwin-rebuild switch --flake ~/Repos/dotfiles#mbp-personal";
     };
   };
 

@@ -60,10 +60,6 @@ in
         };
         programs = {
           zsh.shellAliases.nrs = "sudo nixos-rebuild switch --flake ${dotfiles}#desktop";
-          git.settings.user = {
-            name = "BennyDeeDev";
-            email = "45900418+BennyDeeDev@users.noreply.github.com";
-          };
         };
         xdg.desktopEntries.windows = {
           name = "Windows";

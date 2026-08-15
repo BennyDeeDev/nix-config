@@ -9,6 +9,10 @@
         pull = {
           rebase = true;
         };
+        user = {
+          name = "BennyDeeDev";
+          email = "45900418+BennyDeeDev@users.noreply.github.com";
+        };
       };
     };
 

@@ -33,10 +33,6 @@ in
         homeDirectory = "/home/benjamin";
         stateVersion = "25.11";
       };
-      programs.git.settings.user = {
-        name = "BennyDeeDev";
-        email = "45900418+BennyDeeDev@users.noreply.github.com";
-      };
     };
   };
 
