@@ -1,12 +1,14 @@
 ## Nix Config
 
-This Nix config is a black hole for wasted time, water, and money: personal costs are probably over 500 EUR because I am a lazy fuck and couldn't be bothered, while the unsubsidized AI bill is over 9000 (Vegeta meme goes here); the machinery's water use has real environmental costs, multiple people in Africa died of thirst because AI used all the water for this, and it just keeps going. The robot tells me it doesn't want to stop.
+This Nix config is a black hole for wasted time, water, and money: personal costs are probably over 500 EUR because I am a lazy fuck and couldn't be bothered, while the unsubsidized AI bill is over 9000; multiple people in Africa died of thirst because AI used all the water for this, and it just keeps going. The robot tells me it doesn't want to stop.
 
 The Dendritic pattern is already an overengineered piece of software for people who don't know how to import things, but apparently it was not extravagant enough for me. I looked at it and thought, "I can waste even more time than this," so I created my own version.
 
 My wife keeps wondering where all the money goes and why I am not walking the dog, because I am eternally tied to maintaining this Nix config: it has to be "pure". Have you heard of Nix Impermanence? It is even more pure, so pure it is like Dana White's bald head.
 
 Right as I am writing this, I am dropping into the next Nix rabbit hole. It is in my blood to fight the everlasting impurity of applications, so we write yet another wrapper in Nix.
+
+![vegeta-over-9000-gif](https://media1.tenor.com/m/VXpt02jFlIIAAAAd/it%27s-over-9000-it%27s.gif)   
 
 ## Boring Documentation for Lunatics and Robots
 
