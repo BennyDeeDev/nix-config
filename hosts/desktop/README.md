@@ -31,29 +31,7 @@ sudo nix --experimental-features "nix-command flakes" run github:nix-community/d
   --mode destroy,format,mount /tmp/dotfiles/hosts/desktop/disko.nix
 ```
 
-**3. Generate hardware configuration**
-
-```bash
-sudo nixos-generate-config --no-filesystems --root /mnt
-sudo cp /mnt/etc/nixos/hardware-configuration.nix /tmp/dotfiles/hosts/desktop/
-```
-
-**4. Set `neededForBoot` on `/var/log`**
-
-Open the copied `hardware-configuration.nix` and add `neededForBoot = true;` to
-the `/var/log` filesystem entry:
-
-```nix
-fileSystems."/var/log" = {
-  # ... existing generated content ...
-  neededForBoot = true;
-};
-```
-
-This ensures `/var/log` is mounted before the systemd journal starts, so no
-early boot logs are lost.
-
-**5. Restore the host SOPS key**
+**3. Restore the host SOPS key**
 
 ```bash
 sudo install -Dm600 /path/to/desktop-age-key /mnt/var/lib/sops-nix/key.txt
@@ -63,19 +41,27 @@ The password hash and NAS credentials are encrypted in `secrets/`. See
 [`secrets/README.md`](../../secrets/README.md) before enrolling a replacement
 host key.
 
-**6. Install**
+**4. Install**
 
 ```bash
 sudo nixos-install --flake /tmp/dotfiles#desktop --root /mnt
 ```
 
-**7. Reboot**
+**5. Reboot**
 
 ```bash
 sudo reboot
 ```
 
-After first boot, commit the generated `hardware-configuration.nix` to the repo.
+**6. Create the persistent checkout**
+
+The Home Manager configuration intentionally links selected application files
+to this checkout:
+
+```bash
+mkdir -p ~/Repos
+git clone https://github.com/BennyDeeDev/dotfiles ~/Repos/dotfiles
+```
 
 ## Identifying the correct drive
 

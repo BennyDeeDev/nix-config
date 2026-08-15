@@ -24,14 +24,16 @@ secrets/     Encrypted SOPS documents
 ```
 
 Profile composition is explicit. `base` provides the universal foundation;
-`system`, `terminal`, and `graphical` are complete opinionated bundles. Each
-host selects whole profiles and reusable host modules:
+`system`, `terminal`, `graphical`, and `pi5` are complete opinionated bundles.
+`profiles/default.nix` is their explicit catalog; each host selects whole
+profiles and reusable host modules:
 
 ```text
 profiles/base/default.nix
 profiles/system/default.nix
 profiles/terminal/default.nix
 profiles/graphical/default.nix
+profiles/pi5/default.nix
 ```
 
 Feature files return the module-system facets they support:
@@ -63,7 +65,8 @@ the corresponding opinionated macOS system policy.
 
 `profiles/terminal/` contains the shell, command-line tools, and terminal
 editors. `profiles/graphical/` contains the Niri desktop, GUI applications,
-fonts, and desktop integration.
+fonts, and desktop integration. `profiles/pi5/` contains the shared Pi user,
+SSH, filesystem, and lifecycle policy.
 
 `hosts/<name>/` selects whole profiles and contains machine facts: hostnames,
 hardware, disks, users, state versions, secret files, and unique mounts or
@@ -89,6 +92,12 @@ Simple GUI applications live in `apps.nix`. Simple command-line programs and
 shell integrations live in `cli.nix`. Helix has its own file because its
 editor configuration is expected to grow.
 
+Application payloads intentionally use mixed update semantics. DMS, Neovim,
+VS Code, and gaming files link to the mutable checkout for rapid iteration;
+Niri, Ghostty, OpenCode, and other system-owned files are store-backed and
+require a rebuild. Workstation hosts therefore require the repository at
+`~/Repos/dotfiles`.
+
 Prefer upstream `programs.*`, `services.*`, and `virtualisation.*` modules
 when they represent the intended behavior. When a direct package is retained
 despite a related module, leave a short comment explaining the decision.
@@ -99,8 +108,6 @@ A terminal Home Manager feature uses the same facet shape:
 
 ```nix
 # profiles/terminal/example.nix
-{ ... }:
-
 {
   homeManager = {
     programs.example.enable = true;
@@ -126,6 +133,7 @@ Evaluate the active outputs without activating them:
 nix eval --raw .#darwinConfigurations.mbp-personal.system.drvPath
 nix eval --raw .#nixosConfigurations.desktop.config.system.build.toplevel.drvPath
 nix eval --raw .#nixosConfigurations.pi5-server.config.system.build.toplevel.drvPath
+nix eval --raw .#nixosConfigurations.pi5-kiosk.config.system.build.toplevel.drvPath
 nix eval --raw .#images.pi5-bootstrap.drvPath
 ```
 
