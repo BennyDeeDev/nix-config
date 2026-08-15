@@ -32,7 +32,8 @@ let
       programs.home-manager.enable = true;
     };
   };
-  compose = name:
+  compose =
+    name:
     let
       imports =
         lib.optional (builtins.hasAttr name systemProfile) systemProfile.${name}

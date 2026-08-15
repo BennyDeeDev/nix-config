@@ -1,7 +1,8 @@
 { ... }:
 
 {
-  nixos = { ... }:
+  nixos =
+    { ... }:
     {
       programs.gamescope = {
         enable = true;

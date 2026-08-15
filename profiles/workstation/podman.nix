@@ -1,4 +1,4 @@
-{ inputs, repoRoot, ... }:
+{ ... }:
 
 {
   nixos = { ... }: {

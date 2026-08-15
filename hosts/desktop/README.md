@@ -10,7 +10,7 @@ Installs NixOS on the Samsung SSD 990 PRO with Heatsink (serial
 | ESP       | 1G        | vfat       | `/boot` |
 | root      | remainder | btrfs      | —       |
 
-Btrfs subvolumes: `/rootfs` → `/`, `/home` → `/home`, `/log` → `/var/log`,
+Btrfs subvolumes: `/root` → `/`, `/home` → `/home`, `/log` → `/var/log`,
 `/nix` → `/nix`
 
 ## Install steps
@@ -53,23 +53,15 @@ fileSystems."/var/log" = {
 This ensures `/var/log` is mounted before the systemd journal starts, so no
 early boot logs are lost.
 
-**5. Set password**
+**5. Restore the host SOPS key**
 
 ```bash
-sudo mkdir -p /mnt/etc/nixos
-echo -n "yourpassword" | mkpasswd -m sha-512 -s | sudo tee /mnt/etc/nixos/password-hash
+sudo install -Dm600 /path/to/desktop-age-key /mnt/var/lib/sops-nix/key.txt
 ```
 
-**5a. Set NAS credentials**
-
-```bash
-sudo tee /mnt/etc/nixos/smb-secrets <<EOF
-username=Benjamin
-password=YOUR_NAS_PASSWORD
-domain=WORKGROUP
-EOF
-sudo chmod 600 /mnt/etc/nixos/smb-secrets
-```
+The password hash and NAS credentials are encrypted in `secrets/`. See
+[`secrets/README.md`](../../secrets/README.md) before enrolling a replacement
+host key.
 
 **6. Install**
 
@@ -96,7 +88,11 @@ lsblk -o NAME,SIZE,SERIAL
 
 ## Secure Boot (Lanzaboote)
 
-Signs all boot artifacts and enforces Secure Boot via `profiles/workstation/boot.nix`. Keys auto-generate at `/var/lib/sbctl` and auto-enroll alongside Microsoft's UEFI CA on the first Setup-Mode boot. The steps below are the manual BIOS flow required on MSI boards to actually flip Secure Boot on.
+Signs all boot artifacts and enforces Secure Boot via
+`profiles/workstation/boot.nix`. Keys auto-generate at `/var/lib/sbctl` and
+auto-enroll alongside Microsoft's UEFI CA on the first Setup-Mode boot. The
+steps below are the manual BIOS flow required on MSI boards to actually flip
+Secure Boot on.
 
 **1. Rebuild and install the signed bootloader**
 

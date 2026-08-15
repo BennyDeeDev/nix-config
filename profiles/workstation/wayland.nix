@@ -17,7 +17,8 @@
     };
   };
 
-  homeManager = { lib, pkgs, ... }:
+  homeManager =
+    { lib, pkgs, ... }:
     lib.mkIf pkgs.stdenv.isLinux {
       home.packages = with pkgs; [
         wl-clipboard

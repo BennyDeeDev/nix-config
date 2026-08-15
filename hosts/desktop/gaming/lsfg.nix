@@ -15,8 +15,7 @@
     {
       home.packages = [ pkgs.lsfg-vk ];
 
-      home.file.".config/lsfg-vk/conf.toml".source =
-        config.lib.file.mkOutOfStoreSymlink configFile;
+      home.file.".config/lsfg-vk/conf.toml".source = config.lib.file.mkOutOfStoreSymlink configFile;
 
       services.flatpak.overrides."io.github.ryubing.Ryujinx".Context.filesystems = [
         "${dotfiles}/files/gaming/lsfg-vk:ro"

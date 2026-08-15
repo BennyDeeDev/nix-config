@@ -1,7 +1,8 @@
 { ... }:
 
 {
-  homeManager = { ... }:
+  homeManager =
+    { ... }:
     {
       programs.mangohud.enable = true;
     };

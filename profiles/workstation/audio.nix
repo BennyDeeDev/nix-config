@@ -13,17 +13,18 @@
     };
   };
 
-  homeManager = { lib, pkgs, ... }:
+  homeManager =
+    { lib, pkgs, ... }:
     lib.mkIf pkgs.stdenv.isLinux {
-    home.packages = with pkgs; [
-      # playerctl is called directly; no playerctld daemon is needed.
-      playerctl
-      wiremix
+      home.packages = with pkgs; [
+        # playerctl is called directly; no playerctld daemon is needed.
+        playerctl
+        wiremix
 
-      # These PulseAudio clients control PipeWire through its compatibility layer.
-      pamixer
-      pavucontrol
-      pulseaudio
-    ];
+        # These PulseAudio clients control PipeWire through its compatibility layer.
+        pamixer
+        pavucontrol
+        pulseaudio
+      ];
     };
 }

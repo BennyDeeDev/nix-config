@@ -30,11 +30,11 @@ authentication disabled, and provisions the SSH public key from
 from any host holding the matching private key:
 
 ```bash
-ssh ssh benjamin@pi5.fritz.box
+ssh benjamin@pi5.fritz.box
 ```
 
-`benjamin` is in `wheel`; sudo prompts for the user password (set via
-`/etc/nixos/password-hash` on the host).
+`benjamin` is in `wheel`; the user password hash comes from
+`secrets/common.yaml` through SOPS.
 
 ## Sops age key enrollment
 

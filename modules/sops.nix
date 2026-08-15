@@ -27,7 +27,12 @@
     };
 
   homeManager =
-    { config, lib, pkgs, ... }:
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
     let
       cfg = config.dotfiles.sops;
       identityFile = "${config.xdg.configHome}/sops/age/identity.txt";
@@ -51,7 +56,7 @@
         sops.age.keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
         sops.age.generateKey = true;
 
-        home.file."${config.xdg.configHome}/sops/age/identity.txt" = {
+        xdg.configFile."sops/age/identity.txt" = {
           text = cfg.yubikeyIdentity;
         };
 

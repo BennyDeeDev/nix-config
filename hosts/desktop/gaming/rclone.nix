@@ -1,7 +1,8 @@
 { ... }:
 
 {
-  homeManager = { config, ... }:
+  homeManager =
+    { config, ... }:
     {
       programs.rclone.enable = true;
 

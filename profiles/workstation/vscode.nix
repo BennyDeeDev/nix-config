@@ -1,18 +1,17 @@
 { repoRoot, ... }:
 
 {
-  homeManager = {
-    pkgs,
-    lib,
-    config,
-    dotfiles,
-    ...
-  }:
+  homeManager =
+    {
+      pkgs,
+      lib,
+      config,
+      dotfiles,
+      ...
+    }:
     let
       userDir =
-        if pkgs.stdenv.isLinux
-        then ".config/Code/User"
-        else "Library/Application Support/Code/User";
+        if pkgs.stdenv.isLinux then ".config/Code/User" else "Library/Application Support/Code/User";
     in
     {
       programs.vscode = {
@@ -30,7 +29,8 @@
       home.file = {
         "${userDir}/settings.json".source =
           config.lib.file.mkOutOfStoreSymlink "${dotfiles}/files/vscode/settings.json";
-      } // lib.optionalAttrs pkgs.stdenv.isLinux {
+      }
+      // lib.optionalAttrs pkgs.stdenv.isLinux {
         "${userDir}/keybindings.json".source =
           config.lib.file.mkOutOfStoreSymlink "${dotfiles}/files/vscode/keybindings-linux.json";
       };

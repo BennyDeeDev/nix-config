@@ -65,9 +65,7 @@
       };
       moduleSet = import ./modules profileArgs;
       systemProfile = import ./profiles/system profileArgs;
-      workstationProfile = import ./profiles/workstation (
-        profileArgs // { inherit systemProfile; }
-      );
+      workstationProfile = import ./profiles/workstation (profileArgs // { inherit systemProfile; });
       specialArgs = {
         inherit
           inputs
@@ -79,6 +77,13 @@
       };
     in
     {
+      formatter = nixpkgs.lib.genAttrs [
+        "aarch64-darwin"
+        "aarch64-linux"
+        "x86_64-darwin"
+        "x86_64-linux"
+      ] (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
+
       nixosConfigurations = {
         vm = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";

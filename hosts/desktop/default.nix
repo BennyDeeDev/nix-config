@@ -105,18 +105,23 @@ in
   ];
 
   services.displayManager.sessionPackages = [
-    (pkgs.makeDesktopItem {
-      name = "windows";
-      destination = "/share/wayland-sessions";
-      desktopName = "Windows";
-      comment = "Reboot to Windows Boot Manager";
-      exec = ''/home/benjamin/Repos/dotfiles/files/bin/reboot-to "Windows Boot Manager" reboot'';
-      type = "Application";
-      categories = [ "System" ];
-      extraConfig = {
-        "X-DesktopNames" = "Windows";
-      };
-    } // { providedSessions = [ "windows" ]; })
+    (
+      pkgs.makeDesktopItem {
+        name = "windows";
+        destination = "/share/wayland-sessions";
+        desktopName = "Windows";
+        comment = "Reboot to Windows Boot Manager";
+        exec = ''/home/benjamin/Repos/dotfiles/files/bin/reboot-to "Windows Boot Manager" reboot'';
+        type = "Application";
+        categories = [ "System" ];
+        extraConfig = {
+          "X-DesktopNames" = "Windows";
+        };
+      }
+      // {
+        providedSessions = [ "windows" ];
+      }
+    )
   ];
 
   home-manager.users.benjamin = { dotfiles, ... }: {

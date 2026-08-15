@@ -2,7 +2,12 @@
 
 {
   homeManager =
-    { config, lib, pkgs, ... }:
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
     lib.mkIf pkgs.stdenv.isLinux {
       xdg.userDirs = {
         enable = true;
@@ -54,21 +59,21 @@
 
           "application/pdf" = "org.gnome.Papers.desktop";
 
-          "video/mp4" = "io.github.celluloid_player.Celluloid.desktop";
-          "video/x-msvideo" = "io.github.celluloid_player.Celluloid.desktop";
-          "video/x-matroska" = "io.github.celluloid_player.Celluloid.desktop";
-          "video/x-flv" = "io.github.celluloid_player.Celluloid.desktop";
-          "video/x-ms-wmv" = "io.github.celluloid_player.Celluloid.desktop";
-          "video/mpeg" = "io.github.celluloid_player.Celluloid.desktop";
-          "video/ogg" = "io.github.celluloid_player.Celluloid.desktop";
-          "video/webm" = "io.github.celluloid_player.Celluloid.desktop";
-          "video/quicktime" = "io.github.celluloid_player.Celluloid.desktop";
-          "video/3gpp" = "io.github.celluloid_player.Celluloid.desktop";
-          "video/3gpp2" = "io.github.celluloid_player.Celluloid.desktop";
-          "video/x-ms-asf" = "io.github.celluloid_player.Celluloid.desktop";
-          "video/x-ogm+ogg" = "io.github.celluloid_player.Celluloid.desktop";
-          "video/x-theora+ogg" = "io.github.celluloid_player.Celluloid.desktop";
-          "application/ogg" = "io.github.celluloid_player.Celluloid.desktop";
+          "video/mp4" = "org.gnome.Showtime.desktop";
+          "video/x-msvideo" = "org.gnome.Showtime.desktop";
+          "video/x-matroska" = "org.gnome.Showtime.desktop";
+          "video/x-flv" = "org.gnome.Showtime.desktop";
+          "video/x-ms-wmv" = "org.gnome.Showtime.desktop";
+          "video/mpeg" = "org.gnome.Showtime.desktop";
+          "video/ogg" = "org.gnome.Showtime.desktop";
+          "video/webm" = "org.gnome.Showtime.desktop";
+          "video/quicktime" = "org.gnome.Showtime.desktop";
+          "video/3gpp" = "org.gnome.Showtime.desktop";
+          "video/3gpp2" = "org.gnome.Showtime.desktop";
+          "video/x-ms-asf" = "org.gnome.Showtime.desktop";
+          "video/x-ogm+ogg" = "org.gnome.Showtime.desktop";
+          "video/x-theora+ogg" = "org.gnome.Showtime.desktop";
+          "application/ogg" = "org.gnome.Showtime.desktop";
 
           "text/plain" = "code.desktop";
           "text/x-makefile" = "code.desktop";

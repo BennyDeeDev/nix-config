@@ -1,7 +1,8 @@
 { ... }:
 
 {
-  nixos = { pkgs, ... }:
+  nixos =
+    { pkgs, ... }:
     {
       programs.steam = {
         enable = true;

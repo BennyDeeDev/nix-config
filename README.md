@@ -106,6 +106,13 @@ machine-specific behavior in an explicit module or host instead.
 
 ## Validation
 
+Format the Nix tree and verify that formatting is clean:
+
+```sh
+nix fmt
+nix fmt -- --ci
+```
+
 Evaluate the active outputs without activating them:
 
 ```sh

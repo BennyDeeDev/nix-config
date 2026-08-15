@@ -1,8 +1,18 @@
 { inputs, ... }:
 
 {
-  nixos = { ... }: {
-    services.displayManager.dms-greeter = {
+  nixos = {
+    imports = [ inputs.dms.nixosModules.greeter ];
+
+    users.groups.greeter = { };
+    users.users.greeter = {
+      isSystemUser = true;
+      group = "greeter";
+    };
+
+    services.greetd.settings.default_session.user = "greeter";
+
+    programs.dank-material-shell.greeter = {
       enable = true;
       compositor.name = "niri";
       configHome = "/home/benjamin";
@@ -20,7 +30,7 @@
     {
       imports = [
         inputs.dms.homeModules.dank-material-shell
-        inputs.dms-plugin-registry.nixosModules.default
+        inputs.dms-plugin-registry.homeModules.default
       ];
 
       config = lib.mkIf pkgs.stdenv.isLinux {

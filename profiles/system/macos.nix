@@ -234,10 +234,13 @@
   homeManager =
     { lib, pkgs, ... }:
     {
-      home.packages = lib.optionals pkgs.stdenv.isDarwin (with pkgs; [
-        appcleaner
-        caffeine
-        the-unarchiver
-      ]);
+      home.packages = lib.optionals pkgs.stdenv.isDarwin (
+        with pkgs;
+        [
+          appcleaner
+          caffeine
+          the-unarchiver
+        ]
+      );
     };
 }

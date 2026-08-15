@@ -5,7 +5,8 @@
     networking.networkmanager.enable = true;
   };
 
-  homeManager = { lib, pkgs, ... }:
+  homeManager =
+    { lib, pkgs, ... }:
     lib.mkIf pkgs.stdenv.isLinux {
       home.packages = [ pkgs.impala ];
     };

@@ -9,7 +9,8 @@
     };
   };
 
-  homeManager = { lib, pkgs, ... }:
+  homeManager =
+    { lib, pkgs, ... }:
     lib.mkIf pkgs.stdenv.isLinux {
       home.pointerCursor = {
         gtk.enable = true;

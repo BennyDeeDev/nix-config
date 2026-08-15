@@ -14,9 +14,12 @@
     programs.keepassxc.enable = true;
     programs.obs-studio.enable = pkgs.stdenv.isLinux;
 
-    home.packages =
-      [ pkgs.spotify ]
-      ++ lib.optionals pkgs.stdenv.isLinux (with pkgs; [
+    home.packages = [
+      pkgs.spotify
+    ]
+    ++ lib.optionals pkgs.stdenv.isLinux (
+      with pkgs;
+      [
         libnotify
         showtime
         gnome-calculator
@@ -32,6 +35,7 @@
         godot-mono
         dotnet-sdk
         rpi-imager
-      ]);
+      ]
+    );
   };
 }

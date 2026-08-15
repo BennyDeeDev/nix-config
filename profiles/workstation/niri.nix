@@ -1,4 +1,4 @@
-{ inputs, repoRoot, ... }:
+{ repoRoot, ... }:
 
 {
   nixos = { pkgs, ... }: {
@@ -9,7 +9,8 @@
     services.displayManager.defaultSession = "niri";
   };
 
-  homeManager = { lib, pkgs, ... }:
+  homeManager =
+    { lib, pkgs, ... }:
     lib.mkIf pkgs.stdenv.isLinux {
       xdg.configFile = {
         "niri/config.kdl".source = repoRoot + "/files/niri/config.kdl";

@@ -1,7 +1,6 @@
 {
-  "currentThemeName": "custom",
+  "currentThemeName": "catppuccin",
   "currentThemeCategory": "registry",
-  "customThemeFile": "/home/benjamin/.config/DankMaterialShell/themes/catppuccin/theme.json",
   "registryThemeVariants": {
     "catppuccin": {
       "dark": {

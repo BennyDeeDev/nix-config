@@ -1,7 +1,8 @@
 { ... }:
 
 {
-  homeManager = { config, dotfiles, ... }:
+  homeManager =
+    { config, dotfiles, ... }:
     {
       services.flatpak.packages = [ "com.usebottles.bottles" ];
 

@@ -1,13 +1,15 @@
 { inputs, ... }:
 
 {
-  nixos = { ... }:
+  nixos =
+    { ... }:
     {
       imports = [ inputs.nix-flatpak.nixosModules.nix-flatpak ];
       services.flatpak.enable = true;
     };
 
-  homeManager = { ... }:
+  homeManager =
+    { ... }:
     {
       imports = [ inputs.nix-flatpak.homeManagerModules.nix-flatpak ];
       services.flatpak.update.auto = {
