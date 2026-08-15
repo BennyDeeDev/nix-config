@@ -1,4 +1,4 @@
-{ repoRoot, ... }:
+{ ... }:
 
 {
   nixos =
@@ -22,7 +22,7 @@
       };
 
       sops.secrets."benjamin-password" = {
-        sopsFile = repoRoot + "/secrets/common.yaml";
+        sopsFile = ../secrets/common.yaml;
         neededForUsers = true;
       };
 

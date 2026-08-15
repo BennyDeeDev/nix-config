@@ -1,26 +1,11 @@
 {
   config,
-  inputs,
-  lib,
-  moduleSet,
   pkgs,
-  repoRoot,
-  workstationProfile,
   ...
 }:
 
-let
-  gaming = import ./gaming {
-    inherit inputs lib repoRoot;
-  };
-in
 {
   imports = [
-    workstationProfile.nixos
-    moduleSet.sops.nixos
-    moduleSet.nas.nixos
-    gaming.nixos
-    inputs.disko.nixosModules.disko
     ./disko.nix
     ./hardware-configuration.nix
   ];
@@ -125,11 +110,6 @@ in
   ];
 
   home-manager.users.benjamin = { dotfiles, ... }: {
-    imports = [
-      workstationProfile.homeManager
-      moduleSet.sops.homeManager
-      gaming.homeManager
-    ];
     home.packages = with pkgs; [
       keymapp
       asdbctl

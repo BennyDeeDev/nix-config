@@ -1,8 +1,12 @@
-{ inputs, ... }:
+{
+  dgop,
+  dms,
+  dms-plugin-registry,
+}:
 
 {
   nixos = {
-    imports = [ inputs.dms.nixosModules.greeter ];
+    imports = [ dms.nixosModules.greeter ];
 
     users.groups.greeter = { };
     users.users.greeter = {
@@ -29,8 +33,8 @@
     }:
     {
       imports = [
-        inputs.dms.homeModules.dank-material-shell
-        inputs.dms-plugin-registry.homeModules.default
+        dms.homeModules.dank-material-shell
+        dms-plugin-registry.homeModules.default
       ];
 
       config = lib.mkIf pkgs.stdenv.isLinux {
@@ -52,7 +56,7 @@
             restartIfChanged = true;
           };
           enableSystemMonitoring = true;
-          dgop.package = inputs.dgop.packages.${pkgs.stdenv.hostPlatform.system}.default;
+          dgop.package = dgop.packages.${pkgs.stdenv.hostPlatform.system}.default;
           enableVPN = false;
           enableDynamicTheming = false;
           enableAudioWavelength = true;

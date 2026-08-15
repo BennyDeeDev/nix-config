@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ sops-nix }:
 
 {
   nixos =
@@ -7,7 +7,7 @@
       cfg = config.dotfiles.sops;
     in
     {
-      imports = [ inputs.sops-nix.nixosModules.sops ];
+      imports = [ sops-nix.nixosModules.sops ];
 
       options.dotfiles.sops.smartcard.enable = lib.mkOption {
         type = lib.types.bool;
@@ -38,7 +38,7 @@
       identityFile = "${config.xdg.configHome}/sops/age/identity.txt";
     in
     {
-      imports = [ inputs.sops-nix.homeManagerModules.sops ];
+      imports = [ sops-nix.homeManagerModules.sops ];
 
       options.dotfiles.sops.yubikeyIdentity = lib.mkOption {
         type = lib.types.str;

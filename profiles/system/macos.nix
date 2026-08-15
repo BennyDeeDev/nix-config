@@ -1,10 +1,10 @@
-{ inputs, ... }:
+{ home-manager }:
 
 {
   darwin =
     { config, lib, ... }:
     {
-      imports = [ inputs.home-manager.darwinModules.home-manager ];
+      imports = [ home-manager.darwinModules.home-manager ];
 
       nixpkgs.config.allowUnfree = true;
 

@@ -1,25 +1,15 @@
 {
   config,
-  moduleSet,
   pkgs,
-  systemProfile,
-  workstationProfile,
   ...
 }:
 
 {
   imports = [
-    systemProfile.nixos
-    moduleSet.sops.nixos
     ./hardware-configuration.nix
   ];
 
-  networking = {
-    hostName = "nixos-vm";
-    networkmanager.enable = true;
-  };
-
-  nixpkgs.config.allowUnfree = true;
+  networking.hostName = "nixos-vm";
 
   boot.loader = {
     systemd-boot.enable = true;
@@ -41,12 +31,10 @@
     hashedPasswordFile = config.sops.secrets."benjamin-password".path;
   };
 
-  programs.hyprland.enable = true;
   services.openssh.enable = true;
   services.spice-vdagentd.enable = true;
 
   home-manager.users.benjamin = {
-    imports = [ workstationProfile.homeManager ];
     home.username = "benjamin";
     home.homeDirectory = "/home/benjamin";
     home.stateVersion = "25.11";

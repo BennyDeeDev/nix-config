@@ -42,7 +42,7 @@
   };
 
   outputs =
-    inputs@{
+    {
       nixpkgs,
       nixpkgs-unstable,
       home-manager,
@@ -58,23 +58,26 @@
       ...
     }:
     let
-      profileArgs = {
-        inherit inputs;
-        lib = nixpkgs.lib;
-        repoRoot = ./.;
+      systemProfile = import ./profiles/system { inherit home-manager; };
+      terminalProfile = import ./profiles/terminal { };
+      graphicalProfile = import ./profiles/graphical {
+        inherit dgop dms dms-plugin-registry;
       };
-      moduleSet = import ./modules profileArgs;
-      systemProfile = import ./profiles/system profileArgs;
-      workstationProfile = import ./profiles/workstation (profileArgs // { inherit systemProfile; });
-      specialArgs = {
-        inherit
-          inputs
-          moduleSet
-          systemProfile
-          workstationProfile
-          ;
-        repoRoot = ./.;
-      };
+
+      audio = import ./profiles/system/audio.nix { };
+      bluetooth = import ./profiles/system/bluetooth.nix { };
+      boot = import ./profiles/system/boot.nix { inherit lanzaboote; };
+      libvirt = import ./profiles/system/libvirt.nix { };
+      networkmanager = import ./profiles/system/networkmanager.nix { };
+      podman = import ./profiles/system/podman.nix { };
+      printing = import ./profiles/system/printing.nix { };
+
+      sops = import ./modules/sops.nix { inherit sops-nix; };
+      nas = import ./modules/nas.nix { };
+      container-backup = import ./modules/container-backup.nix { };
+      pi5 = import ./modules/pi5.nix { };
+
+      gaming = import ./hosts/desktop/gaming { inherit nix-flatpak; };
     in
     {
       formatter = nixpkgs.lib.genAttrs [
@@ -87,35 +90,104 @@
       nixosConfigurations = {
         vm = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          inherit specialArgs;
-          modules = [ ./hosts/vm ];
+          modules = [
+            systemProfile.nixos
+            terminalProfile.nixos
+            graphicalProfile.nixos
+            audio.nixos
+            networkmanager.nixos
+            sops.nixos
+            ./hosts/vm
+            {
+              home-manager.users.benjamin.imports = [
+                terminalProfile.homeManager
+                graphicalProfile.homeManager
+                audio.homeManager
+                networkmanager.homeManager
+              ];
+            }
+          ];
         };
         desktop = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          inherit specialArgs;
-          modules = [ ./hosts/desktop ];
+          modules = [
+            systemProfile.nixos
+            terminalProfile.nixos
+            graphicalProfile.nixos
+            audio.nixos
+            bluetooth.nixos
+            boot.nixos
+            libvirt.nixos
+            networkmanager.nixos
+            podman.nixos
+            printing.nixos
+            sops.nixos
+            nas.nixos
+            gaming.nixos
+            disko.nixosModules.disko
+            ./hosts/desktop
+            {
+              home-manager.users.benjamin.imports = [
+                terminalProfile.homeManager
+                graphicalProfile.homeManager
+                audio.homeManager
+                bluetooth.homeManager
+                networkmanager.homeManager
+                podman.homeManager
+                sops.homeManager
+                gaming.homeManager
+              ];
+            }
+          ];
         };
         pi5-server = nixpkgs-unstable.lib.nixosSystem {
           system = "aarch64-linux";
-          inherit specialArgs;
-          modules = [ ./hosts/pi5-server ];
+          modules = [
+            systemProfile.nixos
+            sops.nixos
+            pi5.nixos
+            nas.nixos
+            container-backup.nixos
+            nixos-hardware.nixosModules.raspberry-pi-5
+            ./hosts/pi5-server
+          ];
         };
         pi5-kiosk = nixpkgs-unstable.lib.nixosSystem {
           system = "aarch64-linux";
-          inherit specialArgs;
-          modules = [ ./hosts/pi5-kiosk ];
+          modules = [
+            systemProfile.nixos
+            sops.nixos
+            pi5.nixos
+            nixos-hardware.nixosModules.raspberry-pi-5
+            ./hosts/pi5-kiosk
+          ];
         };
       };
       images.pi5-bootstrap =
         (nixpkgs-unstable.lib.nixosSystem {
           system = "aarch64-linux";
-          inherit specialArgs;
-          modules = [ ./images/pi5-bootstrap.nix ];
+          modules = [
+            systemProfile.nixos
+            sops.nixos
+            pi5.nixos
+            ./images/pi5-bootstrap.nix
+          ];
         }).config.system.build.sdImage;
 
       darwinConfigurations.mbp-personal = darwin.lib.darwinSystem {
-        inherit specialArgs;
-        modules = [ ./hosts/mbp-personal ];
+        modules = [
+          systemProfile.darwin
+          ./hosts/mbp-personal
+          {
+            home-manager.users.benjaminderksen.imports = [
+              systemProfile.homeManager
+              terminalProfile.homeManager
+              graphicalProfile.homeManager
+              podman.homeManager
+              sops.homeManager
+            ];
+          }
+        ];
       };
     };
 }

@@ -13,25 +13,25 @@ NixOS, nix-darwin, and Home Manager configuration for the machines below.
 
 ## Architecture
 
-The repository uses scope-first, auto-composed feature facets.
+The repository uses explicit, scope-first feature facets.
 
 ```text
 files/       Application payloads
 hosts/       Machine identity, hardware, disks, and unique policy
 images/      Image outputs
-lib/         Composition helpers
 modules/     Reusable modules selected explicitly
-profiles/    Automatically composed system and workstation contexts
+profiles/    Explicit system, terminal, and graphical contexts
 secrets/     Encrypted SOPS documents
 ```
 
-An auto-composed context is a directory whose `default.nix` is its public
-entry point and whose sibling Nix files are enabled automatically:
+Profile composition is explicit. Terminal and graphical entry points list
+their features, while the system entry point combines platform foundations
+and `flake.nix` selects host capabilities:
 
 ```text
 profiles/system/default.nix
-profiles/workstation/default.nix
-hosts/desktop/gaming/default.nix
+profiles/terminal/default.nix
+profiles/graphical/default.nix
 ```
 
 Feature files return the module-system facets they support:
@@ -45,21 +45,20 @@ Feature files return the module-system facets they support:
 ```
 
 Unsupported facets are omitted. Home Manager facets shared between Linux and
-macOS use `pkgs.stdenv.isLinux` or `pkgs.stdenv.isDarwin` where needed.
-
-`lib/load-features.nix` loads sibling files in sorted order and combines each
-facet through normal module imports. `modules/default.nix` is deliberately an
-explicit registry: adding a reusable module does not enable it automatically.
+macOS use `pkgs.stdenv.isLinux` or `pkgs.stdenv.isDarwin` where needed. The
+flake composes profile facets, reusable modules, and host modules directly;
+only the mutable checkout path is passed to Home Manager through
+`extraSpecialArgs`.
 
 ## Ownership
 
-`profiles/system/` contains the operating-system foundation. `nixos.nix`
-owns shared NixOS policy and `macos.nix` owns shared nix-darwin and macOS Home
-Manager policy.
+`profiles/system/` contains the operating-system foundation and explicitly
+selected capabilities such as boot, audio, networking, printing, containers,
+and virtualization.
 
-`profiles/workstation/` contains features present on every daily-use machine.
-A future Linux laptop can reuse the same NixOS and Home Manager facets as the
-desktop without importing desktop hardware or gaming.
+`profiles/terminal/` contains the shell, command-line tools, and terminal
+editors. `profiles/graphical/` contains the Niri desktop, GUI applications,
+fonts, and desktop integration.
 
 `hosts/<name>/` contains machine facts: hostnames, hardware, disks, users,
 state versions, secret files, and unique mounts or applications.
@@ -88,10 +87,10 @@ despite a related module, leave a short comment explaining the decision.
 
 ## Adding A Feature
 
-A workstation-only Home Manager program needs only a sibling file:
+A terminal Home Manager feature uses the same facet shape:
 
 ```nix
-# profiles/workstation/example.nix
+# profiles/terminal/example.nix
 { ... }:
 
 {
@@ -101,8 +100,9 @@ A workstation-only Home Manager program needs only a sibling file:
 }
 ```
 
-Adding the file enables it on every applicable workstation. Put optional or
-machine-specific behavior in an explicit module or host instead.
+Add the facet explicitly to `profiles/terminal/default.nix`. System
+capabilities and machine-specific behavior remain explicit in `flake.nix` or
+the relevant host.
 
 ## Validation
 
@@ -118,6 +118,7 @@ Evaluate the active outputs without activating them:
 ```sh
 nix eval --raw .#darwinConfigurations.mbp-personal.system.drvPath
 nix eval --raw .#nixosConfigurations.desktop.config.system.build.toplevel.drvPath
+nix eval --raw .#nixosConfigurations.vm.config.system.build.toplevel.drvPath
 nix eval --raw .#nixosConfigurations.pi5-server.config.system.build.toplevel.drvPath
 nix eval --raw .#images.pi5-bootstrap.drvPath
 ```

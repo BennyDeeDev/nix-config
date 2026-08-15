@@ -1,4 +1,4 @@
-{ repoRoot, ... }:
+{ ... }:
 
 {
   homeManager =
@@ -38,7 +38,7 @@
       home.activation.vscodeConfig = lib.mkIf pkgs.stdenv.isLinux (
         lib.hm.dag.entryAfter [ "writeBoundary" ] ''
           mkdir -p "$HOME/.vscode"
-          cp ${repoRoot}/files/vscode/argv-linux.json "$HOME/.vscode/argv.json"
+          cp ${../../files/vscode/argv-linux.json} "$HOME/.vscode/argv.json"
           chmod 644 "$HOME/.vscode/argv.json"
         ''
       );

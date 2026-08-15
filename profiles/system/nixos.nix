@@ -1,10 +1,10 @@
-{ inputs, ... }:
+{ home-manager }:
 
 {
   nixos =
     { ... }:
     {
-      imports = [ inputs.home-manager.nixosModules.home-manager ];
+      imports = [ home-manager.nixosModules.home-manager ];
 
       time.timeZone = "Europe/Berlin";
 

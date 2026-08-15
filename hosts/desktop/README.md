@@ -89,7 +89,7 @@ lsblk -o NAME,SIZE,SERIAL
 ## Secure Boot (Lanzaboote)
 
 Signs all boot artifacts and enforces Secure Boot via
-`profiles/workstation/boot.nix`. Keys auto-generate at `/var/lib/sbctl` and
+`profiles/system/boot.nix`. Keys auto-generate at `/var/lib/sbctl` and
 auto-enroll alongside Microsoft's UEFI CA on the first Setup-Mode boot. The
 steps below are the manual BIOS flow required on MSI boards to actually flip
 Secure Boot on.

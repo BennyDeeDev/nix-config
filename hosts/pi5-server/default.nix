@@ -1,18 +1,7 @@
-{
-  inputs,
-  moduleSet,
-  systemProfile,
-  ...
-}:
+{ ... }:
 
 {
   imports = [
-    systemProfile.nixos
-    moduleSet.sops.nixos
-    moduleSet.pi5.nixos
-    moduleSet.nas.nixos
-    moduleSet.container-backup.nixos
-    inputs.nixos-hardware.nixosModules.raspberry-pi-5
     ./home-assistant.nix
   ];
 
