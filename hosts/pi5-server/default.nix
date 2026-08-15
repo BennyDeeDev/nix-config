@@ -17,7 +17,6 @@ in
     nas.nixos
     container-backup.nixos
     nixos-hardware.nixosModules.raspberry-pi-5
-    ./secrets.nix
     ./home-assistant.nix
   ];
 
@@ -25,6 +24,8 @@ in
 
   # Trusted-LAN appliance: all listening services are intentionally exposed.
   networking.firewall.enable = false;
+
+  sops.defaultSopsFile = ../../secrets/pi5-server.yaml;
 
   my.nas = {
     shares = [
