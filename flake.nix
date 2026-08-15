@@ -70,14 +70,15 @@
           modules = [ (import ./hosts/pi5-kiosk inputs) ];
         };
       };
+
+      darwinConfigurations.mbp-personal = darwin.lib.darwinSystem {
+        modules = [ (import ./hosts/mbp-personal inputs) ];
+      };
+
       images.pi5-bootstrap =
         (nixpkgs-unstable.lib.nixosSystem {
           system = "aarch64-linux";
           modules = [ (import ./images/pi5-bootstrap.nix inputs) ];
         }).config.system.build.sdImage;
-
-      darwinConfigurations.mbp-personal = darwin.lib.darwinSystem {
-        modules = [ (import ./hosts/mbp-personal inputs) ];
-      };
     };
 }

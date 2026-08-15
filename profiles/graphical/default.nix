@@ -11,6 +11,7 @@ let
   };
   fonts = import ./fonts.nix;
   graphical = import ./graphical.nix;
+  gnomeKeyring = import ./gnome-keyring.nix;
   gnomeDisks = import ./gnome-disks.nix;
   ghostty = import ./ghostty.nix;
   godot = import ./godot.nix;
@@ -29,6 +30,7 @@ in
       apps.nixos
       dmsFeature.nixos
       graphical.nixos
+      gnomeKeyring.nixos
       gnomeDisks.nixos
       input.nixos
       nautilus.nixos
@@ -49,6 +51,7 @@ in
         dmsFeature.homeManager
         fonts.homeManager
         ghostty.homeManager
+        gnomeKeyring.homeManager
         godot.homeManager
         input.homeManager
         nautilus.homeManager
