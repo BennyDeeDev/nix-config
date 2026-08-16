@@ -1,5 +1,5 @@
-{
-  nixos = {
+let
+  common = {
     nixpkgs.config.allowUnfree = true;
 
     nix.settings = {
@@ -9,7 +9,10 @@
         "flakes"
       ];
     };
-
+  };
+in
+{
+  nixos = common // {
     nix.gc = {
       automatic = true;
       dates = "weekly";
@@ -17,17 +20,7 @@
     };
   };
 
-  darwin = {
-    nixpkgs.config.allowUnfree = true;
-
-    nix.settings = {
-      auto-optimise-store = true;
-      experimental-features = [
-        "nix-command"
-        "flakes"
-      ];
-    };
-
+  darwin = common // {
     nix.gc = {
       automatic = true;
       interval = {
