@@ -2,16 +2,16 @@
   homeManager =
     {
       config,
-      dotfiles,
+      nixConfig,
       lib,
       ...
     }:
     {
       home.file = {
         ".config/Code/User/settings.json".source =
-          config.lib.file.mkOutOfStoreSymlink "${dotfiles}/files/vscode/settings.json";
+          config.lib.file.mkOutOfStoreSymlink "${nixConfig}/files/vscode/settings.json";
         ".config/Code/User/keybindings.json".source =
-          config.lib.file.mkOutOfStoreSymlink "${dotfiles}/files/vscode/keybindings-linux.json";
+          config.lib.file.mkOutOfStoreSymlink "${nixConfig}/files/vscode/keybindings-linux.json";
       };
 
       home.activation.vscodeConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''

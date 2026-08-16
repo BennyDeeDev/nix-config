@@ -2,7 +2,7 @@
   homeManager =
     {
       config,
-      dotfiles,
+      nixConfig,
       lib,
       pkgs,
       ...
@@ -12,7 +12,7 @@
       home.packages = [ pkgs.ludusavi ];
 
       home.file.".config/ludusavi/config.yaml".source =
-        config.lib.file.mkOutOfStoreSymlink "${dotfiles}/files/gaming/ludusavi/config.yaml";
+        config.lib.file.mkOutOfStoreSymlink "${nixConfig}/files/gaming/ludusavi/config.yaml";
 
       home.activation.ludusaviBootstrap = lib.hm.dag.entryAfter [ "sops-nix.service" ] ''
         mkdir -p "$HOME/Backups/ludusavi"

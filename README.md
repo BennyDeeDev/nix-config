@@ -94,11 +94,11 @@ the profile facet needed by the consuming system:
 
 ```nix
 {
-  inputs.dotfiles.url = "github:benjaminderksen/dotfiles";
+  inputs.nixConfig.url = "github:BennyDeeDev/nix-config";
 
-  outputs = { nixpkgs, dotfiles, ... }:
+  outputs = { nixpkgs, nixConfig, ... }:
     let
-      profiles = dotfiles.profiles;
+      profiles = nixConfig.profiles;
     in
     {
       nixosConfigurations.example = nixpkgs.lib.nixosSystem {
@@ -224,7 +224,7 @@ instead of encoding the configuration through Nix attrset hacks.
 
 Prefer `config.lib.file.mkOutOfStoreSymlink` for configuration files that need
 to remain editable at runtime, especially when theme switches or other live
-changes are expected. Link those files from the mutable dotfiles checkout
+changes are expected. Link those files from the mutable nix-config checkout
 instead of copying them into the Nix store.
 
 ### File Size

@@ -1,8 +1,8 @@
 {
   homeManager =
-    { config, dotfiles, ... }:
+    { config, nixConfig, ... }:
     {
       home.file."Library/Application Support/Code/User/settings.json".source =
-        config.lib.file.mkOutOfStoreSymlink "${dotfiles}/files/vscode/settings.json";
+        config.lib.file.mkOutOfStoreSymlink "${nixConfig}/files/vscode/settings.json";
     };
 }

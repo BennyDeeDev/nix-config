@@ -11,7 +11,7 @@ curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install | sh
 ```sh
 sudo nix --extra-experimental-features 'nix-command flakes' \
   run nix-darwin/nix-darwin-26.05#darwin-rebuild -- \
-  switch --flake ~/Repos/dotfiles#mbp-personal
+  switch --flake ~/Repos/nix-config#mbp-personal
 ```
 
 If it fails with "Unexpected files in /etc", back them up and re-run:
@@ -35,5 +35,5 @@ Code. Quit and reopen that application afterward, then run the rebuild again.
 ## 3. Subsequent rebuilds
 
 ```sh
-darwin-rebuild switch --flake ~/Repos/dotfiles#mbp-personal
+darwin-rebuild switch --flake ~/Repos/nix-config#mbp-personal
 ```

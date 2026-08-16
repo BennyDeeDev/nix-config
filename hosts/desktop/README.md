@@ -17,25 +17,25 @@ Btrfs subvolumes: `/root` → `/`, `/home` → `/home`, `/log` → `/var/log`,
 
 Boot from the NixOS graphical ISO (F11 on MSI boards for the boot menu).
 
-**1. Open a terminal and clone dotfiles**
+**1. Open a terminal and clone nix-config**
 
 ```bash
 nix-shell -p git
-git clone https://github.com/BennyDeeDev/dotfiles /tmp/dotfiles
+git clone https://github.com/BennyDeeDev/nix-config /tmp/nix-config
 ```
 
 **2. Partition, format, and mount with disko**
 
 ```bash
 sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko/latest -- \
-  --mode destroy,format,mount /tmp/dotfiles/hosts/desktop/disko.nix
+  --mode destroy,format,mount /tmp/nix-config/hosts/desktop/disko.nix
 ```
 
 **3. Generate hardware configuration**
 
 ```bash
 sudo nixos-generate-config --no-filesystems --root /mnt
-sudo cp /mnt/etc/nixos/hardware-configuration.nix /tmp/dotfiles/hosts/desktop/
+sudo cp /mnt/etc/nixos/hardware-configuration.nix /tmp/nix-config/hosts/desktop/
 ```
 
 **4. Set `neededForBoot` on `/var/log`**
@@ -63,7 +63,7 @@ sops-nix automatically generates the host age key at
 new key is not yet an encrypted-file recipient.
 
 ```bash
-sudo nixos-install --flake /tmp/dotfiles#desktop --root /mnt
+sudo nixos-install --flake /tmp/nix-config#desktop --root /mnt
 ```
 
 **6. Reboot**
@@ -94,7 +94,7 @@ Secure Boot on.
 **1. Rebuild and install the signed bootloader**
 
 ```bash
-cd ~/Repos/dotfiles
+cd ~/Repos/nix-config
 sudo nixos-rebuild boot --install-bootloader --flake .#desktop
 ```
 

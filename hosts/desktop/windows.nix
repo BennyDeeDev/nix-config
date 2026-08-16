@@ -23,7 +23,7 @@
             destination = "/share/wayland-sessions";
             desktopName = "Windows";
             comment = "Reboot to Windows Boot Manager";
-            exec = ''/home/benjamin/Repos/dotfiles/files/bin/reboot-to "Windows Boot Manager" reboot'';
+            exec = ''/home/benjamin/Repos/nix-config/files/bin/reboot-to "Windows Boot Manager" reboot'';
             type = "Application";
             categories = [ "System" ];
             extraConfig = {
@@ -38,11 +38,11 @@
     };
 
   homeManager =
-    { dotfiles, ... }:
+    { nixConfig, ... }:
     {
       xdg.desktopEntries.windows = {
         name = "Windows";
-        exec = ''${dotfiles}/files/bin/reboot-to "Windows Boot Manager" reboot'';
+        exec = ''${nixConfig}/files/bin/reboot-to "Windows Boot Manager" reboot'';
         comment = "Reboot to Windows Boot Manager";
         icon = "system-reboot-symbolic";
         type = "Application";

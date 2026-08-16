@@ -4,7 +4,7 @@
 
 - Prefer the dedicated CLI tool for a task when one exists.
 
-- Never write into `~/.config/`. All config edits happen inside this dotfiles repo `$HOME/Repos/dotfiles`.
+- Never write into `~/.config/`. All config edits happen inside this nix-config repo `$HOME/Repos/nix-config`.
 
 - Never run `kubectl exec` or `kubectl run`. These commands are blocked and will fail.
 

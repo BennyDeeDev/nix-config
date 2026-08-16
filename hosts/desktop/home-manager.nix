@@ -9,7 +9,7 @@
   nixos = {
     home-manager = {
       extraSpecialArgs = {
-        dotfiles = "/home/benjamin/Repos/dotfiles";
+        nixConfig = "/home/benjamin/Repos/nix-config";
         flakeHost = "desktop";
       };
       users.benjamin =

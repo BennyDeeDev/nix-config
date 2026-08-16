@@ -2,7 +2,7 @@
   homeManager =
     {
       config,
-      dotfiles,
+      nixConfig,
       flakeHost,
       lib,
       pkgs,
@@ -30,8 +30,8 @@
             lta = "lt -a";
             cat = "bat";
             ff = "fzf --preview 'bat --style=numbers --color=always {}'";
-            nrs = "sudo nixos-rebuild switch --flake ${dotfiles}#${flakeHost}";
-            drs = "sudo darwin-rebuild switch --flake ${dotfiles}#${flakeHost}";
+            nrs = "sudo nixos-rebuild switch --flake ${nixConfig}#${flakeHost}";
+            drs = "sudo darwin-rebuild switch --flake ${nixConfig}#${flakeHost}";
             ".." = "cd ..";
             "..." = "cd ../..";
             "...." = "cd ../../..";

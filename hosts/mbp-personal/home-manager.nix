@@ -7,7 +7,7 @@
   darwin = {
     home-manager = {
       extraSpecialArgs = {
-        dotfiles = "/Users/benjaminderksen/Repos/dotfiles";
+        nixConfig = "/Users/benjaminderksen/Repos/nix-config";
         flakeHost = "mbp-personal";
       };
       users.benjaminderksen = {

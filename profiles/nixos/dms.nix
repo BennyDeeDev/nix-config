@@ -38,7 +38,7 @@
   homeManager =
     {
       config,
-      dotfiles,
+      nixConfig,
       pkgs,
       ...
     }:
@@ -50,13 +50,13 @@
 
       xdg.configFile = {
         "dms/wallpapers/dark.png".source = config.lib.file.mkOutOfStoreSymlink (
-          "${dotfiles}/files/images/dark.png"
+          "${nixConfig}/files/images/dark.png"
         );
         "dms/wallpapers/light.png".source = config.lib.file.mkOutOfStoreSymlink (
-          "${dotfiles}/files/images/light.png"
+          "${nixConfig}/files/images/light.png"
         );
         "DankMaterialShell/settings.json".source =
-          config.lib.file.mkOutOfStoreSymlink "${dotfiles}/files/dms/settings.json";
+          config.lib.file.mkOutOfStoreSymlink "${nixConfig}/files/dms/settings.json";
       };
 
       programs.dank-material-shell = {
