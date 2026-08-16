@@ -1,23 +1,30 @@
 { home-manager }:
 
-{
-  nixos = {
-    imports = [ home-manager.nixosModules.home-manager ];
-
+let
+  common = {
     home-manager = {
       backupFileExtension = "hm-backup";
       useGlobalPkgs = true;
       useUserPackages = true;
     };
   };
+in
+{
+  nixos = {
+    imports = [
+      common
+      home-manager.nixosModules.home-manager
+    ];
+  };
 
   darwin = {
-    imports = [ home-manager.darwinModules.home-manager ];
+    imports = [
+      common
+      home-manager.darwinModules.home-manager
+    ];
+  };
 
-    home-manager = {
-      backupFileExtension = "hm-backup";
-      useGlobalPkgs = true;
-      useUserPackages = true;
-    };
+  homeManager = {
+    programs.home-manager.enable = true;
   };
 }

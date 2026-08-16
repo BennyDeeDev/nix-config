@@ -1,5 +1,6 @@
 {
   gaming,
+  myHomeManagerSystem,
   profiles,
   sops,
   windows,
@@ -8,7 +9,6 @@
 let
   apps = import ../../modules/apps.nix;
   ghostty = import ../../modules/ghostty.nix;
-  myHomeManagerProfile = import ../../modules/home-manager-profile.nix;
   vscode = import ../../modules/vscode.nix;
 in
 
@@ -27,7 +27,7 @@ in
             profiles.terminal.homeManager
             apps.homeManager
             ghostty.homeManager
-            myHomeManagerProfile.homeManager
+            myHomeManagerSystem.homeManager
             vscode.homeManager
             sops.homeManager
             gaming.homeManager

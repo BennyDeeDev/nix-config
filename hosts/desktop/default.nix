@@ -19,6 +19,7 @@ let
   myHomeManager = import ./home-manager.nix {
     inherit
       gaming
+      myHomeManagerSystem
       profiles
       sops
       windows
