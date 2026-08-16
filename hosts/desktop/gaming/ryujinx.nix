@@ -2,7 +2,7 @@
   homeManager =
     {
       config,
-      dotfiles,
+      nixConfig,
       lib,
       pkgs,
       ...
@@ -14,7 +14,7 @@
           filesystems = [
             "/nix/store:ro"
             "~/Games/Switch:ro"
-            "${dotfiles}/files/gaming/ryujinx:rw"
+            "${nixConfig}/files/gaming/ryujinx:rw"
             "/mnt/bazzite/bazzite/Games/Switch:ro"
           ];
           shared = [ "!network" ];
@@ -22,7 +22,7 @@
       };
 
       home.file.".var/app/io.github.ryubing.Ryujinx/config/Ryujinx/Config.json".source =
-        config.lib.file.mkOutOfStoreSymlink "${dotfiles}/files/gaming/ryujinx/Config.json";
+        config.lib.file.mkOutOfStoreSymlink "${nixConfig}/files/gaming/ryujinx/Config.json";
 
       home.activation = {
         ryujinxKeys = lib.hm.dag.entryAfter [ "writeBoundary" ] ''

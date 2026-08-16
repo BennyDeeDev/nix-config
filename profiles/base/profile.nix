@@ -1,0 +1,5 @@
+{
+  nixos = {
+    zramSwap.enable = true;
+  };
+}

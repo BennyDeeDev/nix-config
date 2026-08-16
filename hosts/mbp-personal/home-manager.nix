@@ -3,24 +3,24 @@
   sops,
 }:
 
-{ ... }:
-
 {
-  home-manager = {
-    extraSpecialArgs = {
-      dotfiles = "/Users/benjaminderksen/Repos/dotfiles";
-      flakeHost = "mbp-personal";
-    };
-    users.benjaminderksen = {
-      imports = [
-        profiles.system.homeManager
-        profiles.terminal.homeManager
-        profiles.graphical.homeManager
-        sops.homeManager
-      ];
+  darwin = {
+    home-manager = {
+      extraSpecialArgs = {
+        nixConfig = "/Users/benjaminderksen/Repos/nix-config";
+        flakeHost = "mbp-personal";
+      };
+      users.benjaminderksen = {
+        imports = [
+          profiles.terminal.homeManager
+          profiles.shared.homeManager
+          profiles.darwin.homeManager
+          sops.homeManager
+        ];
 
-      home.stateVersion = "26.05";
-      my.sops.yubikeyIdentity = "AGE-PLUGIN-YUBIKEY-19TEYVQ5ZLFFEFYSGZHTZ3";
+        home.stateVersion = "26.05";
+        my.sops.yubikeyIdentity = "AGE-PLUGIN-YUBIKEY-19TEYVQ5ZLFFEFYSGZHTZ3";
+      };
     };
   };
 }

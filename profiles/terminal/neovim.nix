@@ -2,7 +2,7 @@
   homeManager =
     {
       config,
-      dotfiles,
+      nixConfig,
       pkgs,
       ...
     }:
@@ -68,6 +68,6 @@
       home.sessionVariables.SUDO_EDITOR = "nvim";
 
       xdg.configFile."nvim/init.lua".source =
-        config.lib.file.mkOutOfStoreSymlink "${dotfiles}/files/neovim/init.lua";
+        config.lib.file.mkOutOfStoreSymlink "${nixConfig}/files/neovim/init.lua";
     };
 }

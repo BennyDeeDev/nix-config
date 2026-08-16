@@ -5,21 +5,21 @@ inputs@{
 
 let
   profiles = import ../../profiles inputs;
+  homeManager = import ./home-manager.nix { inherit profiles sops; };
+  host = import ./host.nix;
   sops = import ../../modules/sops.nix { inherit sops-nix; };
+  homebrew = import ./homebrew.nix;
+  users = import ./users.nix;
 in
-{ ... }:
-
 {
-  imports = [
-    profiles.base.darwin
-    profiles.system.darwin
-    profiles.graphical.darwin
-    ./users.nix
-    (import ./home-manager.nix { inherit profiles sops; })
-    ./homebrew.nix
-  ];
-
-  nixpkgs.hostPlatform = "aarch64-darwin";
-
-  system.stateVersion = 5;
+  darwin = {
+    imports = [
+      profiles.base.darwin
+      profiles.darwin.darwin
+      users.darwin
+      homeManager.darwin
+      homebrew.darwin
+      host.darwin
+    ];
+  };
 }

@@ -2,7 +2,7 @@
   homeManager =
     {
       config,
-      dotfiles,
+      nixConfig,
       lib,
       pkgs,
       ...
@@ -12,9 +12,9 @@
 
       home.file = {
         ".config/steam-rom-manager/userData/userConfigurations.json".source =
-          config.lib.file.mkOutOfStoreSymlink "${dotfiles}/files/gaming/steam-rom-manager/userConfigurations.json";
+          config.lib.file.mkOutOfStoreSymlink "${nixConfig}/files/gaming/steam-rom-manager/userConfigurations.json";
         ".config/steam-rom-manager/userData/userSettings.json".source =
-          config.lib.file.mkOutOfStoreSymlink "${dotfiles}/files/gaming/steam-rom-manager/userSettings.json";
+          config.lib.file.mkOutOfStoreSymlink "${nixConfig}/files/gaming/steam-rom-manager/userSettings.json";
       };
 
       home.activation.steamRomManagerBootstrap = lib.hm.dag.entryAfter [ "writeBoundary" ] ''

@@ -1,0 +1,76 @@
+{
+  dgop,
+  dms,
+  dms-plugin-registry,
+}:
+
+{
+  nixos =
+    { config, ... }:
+    let
+      configHome = config.users.users.benjamin.home;
+    in
+    {
+      imports = [ dms.nixosModules.greeter ];
+
+      assertions = [
+        {
+          assertion = configHome == "/home/benjamin";
+          message = "DankMaterialShell requires benjamin's home directory to be /home/benjamin.";
+        }
+      ];
+
+      users.groups.greeter = { };
+      users.users.greeter = {
+        isSystemUser = true;
+        group = "greeter";
+      };
+
+      services.greetd.settings.default_session.user = "greeter";
+
+      programs.dank-material-shell.greeter = {
+        enable = true;
+        compositor.name = "niri";
+        configHome = configHome;
+      };
+    };
+
+  homeManager =
+    {
+      config,
+      nixConfig,
+      pkgs,
+      ...
+    }:
+    {
+      imports = [
+        dms.homeModules.dank-material-shell
+        dms-plugin-registry.homeModules.default
+      ];
+
+      xdg.configFile = {
+        "dms/wallpapers/dark.png".source = config.lib.file.mkOutOfStoreSymlink (
+          "${nixConfig}/files/images/dark.png"
+        );
+        "dms/wallpapers/light.png".source = config.lib.file.mkOutOfStoreSymlink (
+          "${nixConfig}/files/images/light.png"
+        );
+        "DankMaterialShell/settings.json".source =
+          config.lib.file.mkOutOfStoreSymlink "${nixConfig}/files/dms/settings.json";
+      };
+
+      programs.dank-material-shell = {
+        enable = true;
+        systemd = {
+          enable = true;
+          restartIfChanged = true;
+        };
+        enableSystemMonitoring = true;
+        dgop.package = dgop.packages.${pkgs.stdenv.hostPlatform.system}.default;
+        enableVPN = false;
+        enableDynamicTheming = false;
+        enableAudioWavelength = true;
+        enableCalendarEvents = true;
+      };
+    };
+}

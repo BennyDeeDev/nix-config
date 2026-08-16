@@ -10,10 +10,14 @@
 
 {
   base = import ./base { inherit home-manager sops-nix; };
+  darwin = import ./darwin;
+  nixos = import ./nixos {
+    inherit dgop dms dms-plugin-registry;
+    inherit lanzaboote;
+  };
   pi5 = import ./pi5;
-  system = import ./system { inherit lanzaboote; };
-  terminal = import ./terminal;
-  graphical = import ./graphical {
+  shared = import ./shared {
     inherit dgop dms dms-plugin-registry;
   };
+  terminal = import ./terminal;
 }

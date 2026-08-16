@@ -49,6 +49,8 @@
       ...
     }:
     {
+      profiles = import ./profiles inputs;
+
       formatter = nixpkgs.lib.genAttrs [
         "aarch64-darwin"
         "aarch64-linux"
@@ -59,26 +61,26 @@
       nixosConfigurations = {
         desktop = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          modules = [ (import ./hosts/desktop inputs) ];
+          modules = [ (import ./hosts/desktop inputs).nixos ];
         };
         pi5-server = nixpkgs-unstable.lib.nixosSystem {
           system = "aarch64-linux";
-          modules = [ (import ./hosts/pi5-server inputs) ];
+          modules = [ (import ./hosts/pi5-server inputs).nixos ];
         };
         pi5-kiosk = nixpkgs-unstable.lib.nixosSystem {
           system = "aarch64-linux";
-          modules = [ (import ./hosts/pi5-kiosk inputs) ];
+          modules = [ (import ./hosts/pi5-kiosk inputs).nixos ];
         };
       };
 
       darwinConfigurations.mbp-personal = darwin.lib.darwinSystem {
-        modules = [ (import ./hosts/mbp-personal inputs) ];
+        modules = [ (import ./hosts/mbp-personal inputs).darwin ];
       };
 
       images.pi5-bootstrap =
         (nixpkgs-unstable.lib.nixosSystem {
           system = "aarch64-linux";
-          modules = [ (import ./images/pi5-bootstrap.nix inputs) ];
+          modules = [ (import ./images/pi5-bootstrap.nix inputs).nixos ];
         }).config.system.build.sdImage;
     };
 }

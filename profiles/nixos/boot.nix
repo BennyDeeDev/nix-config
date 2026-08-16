@@ -1,0 +1,43 @@
+{ lanzaboote }:
+
+{
+  nixos =
+    { lib, pkgs, ... }:
+    {
+      imports = [ lanzaboote.nixosModules.lanzaboote ];
+
+      boot = {
+        binfmt.emulatedSystems = [ "aarch64-linux" ];
+
+        loader = {
+          systemd-boot = {
+            enable = lib.mkForce false;
+          };
+          efi.canTouchEfiVariables = true;
+          timeout = 0;
+        };
+
+        consoleLogLevel = 3;
+        initrd.verbose = false;
+        kernelParams = [
+          "quiet"
+          "udev.log_level=3"
+          "systemd.show_status=auto"
+        ];
+        plymouth.enable = true;
+
+        lanzaboote = {
+          enable = true;
+          pkiBundle = "/var/lib/sbctl";
+          configurationLimit = 10;
+          autoGenerateKeys.enable = true;
+          autoEnrollKeys = {
+            enable = true;
+            autoReboot = true;
+          };
+        };
+      };
+
+      environment.systemPackages = [ pkgs.sbctl ];
+    };
+}

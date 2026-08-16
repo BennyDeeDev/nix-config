@@ -5,32 +5,21 @@ inputs@{
 
 let
   profiles = import ../../profiles inputs;
+  host = import ./host.nix;
+  homeAssistant = import ./home-assistant.nix;
   nas = import ../../modules/nas.nix;
   container-backup = import ../../modules/container-backup.nix;
 in
-{ ... }:
-
 {
-  imports = [
-    profiles.base.nixos
-    profiles.pi5.nixos
-    nas.nixos
-    container-backup.nixos
-    nixos-hardware.nixosModules.raspberry-pi-5
-    ./home-assistant.nix
-  ];
-
-  networking.hostName = "pi5-server";
-
-  # Trusted-LAN appliance: all listening services are intentionally exposed.
-  networking.firewall.enable = false;
-
-  sops.defaultSopsFile = ../../secrets/pi5-server.yaml;
-
-  my.nas = {
-    shares = [
-      "Homelab"
-      "Restic"
+  nixos = {
+    imports = [
+      profiles.base.nixos
+      profiles.pi5.nixos
+      nas.nixos
+      container-backup.nixos
+      nixos-hardware.nixosModules.raspberry-pi-5
+      homeAssistant.nixos
+      host.nixos
     ];
   };
 }
