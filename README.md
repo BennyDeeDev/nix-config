@@ -157,6 +157,10 @@ applies throughout `profiles/`, `hosts/`, `images/`, and `modules/`. Omit
 facets that do not apply; add more than one only when the feature has an
 intentional implementation for multiple systems.
 
+When a file exposes more than one facet, list them in this order: `nixos`,
+`homeManager`, then `darwin`. Omit unsupported facets without changing the
+relative order of the remaining ones.
+
 `default.nix` files are composition-only. They combine facets through
 `imports`, but do not define feature settings themselves. This keeps the
 responsibility and supported module systems of each feature visible in its own

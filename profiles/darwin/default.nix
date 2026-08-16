@@ -8,14 +8,6 @@ let
   vscode = import ./vscode.nix;
 in
 {
-  homeManager = {
-    imports = [
-      apps.homeManager
-      ghostty.homeManager
-      vscode.homeManager
-    ];
-  };
-
   darwin = {
     imports = [
       apps.darwin
@@ -23,6 +15,14 @@ in
       input.darwin
       settings.darwin
       security.darwin
+    ];
+  };
+
+  homeManager = {
+    imports = [
+      apps.homeManager
+      ghostty.homeManager
+      vscode.homeManager
     ];
   };
 }
