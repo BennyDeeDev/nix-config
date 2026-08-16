@@ -177,10 +177,11 @@ exceptions are `flake.nix`, which defines the flake entrypoint,
 
 ### Local Bindings
 
-Use the `my` prefix for repository-owned local composition bindings, matching
-the `config.my.*` namespace used by custom options. For example, bind the
-host's Home Manager system module as `myHomeManager`. Keep these bindings
-distinct from the Home Manager user configuration they import.
+Use the `my` prefix for repository-owned Home Manager composition bindings,
+matching the `config.my.*` namespace used by custom options. Use role-specific
+suffixes when more than one binding is needed: `myHomeManagerSystem` registers
+Home Manager with the host system, `myHomeManager` configures the host user,
+and `myHomeManagerProfile` identifies a reusable user module.
 
 ### Attrset Style
 
