@@ -1,5 +1,5 @@
 {
-  myHomeManagerSystem,
+  homeManagerModule,
   profiles,
   sops,
 }:
@@ -23,7 +23,7 @@ in
           profiles.macos.homeManager
           apps.homeManager
           ghostty.homeManager
-          myHomeManagerSystem.homeManager
+          homeManagerModule.homeManager
           vscode.homeManager
           sops.homeManager
         ];

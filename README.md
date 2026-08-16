@@ -175,13 +175,17 @@ exceptions are `flake.nix`, which defines the flake entrypoint,
 `hosts/desktop/disko.nix`, which Disko consumes directly, and the generated
 `hosts/desktop/hardware-configuration.nix`.
 
-### Local Bindings
+### Home Manager Bindings
 
-Use the `my` prefix for repository-owned Home Manager composition bindings,
-matching the `config.my.*` namespace used by custom options. Use role-specific
-suffixes when more than one binding is needed: `myHomeManagerSystem` registers
-Home Manager with the host system, `myHomeManager` configures the host user,
-and `myHomeManagerProfile` identifies a reusable user module.
+Use `homeManagerModule` for the reusable module that registers Home Manager
+with the host system. Use `homeManagerConfig` for the host-specific module that
+configures the user through `home-manager.users`.
+
+### Custom Options
+
+Repository-owned module options use the `config.my.*` and `options.my.*`
+namespaces. This option namespace is separate from local `let` bindings, which
+use descriptive names such as `homeManagerModule` and `homeManagerConfig`.
 
 ### Attrset Style
 

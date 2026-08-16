@@ -1,6 +1,6 @@
 {
   gaming,
-  myHomeManagerSystem,
+  homeManagerModule,
   profiles,
   sops,
   windows,
@@ -27,7 +27,7 @@ in
             profiles.terminal.homeManager
             apps.homeManager
             ghostty.homeManager
-            myHomeManagerSystem.homeManager
+            homeManagerModule.homeManager
             vscode.homeManager
             sops.homeManager
             gaming.homeManager

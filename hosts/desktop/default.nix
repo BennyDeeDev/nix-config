@@ -11,15 +11,15 @@ let
   gaming = import ./gaming { inherit nix-flatpak; };
   hardware = import ./hardware.nix;
   host = import ./host.nix;
-  myHomeManagerSystem = import ../../modules/home-manager.nix { inherit home-manager; };
+  homeManagerModule = import ../../modules/home-manager.nix { inherit home-manager; };
   sops = import ../../modules/sops.nix { inherit sops-nix; };
   secrets = import ./secrets.nix;
   users = import ./users.nix;
   windows = import ./windows.nix;
-  myHomeManager = import ./home-manager.nix {
+  homeManagerConfig = import ./home-manager.nix {
     inherit
       gaming
-      myHomeManagerSystem
+      homeManagerModule
       profiles
       sops
       windows
@@ -40,8 +40,8 @@ in
       host.nixos
       secrets.nixos
       users.nixos
-      myHomeManagerSystem.nixos
-      myHomeManager.nixos
+      homeManagerModule.nixos
+      homeManagerConfig.nixos
     ];
   };
 }

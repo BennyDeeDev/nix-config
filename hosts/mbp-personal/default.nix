@@ -6,10 +6,10 @@ inputs@{
 
 let
   profiles = import ../../profiles inputs;
-  myHomeManagerSystem = import ../../modules/home-manager.nix { inherit home-manager; };
+  homeManagerModule = import ../../modules/home-manager.nix { inherit home-manager; };
   nix = import ../../modules/nix.nix;
-  myHomeManager = import ./home-manager.nix {
-    inherit myHomeManagerSystem profiles sops;
+  homeManagerConfig = import ./home-manager.nix {
+    inherit homeManagerModule profiles sops;
   };
   host = import ./host.nix;
   sops = import ../../modules/sops.nix { inherit sops-nix; };
@@ -22,8 +22,8 @@ in
       nix.darwin
       profiles.macos.darwin
       users.darwin
-      myHomeManagerSystem.darwin
-      myHomeManager.darwin
+      homeManagerModule.darwin
+      homeManagerConfig.darwin
       homebrew.darwin
       host.darwin
     ];
