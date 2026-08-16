@@ -9,7 +9,7 @@ let
   nix = import ./nix.nix { inherit home-manager; };
   profile = import ./profile.nix;
   programs = import ./programs.nix;
-  sops = import ./sops.nix { inherit sops-nix; };
+  sops = import ../../modules/sops.nix { inherit sops-nix; };
 in
 {
   nixos = {
