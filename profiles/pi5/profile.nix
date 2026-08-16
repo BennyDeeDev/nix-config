@@ -2,7 +2,8 @@
   nixos =
     { pkgs, ... }:
     {
-      # Mainline kernel — cached, fast build. Overrides the nixos-hardware vendor pin.
       boot.kernelPackages = pkgs.linuxPackages;
+      nix.settings.trusted-users = [ "benjamin" ];
+      system.stateVersion = "26.05";
     };
 }

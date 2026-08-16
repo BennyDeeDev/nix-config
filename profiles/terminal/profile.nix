@@ -1,5 +1,5 @@
 {
-  homeManager = { ... }: {
+  homeManager = {
     programs.helix.enable = true;
   };
 }

@@ -7,7 +7,7 @@ let
   gamescope = import ./gamescope.nix;
   lsfg = import ./lsfg.nix;
   ludusavi = import ./ludusavi.nix;
-  mangohud = import ./mangohud.nix;
+  profile = import ./profile.nix;
   rclone = import ./rclone.nix;
   ryujinx = import ./ryujinx.nix;
   steam = import ./steam.nix;
@@ -29,7 +29,7 @@ in
       fonts.homeManager
       lsfg.homeManager
       ludusavi.homeManager
-      mangohud.homeManager
+      profile.homeManager
       rclone.homeManager
       ryujinx.homeManager
       steam-rom-manager.homeManager

@@ -166,6 +166,13 @@ relative order of the remaining ones.
 responsibility and supported module systems of each feature visible in its own
 file.
 
+Every profile directory has a `profile.nix` for small, miscellaneous profile
+settings. Use `host.nix` for the equivalent machine-specific settings. A
+single-option setting may be folded into one of these policy buckets. If a
+file configures more than one related thing, keep those settings together in a
+dedicated feature file instead. Do not use either bucket to hide named feature
+configuration.
+
 Some Nix files are structural rather than reusable feature modules. The
 exceptions are `flake.nix`, which defines the flake entrypoint,
 `profiles/default.nix`, which catalogs the profiles,

@@ -24,17 +24,12 @@ let
   networkmanager = import ./networkmanager.nix;
   nixos = import ./nixos.nix;
   niri = import ./niri.nix;
-  podman = import ./podman.nix;
-  printing = import ./printing.nix;
+  profile = import ./profile.nix;
   shares = import ./shares.nix;
-  security = import ./security.nix;
   studioDisplay = import ./studio-display.nix;
   vscode = import ./vscode.nix;
   xdg = import ./xdg.nix;
   zsa = import ./zsa.nix;
-  dconf = import ./dconf.nix;
-  graphics = import ./graphics.nix;
-  polkit = import ./polkit.nix;
 in
 {
   nixos = {
@@ -45,8 +40,6 @@ in
       boot.nixos
       btrfs.nixos
       dmsFeature.nixos
-      dconf.nixos
-      graphics.nixos
       gnomeKeyring.nixos
       gnomeDisks.nixos
       input.nixos
@@ -55,11 +48,8 @@ in
       networkmanager.nixos
       nixos.nixos
       niri.nixos
-      podman.nixos
-      printing.nixos
-      polkit.nixos
+      profile.nixos
       shares.nixos
-      security.nixos
       studioDisplay.nixos
       xdg.nixos
       zsa.nixos
