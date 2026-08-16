@@ -22,6 +22,10 @@
           }
         ];
 
+        "com.apple.HIToolbox".AppleGlobalTextInputProperties = {
+          TextInputGlobalPropertyPerContextInput = false;
+        };
+
         "com.apple.symbolichotkeys".AppleSymbolicHotKeys = {
           "118" = {
             enabled = true;
