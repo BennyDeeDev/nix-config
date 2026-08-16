@@ -1,6 +1,6 @@
 ## Nix Config
 
-This Nix config is a black hole for wasted time, water, and money: personal costs are probably over 500 EUR because I am a lazy fuck and couldn't be bothered, while the unsubsidized AI bill is over 9000; multiple people in Africa died of thirst because AI used all the water for this, and it just keeps going. The robot tells me it doesn't want to stop.
+This Nix config is a black hole for wasted time, water, and money: personal costs are probably over 500 EUR because I am a lazy fuck and couldn't be bothered, while the unsubsidized AI bill is over 9000; multiple people in Africa died of thirst because AI used all the water for this, and it just keeps going.
 
 The Dendritic pattern is already an overengineered piece of software for people who don't know how to import things, but apparently it was not extravagant enough for me. I looked at it and thought, "I can waste even more time than this," so I created my own version.
 
@@ -8,19 +8,19 @@ My wife keeps wondering where all the money goes and why I am not walking the do
 
 Right as I am writing this, I am dropping into the next Nix rabbit hole. It is in my blood to fight the everlasting impurity of applications, so we write yet another wrapper in Nix.
 
-![vegeta-over-9000-gif](https://media1.tenor.com/m/VXpt02jFlIIAAAAd/it%27s-over-9000-it%27s.gif)   
+![vegeta-over-9000-gif](https://media1.tenor.com/m/VXpt02jFlIIAAAAd/it%27s-over-9000-it%27s.gif)
 
 ## Boring Documentation for Lunatics and Robots
 
 NixOS, nix-darwin, and Home Manager configuration for the machines below.
 
-| Output | Role |
-| --- | --- |
-| `desktop` | NixOS workstation and gaming host |
-| `mbp-personal` | Personal macOS workstation |
-| `pi5-server` | Home automation server |
-| `pi5-kiosk` | Planned kiosk |
-| `images.pi5-bootstrap` | Raspberry Pi 5 bootstrap image |
+| Output                 | Role                              |
+| ---------------------- | --------------------------------- |
+| `desktop`              | NixOS workstation and gaming host |
+| `mbp-personal`         | Personal macOS workstation        |
+| `pi5-server`           | Home automation server            |
+| `pi5-kiosk`            | Planned kiosk                     |
+| `images.pi5-bootstrap` | Raspberry Pi 5 bootstrap image    |
 
 ## Architecture
 
@@ -31,20 +31,23 @@ files/       Application payloads
 hosts/       Machine identity, hardware, disks, and unique policy
 images/      Image outputs
 modules/     Reusable modules selected explicitly
-profiles/    Explicit base, system, terminal, and graphical bundles
+profiles/    Explicit base, NixOS, shared, Darwin, and terminal bundles
 secrets/     Encrypted SOPS documents
 ```
 
 Profile composition is explicit. `base` provides the universal foundation;
-`system`, `terminal`, `graphical`, and `pi5` are complete opinionated bundles.
-`profiles/default.nix` is their explicit catalog; each host selects whole
+`nixos`, `shared`, `darwin`, `terminal`, and `pi5` are complete opinionated
+bundles.
+`profiles/default.nix` is their explicit catalog; the root `flake.nix` exports
+that catalog for other flakes as `.#profiles`. Each host selects whole
 profiles and reusable host modules:
 
 ```text
 profiles/base/default.nix
-profiles/system/default.nix
+profiles/nixos/default.nix
+profiles/shared/default.nix
+profiles/darwin/default.nix
 profiles/terminal/default.nix
-profiles/graphical/default.nix
 profiles/pi5/default.nix
 ```
 
@@ -58,9 +61,9 @@ Feature files return the module-system facets they support:
 }
 ```
 
-Unsupported facets are omitted. Home Manager facets shared between Linux and
-macOS use `pkgs.stdenv.isLinux` or `pkgs.stdenv.isDarwin` where needed. Host
-modules compose profile facets and reusable modules directly. `flake.nix`
+Unsupported facets are omitted. Shared modules are platform-neutral; NixOS and
+Darwin-specific behavior belongs in their respective profiles. Host modules
+compose profile facets and reusable modules directly. `flake.nix`
 only instantiates outputs and provides their external flake dependencies;
 only the mutable checkout path is passed to Home Manager through
 `extraSpecialArgs`.
@@ -70,19 +73,51 @@ only the mutable checkout path is passed to Home Manager through
 `profiles/base/` contains the NixOS and nix-darwin foundation shared by
 workstations, servers, and images.
 
-`profiles/system/` is the complete daily-machine system policy. Its NixOS
-facet requires Btrfs and UEFI Secure Boot and enables audio, Bluetooth,
-networking, printing, containers, and virtualization. Its Darwin facet owns
-the corresponding opinionated macOS system policy.
+`profiles/nixos/` is the complete NixOS workstation policy. It combines the
+system foundation with the Niri desktop, GUI applications, fonts, and desktop
+integration. Its Home Manager facet contains the NixOS-only user packages.
 
 `profiles/terminal/` contains the shell, command-line tools, and terminal
-editors. `profiles/graphical/` contains the Niri desktop, GUI applications,
-fonts, and desktop integration. `profiles/pi5/` contains the shared Pi user,
-SSH, filesystem, and lifecycle policy.
+editors. `profiles/shared/` contains platform-neutral user applications and
+configuration. `profiles/darwin/`
+contains shared macOS system policy and applications. `profiles/pi5/` contains
+the shared Pi user, SSH, filesystem, and lifecycle policy.
 
 `hosts/<name>/` selects whole profiles and contains machine facts: hostnames,
 hardware, disks, users, state versions, secret files, and unique mounts or
 applications.
+
+### External Profile Consumers
+
+The repository is also a profile library. Add it as a flake input and select
+the profile facet needed by the consuming system:
+
+```nix
+{
+  inputs.dotfiles.url = "github:benjaminderksen/dotfiles";
+
+  outputs = { nixpkgs, dotfiles, ... }:
+    let
+      profiles = dotfiles.profiles;
+    in
+    {
+      nixosConfigurations.example = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          profiles.base.nixos
+          profiles.nixos.nixos
+          profiles.shared.homeManager
+        ];
+      };
+    };
+}
+```
+
+Available exports are `base`, `darwin`, `nixos`, `pi5`, `shared`, and
+`terminal`. Each profile exposes only the facets it supports, such as
+`.nixos`, `.darwin`, or `.homeManager`. The profile files and their referenced
+configuration assets are kept inside the flake source, so relative paths keep
+working when the repository is consumed as an input.
 
 ## Feature Granularity
 
@@ -113,6 +148,25 @@ A terminal Home Manager feature uses the same facet shape:
 
 Add the facet explicitly to `profiles/terminal/default.nix`. Machine-specific
 behavior remains explicit in the relevant host.
+
+### Module Facets
+
+Every hand-written Nix module must declare the module systems it supports using
+one or more top-level facets: `nixos`, `homeManager`, or `darwin`. This rule
+applies throughout `profiles/`, `hosts/`, `images/`, and `modules/`. Omit
+facets that do not apply; add more than one only when the feature has an
+intentional implementation for multiple systems.
+
+`default.nix` files are composition-only. They combine facets through
+`imports`, but do not define feature settings themselves. This keeps the
+responsibility and supported module systems of each feature visible in its own
+file.
+
+Some Nix files are structural rather than reusable feature modules. The
+exceptions are `flake.nix`, which defines the flake entrypoint,
+`profiles/default.nix`, which catalogs the profiles,
+`hosts/desktop/disko.nix`, which Disko consumes directly, and the generated
+`hosts/desktop/hardware-configuration.nix`.
 
 ### Attrset Style
 

@@ -14,7 +14,5 @@ in
       neovim.homeManager
       opencode.homeManager
     ];
-
-    programs.home-manager.enable = true;
   };
 }

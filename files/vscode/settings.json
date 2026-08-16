@@ -1,6 +1,6 @@
 {
   "workbench.colorTheme": "Catppuccin Mocha",
-  "workbench.iconTheme": "catppuccin-mocha",
+  "workbench.iconTheme": "catppuccin-latte",
   "workbench.startupEditor": "none",
   "workbench.layoutControl.enabled": false,
   "workbench.secondarySideBar.defaultVisibility": "visible",
@@ -14,7 +14,7 @@
   "window.titleSeparator": " — ",
 
   "editor.fontFamily": "Hack Nerd Font Mono",
-  "editor.fontSize": 13,
+  "editor.fontSize": 12,
   "editor.formatOnSave": true,
   "editor.inlayHints.enabled": "off",
   "editor.accessibilitySupport": "off",
@@ -66,5 +66,5 @@
   "chat.viewSessions.enabled": false,
   "chat.viewSessions.orientation": "stacked",
   "chat.agent.maxRequests": 50,
-  "chat.permissions.default": "autoApprove"
+  "chat.permissions.default": "autoApprove",
 }

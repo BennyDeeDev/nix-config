@@ -8,7 +8,7 @@ Build the bootstrap SD image, flash it, boot the Pi, then deploy a role
 The build machine must register binfmt for aarch64 so it can cross-compile.
 On the desktop host in this repo this is already set via
 `boot.binfmt.emulatedSystems = [ "aarch64-linux" ]` in
-`profiles/system/boot.nix`.
+`profiles/nixos/boot.nix`.
 
 ## Build the bootstrap SD image
 
@@ -110,6 +110,7 @@ and never advances to probing. macOS has no equivalent gating, hence the Mac
 being the working path here.
 
 Workarounds if a Mac is not available:
+
 - `sudo chmod 666 /dev/ttyACM0` (temporary; reverts on replug)
 - OR `sudo usermod -aG dialout $USER` then fully log out and back in
 - OR bypass the browser entirely:
@@ -136,7 +137,6 @@ Workarounds if a Mac is not available:
 3. Import Apple HomeKit Thread credentials so the OTBR joins your existing
    Apple Thread network (HomePod minis are the existing border routers)
    instead of staying on its own partition:
-
    - Install the HA Companion app on your iPhone.
    - Connect it to `http://pi5-server.fritz.box:8123`.
    - In the app: Settings → Devices & Services → Thread → Configure →
@@ -164,7 +164,7 @@ Workarounds if a Mac is not available:
 
    ```bash
    sudo podman exec otbr ot-ctl state
-   sudo podman exec otbr ot-ctl networkname 
+   sudo podman exec otbr ot-ctl networkname
    sudo podman exec otbr ot-ctl panids
    sudo podman exec otbr ot-ctl router table
    sudo podman exec otbr ot-ctl neighbor table
@@ -175,7 +175,6 @@ Workarounds if a Mac is not available:
 
 5. Commission a Matter-over-Thread device into HA (multi-admin — the
    device stays paired to Apple Home, HA joins as a second controller):
-
    - In Apple Home: select the device → open its commissioning window
      (Pairing Mode).
    - Enter the device's setup code.

@@ -86,7 +86,7 @@ lsblk -o NAME,SIZE,SERIAL
 ## Secure Boot (Lanzaboote)
 
 Signs all boot artifacts and enforces Secure Boot via
-`profiles/system/boot.nix`. Keys auto-generate at `/var/lib/sbctl` and
+`profiles/nixos/boot.nix`. Keys auto-generate at `/var/lib/sbctl` and
 auto-enroll alongside Microsoft's UEFI CA on the first Setup-Mode boot. The
 steps below are the manual BIOS flow required on MSI boards to actually flip
 Secure Boot on.
@@ -118,12 +118,12 @@ intermediate images never loaded by firmware.
 Switch to Advanced mode (`F7`), then:
 
 1. **Security → Secure Boot**: set `Secure Boot` = `[Enabled]`, `Secure Boot
-   Mode` = `[Custom]`, `Secure Boot Preset` = `[Maximum Security]`.
+Mode` = `[Custom]`, `Secure Boot Preset` = `[Maximum Security]`.
 2. **Security → Secure Boot → Key Management**: set `Provision Factory Default
-   keys` = `[Disabled]`. Save and exit (`F10`).
+keys` = `[Disabled]`. Save and exit (`F10`).
 3. Re-enter the BIOS before the OS boots.
 4. **Security → Secure Boot → Key Management**: click `Delete all Secure Boot
-   variables`. Confirm both prompts (delete, then reset without saving).
+variables`. Confirm both prompts (delete, then reset without saving).
 
 **3. Verify Secure Boot is enforced**
 
