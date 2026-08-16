@@ -5,19 +5,22 @@ inputs@{
 
 let
   profiles = import ../../profiles inputs;
-  homeManager = import ./home-manager.nix { inherit profiles sops; };
+  nixModule = import ../../modules/nix.nix;
+  homeManagerConfig = import ./home-manager.nix {
+    inherit profiles sopsModule;
+  };
   host = import ./host.nix;
-  sops = import ../../modules/sops.nix { inherit sops-nix; };
+  sopsModule = import ../../modules/sops.nix { inherit sops-nix; };
   homebrew = import ./homebrew.nix;
   users = import ./users.nix;
 in
 {
   darwin = {
     imports = [
-      profiles.base.darwin
-      profiles.darwin.darwin
+      nixModule.darwin
+      profiles.macos.darwin
       users.darwin
-      homeManager.darwin
+      homeManagerConfig.darwin
       homebrew.darwin
       host.darwin
     ];

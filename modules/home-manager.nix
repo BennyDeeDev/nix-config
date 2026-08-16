@@ -2,16 +2,6 @@
 
 let
   common = {
-    nixpkgs.config.allowUnfree = true;
-
-    nix.settings = {
-      auto-optimise-store = true;
-      experimental-features = [
-        "nix-command"
-        "flakes"
-      ];
-    };
-
     home-manager = {
       backupFileExtension = "hm-backup";
       useGlobalPkgs = true;
@@ -32,5 +22,9 @@ in
       common
       home-manager.darwinModules.home-manager
     ];
+  };
+
+  homeManager = {
+    programs.home-manager.enable = true;
   };
 }

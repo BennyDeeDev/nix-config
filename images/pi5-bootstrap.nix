@@ -8,7 +8,7 @@ in
     { modulesPath, ... }:
     {
       imports = [
-        profiles.base.nixos
+        profiles.nixos.nixos
         profiles.pi5.nixos
         "${modulesPath}/installer/sd-card/sd-image-aarch64.nix"
       ];

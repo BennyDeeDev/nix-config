@@ -10,7 +10,7 @@ in
 {
   nixos = {
     imports = [
-      profiles.base.nixos
+      profiles.nixos.nixos
       profiles.pi5.nixos
       nixos-hardware.nixosModules.raspberry-pi-5
       host.nixos

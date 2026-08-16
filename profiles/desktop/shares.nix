@@ -1,9 +1,9 @@
 let
-  nas = import ../../modules/nas.nix;
+  nasModule = import ../../modules/nas.nix;
 in
 {
   nixos = {
-    imports = [ nas.nixos ];
+    imports = [ nasModule.nixos ];
 
     my.nas = {
       uid = 1000;

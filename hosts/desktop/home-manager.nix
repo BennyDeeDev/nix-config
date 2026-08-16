@@ -1,7 +1,7 @@
 {
   gaming,
   profiles,
-  sops,
+  sopsModule,
   windows,
 }:
 
@@ -16,10 +16,9 @@
         { ... }:
         {
           imports = [
-            profiles.nixos.homeManager
+            profiles.desktop.homeManager
             profiles.terminal.homeManager
-            profiles.shared.homeManager
-            sops.homeManager
+            sopsModule.homeManager
             gaming.homeManager
             windows.homeManager
           ];

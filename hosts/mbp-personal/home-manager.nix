@@ -1,6 +1,6 @@
 {
   profiles,
-  sops,
+  sopsModule,
 }:
 
 {
@@ -13,9 +13,8 @@
       users.benjaminderksen = {
         imports = [
           profiles.terminal.homeManager
-          profiles.shared.homeManager
-          profiles.darwin.homeManager
-          sops.homeManager
+          profiles.macos.homeManager
+          sopsModule.homeManager
         ];
 
         home.stateVersion = "26.05";

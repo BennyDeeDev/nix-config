@@ -7,16 +7,16 @@ let
   profiles = import ../../profiles inputs;
   host = import ./host.nix;
   homeAssistant = import ./home-assistant.nix;
-  nas = import ../../modules/nas.nix;
-  container-backup = import ../../modules/container-backup.nix;
+  nasModule = import ../../modules/nas.nix;
+  containerBackupModule = import ../../modules/container-backup.nix;
 in
 {
   nixos = {
     imports = [
-      profiles.base.nixos
+      profiles.nixos.nixos
       profiles.pi5.nixos
-      nas.nixos
-      container-backup.nixos
+      nasModule.nixos
+      containerBackupModule.nixos
       nixos-hardware.nixosModules.raspberry-pi-5
       homeAssistant.nixos
       host.nixos

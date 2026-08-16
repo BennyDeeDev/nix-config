@@ -31,22 +31,20 @@ files/       Application payloads
 hosts/       Machine identity, hardware, disks, and unique policy
 images/      Image outputs
 modules/     Reusable modules selected explicitly
-profiles/    Explicit base, NixOS, shared, Darwin, and terminal bundles
+profiles/    Explicit NixOS, desktop, macOS, Pi, and terminal bundles
 secrets/     Encrypted SOPS documents
 ```
 
-Profile composition is explicit. `base` provides the universal foundation;
-`nixos`, `shared`, `darwin`, `terminal`, and `pi5` are complete opinionated
-bundles.
+Profile composition is explicit. `nixos` provides the generic NixOS foundation;
+`desktop`, `macos`, `terminal`, and `pi5` are complete opinionated bundles.
 `profiles/default.nix` is their explicit catalog; the root `flake.nix` exports
 that catalog for other flakes as `.#profiles`. Each host selects whole
 profiles and reusable host modules:
 
 ```text
-profiles/base/default.nix
 profiles/nixos/default.nix
-profiles/shared/default.nix
-profiles/darwin/default.nix
+profiles/desktop/default.nix
+profiles/macos/default.nix
 profiles/terminal/default.nix
 profiles/pi5/default.nix
 ```
@@ -70,17 +68,16 @@ only the mutable checkout path is passed to Home Manager through
 
 ## Ownership
 
-`profiles/base/` contains the NixOS and nix-darwin foundation shared by
+`profiles/nixos/` contains the generic NixOS foundation shared by
 workstations, servers, and images.
 
-`profiles/nixos/` is the complete NixOS workstation policy. It combines the
+`profiles/desktop/` is the complete NixOS workstation policy. It combines the
 system foundation with the Niri desktop, GUI applications, fonts, and desktop
 integration. Its Home Manager facet contains the NixOS-only user packages.
 
 `profiles/terminal/` contains the shell, command-line tools, and terminal
-editors. `profiles/shared/` contains platform-neutral user applications and
-configuration. `profiles/darwin/`
-contains shared macOS system policy and applications. `profiles/pi5/` contains
+editors. `profiles/macos/` contains shared macOS system policy and applications.
+`profiles/pi5/` contains
 the shared Pi user, SSH, filesystem, and lifecycle policy.
 
 `hosts/<name>/` selects whole profiles and contains machine facts: hostnames,
@@ -104,16 +101,15 @@ the profile facet needed by the consuming system:
       nixosConfigurations.example = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
-          profiles.base.nixos
           profiles.nixos.nixos
-          profiles.shared.homeManager
+          profiles.desktop.homeManager
         ];
       };
     };
 }
 ```
 
-Available exports are `base`, `darwin`, `nixos`, `pi5`, `shared`, and
+Available profile entries are `nixos`, `desktop`, `macos`, `pi5`, and
 `terminal`. Each profile exposes only the facets it supports, such as
 `.nixos`, `.darwin`, or `.homeManager`. The profile files and their referenced
 configuration assets are kept inside the flake source, so relative paths keep
@@ -178,6 +174,22 @@ exceptions are `flake.nix`, which defines the flake entrypoint,
 `profiles/default.nix`, which catalogs the profiles,
 `hosts/desktop/disko.nix`, which Disko consumes directly, and the generated
 `hosts/desktop/hardware-configuration.nix`.
+
+### Module Bindings
+
+Name local bindings for reusable modules with the `Module` suffix. For example,
+the module imported from `modules/apps.nix` is bound as `appsModule`, and the
+module imported from `modules/sops.nix` is bound as `sopsModule`.
+
+Home Manager uses two bindings because it has two composition layers:
+
+- `homeManagerModule` is the reusable module that registers Home Manager with
+  NixOS or nix-darwin.
+- `homeManagerConfig` is the host-specific module that configures users through
+  `home-manager.users`.
+
+These are local binding names only. Repository-owned module options use the
+separate `config.my.*` and `options.my.*` namespaces.
 
 ### Attrset Style
 
