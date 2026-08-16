@@ -9,7 +9,6 @@ let
   homeAssistant = import ./home-assistant.nix;
   nas = import ../../modules/nas.nix;
   container-backup = import ../../modules/container-backup.nix;
-  settings = import ./settings.nix;
 in
 {
   nixos = {
@@ -21,7 +20,6 @@ in
       nixos-hardware.nixosModules.raspberry-pi-5
       homeAssistant.nixos
       host.nixos
-      settings.nixos
     ];
   };
 }
