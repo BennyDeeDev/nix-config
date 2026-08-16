@@ -1,10 +1,13 @@
 inputs@{
+  home-manager,
   sops-nix,
   ...
 }:
 
 let
   profiles = import ../../profiles inputs;
+  systemHomeManager = import ../../modules/home-manager.nix { inherit home-manager; };
+  nix = import ../../modules/nix.nix;
   homeManager = import ./home-manager.nix { inherit profiles sops; };
   host = import ./host.nix;
   sops = import ../../modules/sops.nix { inherit sops-nix; };
@@ -14,9 +17,10 @@ in
 {
   darwin = {
     imports = [
-      profiles.base.darwin
-      profiles.darwin.darwin
+      nix.darwin
+      profiles.macos.darwin
       users.darwin
+      systemHomeManager.darwin
       homeManager.darwin
       homebrew.darwin
       host.darwin

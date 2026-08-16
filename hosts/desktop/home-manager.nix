@@ -5,6 +5,13 @@
   windows,
 }:
 
+let
+  apps = import ../../modules/apps.nix;
+  ghostty = import ../../modules/ghostty.nix;
+  homeManagerProfile = import ../../modules/home-manager-profile.nix;
+  vscode = import ../../modules/vscode.nix;
+in
+
 {
   nixos = {
     home-manager = {
@@ -16,9 +23,12 @@
         { ... }:
         {
           imports = [
-            profiles.nixos.homeManager
+            profiles.desktop.homeManager
             profiles.terminal.homeManager
-            profiles.shared.homeManager
+            apps.homeManager
+            ghostty.homeManager
+            homeManagerProfile.homeManager
+            vscode.homeManager
             sops.homeManager
             gaming.homeManager
             windows.homeManager
