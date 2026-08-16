@@ -1,14 +1,7 @@
 {
-  homeManagerModule,
   profiles,
-  sops,
+  sopsModule,
 }:
-
-let
-  apps = import ../../modules/apps.nix;
-  ghostty = import ../../modules/ghostty.nix;
-  vscode = import ../../modules/vscode.nix;
-in
 
 {
   darwin = {
@@ -21,11 +14,7 @@ in
         imports = [
           profiles.terminal.homeManager
           profiles.macos.homeManager
-          apps.homeManager
-          ghostty.homeManager
-          homeManagerModule.homeManager
-          vscode.homeManager
-          sops.homeManager
+          sopsModule.homeManager
         ];
 
         home.stateVersion = "26.05";

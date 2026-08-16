@@ -1,6 +1,5 @@
 inputs@{
   disko,
-  home-manager,
   nix-flatpak,
   sops-nix,
   ...
@@ -11,17 +10,15 @@ let
   gaming = import ./gaming { inherit nix-flatpak; };
   hardware = import ./hardware.nix;
   host = import ./host.nix;
-  homeManagerModule = import ../../modules/home-manager.nix { inherit home-manager; };
-  sops = import ../../modules/sops.nix { inherit sops-nix; };
+  sopsModule = import ../../modules/sops.nix { inherit sops-nix; };
   secrets = import ./secrets.nix;
   users = import ./users.nix;
   windows = import ./windows.nix;
   homeManagerConfig = import ./home-manager.nix {
     inherit
       gaming
-      homeManagerModule
       profiles
-      sops
+      sopsModule
       windows
       ;
   };
@@ -40,7 +37,6 @@ in
       host.nixos
       secrets.nixos
       users.nixos
-      homeManagerModule.nixos
       homeManagerConfig.nixos
     ];
   };

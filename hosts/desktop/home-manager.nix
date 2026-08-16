@@ -1,16 +1,9 @@
 {
   gaming,
-  homeManagerModule,
   profiles,
-  sops,
+  sopsModule,
   windows,
 }:
-
-let
-  apps = import ../../modules/apps.nix;
-  ghostty = import ../../modules/ghostty.nix;
-  vscode = import ../../modules/vscode.nix;
-in
 
 {
   nixos = {
@@ -25,11 +18,7 @@ in
           imports = [
             profiles.desktop.homeManager
             profiles.terminal.homeManager
-            apps.homeManager
-            ghostty.homeManager
-            homeManagerModule.homeManager
-            vscode.homeManager
-            sops.homeManager
+            sopsModule.homeManager
             gaming.homeManager
             windows.homeManager
           ];
