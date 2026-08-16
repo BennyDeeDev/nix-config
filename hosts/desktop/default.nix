@@ -11,7 +11,7 @@ let
   gaming = import ./gaming { inherit nix-flatpak; };
   hardware = import ./hardware.nix;
   host = import ./host.nix;
-  systemHomeManager = import ../../modules/home-manager.nix { inherit home-manager; };
+  myHomeManager = import ../../modules/home-manager.nix { inherit home-manager; };
   sops = import ../../modules/sops.nix { inherit sops-nix; };
   secrets = import ./secrets.nix;
   users = import ./users.nix;
@@ -39,7 +39,7 @@ in
       host.nixos
       secrets.nixos
       users.nixos
-      systemHomeManager.nixos
+      myHomeManager.nixos
       homeManager.nixos
     ];
   };

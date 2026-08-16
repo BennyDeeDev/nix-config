@@ -175,6 +175,13 @@ exceptions are `flake.nix`, which defines the flake entrypoint,
 `hosts/desktop/disko.nix`, which Disko consumes directly, and the generated
 `hosts/desktop/hardware-configuration.nix`.
 
+### Local Bindings
+
+Use the `my` prefix for repository-owned local composition bindings, matching
+the `config.my.*` namespace used by custom options. For example, bind the
+host's Home Manager system module as `myHomeManager`. Keep these bindings
+distinct from the Home Manager user configuration they import.
+
 ### Attrset Style
 
 Collapse a dotted path only when that path has multiple child keys in the same
