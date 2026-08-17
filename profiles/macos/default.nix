@@ -8,6 +8,7 @@ let
   ghosttyModule = import ../../modules/ghostty.nix;
   homeManagerModule = import ../../modules/home-manager.nix { inherit home-manager; };
   input = import ./input.nix;
+  nixModule = import ../../modules/nix.nix;
   profile = import ./profile.nix;
   settings = import ./settings.nix;
   vscodeModule = import ../../modules/vscode.nix;
@@ -32,6 +33,7 @@ in
       apps.darwin
       finder.darwin
       input.darwin
+      nixModule.darwin
       profile.darwin
       settings.darwin
     ];
