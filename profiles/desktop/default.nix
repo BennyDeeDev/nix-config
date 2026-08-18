@@ -25,6 +25,7 @@ let
   libvirt = import ./libvirt.nix;
   nautilus = import ./nautilus.nix;
   networkmanager = import ./networkmanager.nix;
+  nixModule = import ../../modules/nix.nix;
   nixos = import ./nixos.nix;
   niri = import ./niri.nix;
   profile = import ./profile.nix;
@@ -52,6 +53,7 @@ in
       libvirt.nixos
       nautilus.nixos
       networkmanager.nixos
+      nixModule.nixos
       nixos.nixos
       niri.nixos
       profile.nixos
