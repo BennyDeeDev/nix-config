@@ -26,6 +26,7 @@ in
 {
   nixos = {
     imports = [
+      profiles.nixos.nixos
       profiles.desktop.nixos
       gaming.nixos
       windows.nixos
