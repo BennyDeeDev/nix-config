@@ -13,22 +13,26 @@ let
 in
 {
   nixos = common // {
-    nix.gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 30d";
+    nix = common.nix // {
+      gc = {
+        automatic = true;
+        dates = "weekly";
+        options = "--delete-older-than 30d";
+      };
     };
   };
 
   darwin = common // {
-    nix.gc = {
-      automatic = true;
-      interval = {
-        Weekday = 1;
-        Hour = 0;
-        Minute = 0;
+    nix = common.nix // {
+      gc = {
+        automatic = true;
+        interval = {
+          Weekday = 1;
+          Hour = 0;
+          Minute = 0;
+        };
+        options = "--delete-older-than 30d";
       };
-      options = "--delete-older-than 30d";
     };
   };
 }
