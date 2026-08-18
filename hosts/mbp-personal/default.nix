@@ -5,7 +5,6 @@ inputs@{
 
 let
   profiles = import ../../profiles inputs;
-  nixModule = import ../../modules/nix.nix;
   homeManagerConfig = import ./home-manager.nix {
     inherit profiles sopsModule;
   };
@@ -17,7 +16,6 @@ in
 {
   darwin = {
     imports = [
-      nixModule.darwin
       profiles.macos.darwin
       users.darwin
       homeManagerConfig.darwin
