@@ -16,6 +16,7 @@
       dms
       dms-plugin-registry
       home-manager
+      sops-nix
       ;
     inherit lanzaboote;
   };
