@@ -1,6 +1,6 @@
 ## Nix Config
 
-This Nix config is a black hole for wasted time, water, and money: personal costs are probably over 500 EUR because I am lazy and couldn't be bothered with handwriting fancy JSON, while the unsubsidized AI bill is over 9000;
+This Nix config is a black hole for wasted time, water, and money: personal costs are probably over 500 EUR because I am lazy and couldn't be bothered with handwriting fancy JSON, while the unsubsidized AI bill is over 9000.
 
 The Dendritic pattern is already an overengineered piece of software for people who don't know how to import things, but apparently it was not extravagant enough for me. I looked at it and thought, "I can waste even more time than this," so I created my own version.
 
