@@ -4,7 +4,6 @@
   dms-plugin-registry,
   home-manager,
   lanzaboote,
-  sops-nix,
 }:
 
 let
@@ -26,7 +25,7 @@ let
   libvirt = import ./libvirt.nix;
   nautilus = import ./nautilus.nix;
   networkmanager = import ./networkmanager.nix;
-  nixosProfile = import ../nixos { inherit sops-nix; };
+  nixModule = import ../../modules/nix.nix;
   nixos = import ./nixos.nix;
   niri = import ./niri.nix;
   profile = import ./profile.nix;
@@ -41,7 +40,6 @@ in
 {
   nixos = {
     imports = [
-      nixosProfile.nixos
       homeManagerModule.nixos
       apps.nixos
       audio.nixos
@@ -55,6 +53,7 @@ in
       libvirt.nixos
       nautilus.nixos
       networkmanager.nixos
+      nixModule.nixos
       nixos.nixos
       niri.nixos
       profile.nixos
