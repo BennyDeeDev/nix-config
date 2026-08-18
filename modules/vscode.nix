@@ -15,6 +15,9 @@
           catppuccin.catppuccin-vsc-icons
           esbenp.prettier-vscode
           jnoortheen.nix-ide
+          dbaeumer.vscode-eslint
+          golang.go
+          mikestead.dotenv
         ];
       };
     };
