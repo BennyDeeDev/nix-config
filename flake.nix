@@ -1,7 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -20,7 +19,7 @@
     };
     nixos-hardware = {
       url = "github:NixOS/nixos-hardware/master";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
     darwin = {
@@ -44,7 +43,6 @@
   outputs =
     inputs@{
       nixpkgs,
-      nixpkgs-unstable,
       darwin,
       ...
     }:
@@ -63,11 +61,11 @@
           system = "x86_64-linux";
           modules = [ (import ./hosts/desktop inputs).nixos ];
         };
-        pi5-server = nixpkgs-unstable.lib.nixosSystem {
+        pi5-server = nixpkgs.lib.nixosSystem {
           system = "aarch64-linux";
           modules = [ (import ./hosts/pi5-server inputs).nixos ];
         };
-        pi5-kiosk = nixpkgs-unstable.lib.nixosSystem {
+        pi5-kiosk = nixpkgs.lib.nixosSystem {
           system = "aarch64-linux";
           modules = [ (import ./hosts/pi5-kiosk inputs).nixos ];
         };
@@ -78,7 +76,7 @@
       };
 
       images.pi5-bootstrap =
-        (nixpkgs-unstable.lib.nixosSystem {
+        (nixpkgs.lib.nixosSystem {
           system = "aarch64-linux";
           modules = [ (import ./images/pi5-bootstrap.nix inputs).nixos ];
         }).config.system.build.sdImage;
