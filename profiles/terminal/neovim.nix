@@ -58,13 +58,6 @@
         delta
       ];
 
-      programs.zsh = {
-        shellAliases.n = "nvim";
-        initContent = ''
-          ncd() { __cd_and_exec nvim .; }
-        '';
-      };
-
       home.sessionVariables.SUDO_EDITOR = "nvim";
 
       xdg.configFile."nvim/init.lua".source =
