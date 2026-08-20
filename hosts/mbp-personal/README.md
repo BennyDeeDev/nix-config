@@ -23,17 +23,34 @@ sudo mv /etc/zprofile /etc/zprofile.before-nix-darwin
 sudo mv /etc/zshrc /etc/zshrc.before-nix-darwin
 ```
 
-## Grant Terminal Full Disk Access
+## macOS Privacy Permissions
 
-The macOS `universalaccess` defaults, including Reduce Motion, require the
-application running `darwin-rebuild` to have **Full Disk Access**.
+Run `darwin-rebuild` from **Terminal.app** and enable these permissions for
+Terminal.app in **System Settings → Privacy & Security**:
 
-Enable it in **System Settings → Privacy & Security → Full Disk Access** for
-the terminal application you use, such as Terminal, Ghostty, or Visual Studio
-Code. Quit and reopen that application afterward, then run the rebuild again.
+- **Full Disk Access**: required by the macOS `universalaccess` defaults.
+- **App Management**: required by Home Manager to copy apps into
+  `~/Applications/Home Manager Apps` for Spotlight and Launchpad.
+
+Quit and reopen Terminal.app after changing permissions.
+
+If `rsync` hangs or reports `Permission denied` while removing files under
+`~/Applications/Home Manager Apps`, stop the copied app before retrying. A
+failed App Management probe can leave bundle files owned by `root`. Quit the
+affected applications, then remove only the Home Manager app copies:
+
+```sh
+sudo /bin/rm -rf "$HOME/Applications/Home Manager Apps"
+```
+
+This removes neither `/Applications` apps nor Nix packages; Home Manager
+recreates its copies after a successful activation.
 
 ## 3. Subsequent rebuilds
 
 ```sh
-darwin-rebuild switch --flake ~/Repos/nix-config#mbp-personal
+sudo darwin-rebuild switch --flake ~/Repos/nix-config#mbp-personal
 ```
+
+`drs` opens Terminal.app and runs the rebuild there. Enter your `sudo` password
+in the Terminal.app window when prompted.
