@@ -4,6 +4,7 @@ let
   neovim = import ./neovim.nix;
   opencode = import ./opencode.nix;
   profile = import ./profile.nix;
+  ssh = import ./ssh.nix;
 in
 {
   homeManager = {
@@ -13,6 +14,7 @@ in
       neovim.homeManager
       opencode.homeManager
       profile.homeManager
+      ssh.homeManager
     ];
   };
 }
