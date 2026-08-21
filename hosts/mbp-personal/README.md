@@ -51,6 +51,3 @@ recreates its copies after a successful activation.
 ```sh
 sudo darwin-rebuild switch --flake ~/Repos/nix-config#mbp-personal
 ```
-
-`drs` opens Terminal.app and runs the rebuild there. Enter your `sudo` password
-in the Terminal.app window when prompted.
