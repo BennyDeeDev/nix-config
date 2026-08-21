@@ -11,6 +11,7 @@ let
   nixModule = import ../../modules/nix.nix;
   profile = import ./profile.nix;
   settings = import ./settings.nix;
+  users = import ./users.nix;
   vscodeModule = import ../../modules/vscode.nix;
   vscode = import ./vscode.nix;
 in
@@ -36,6 +37,7 @@ in
       nixModule.darwin
       profile.darwin
       settings.darwin
+      users
     ];
   };
 }
