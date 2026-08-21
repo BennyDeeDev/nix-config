@@ -63,8 +63,12 @@
   },
   "chat.commandCenter.enabled": false,
   "chat.viewWelcome.enabled": false,
-  "chat.viewSessions.enabled": false,
   "chat.viewSessions.orientation": "stacked",
   "chat.agent.maxRequests": 50,
   "chat.permissions.default": "autoApprove",
+  "accessibility.signalOptions.volume": 25,
+  "accessibility.signals.chatResponseReceived": { "sound": "on" },
+  "accessibility.signals.chatUserActionRequired": {
+    "sound": "on",
+  },
 }
