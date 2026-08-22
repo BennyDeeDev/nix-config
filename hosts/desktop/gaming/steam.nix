@@ -18,6 +18,7 @@
         localNetworkGameTransfers.openFirewall = true;
       };
 
+      services.blueman.enable = lib.mkForce false;
       services.displayManager.defaultSession = lib.mkForce "gamescope-wayland";
     };
 }

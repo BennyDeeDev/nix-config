@@ -21,6 +21,8 @@
 
       services.greetd.settings.default_session.user = "greeter";
 
+      services.upower.enable = true;
+
       programs.dank-material-shell.greeter = {
         enable = true;
         compositor.name = "niri";
@@ -56,6 +58,7 @@
         enable = true;
         systemd = {
           enable = true;
+          target = "niri.service";
           restartIfChanged = true;
         };
         enableSystemMonitoring = true;
