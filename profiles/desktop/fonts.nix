@@ -3,9 +3,6 @@
     { pkgs, ... }:
     {
       home.packages = with pkgs; [
-        inter
-        fira-code
-        nerd-fonts.iosevka
         noto-fonts
         noto-fonts-color-emoji
       ];
@@ -15,7 +12,7 @@
         defaultFonts = {
           sansSerif = [ "Noto Sans" ];
           serif = [ "Noto Serif" ];
-          monospace = [ "Hack Nerd Font" ];
+          monospace = [ "Hack Nerd Font Mono" ];
           emoji = [ "Noto Color Emoji" ];
         };
       };

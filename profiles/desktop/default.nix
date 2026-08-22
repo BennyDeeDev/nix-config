@@ -68,6 +68,7 @@ in
       bluetooth.homeManager
       dmsFeature.homeManager
       fonts.homeManager
+      apps.homeManager
       appsModule.homeManager
       ghosttyModule.homeManager
       ghostty.homeManager

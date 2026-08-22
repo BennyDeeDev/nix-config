@@ -13,13 +13,6 @@
     {
       imports = [ dms.nixosModules.greeter ];
 
-      assertions = [
-        {
-          assertion = configHome == "/home/benjamin";
-          message = "DankMaterialShell requires benjamin's home directory to be /home/benjamin.";
-        }
-      ];
-
       users.groups.greeter = { };
       users.users.greeter = {
         isSystemUser = true;
