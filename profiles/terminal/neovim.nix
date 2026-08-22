@@ -58,6 +58,7 @@
         delta
       ];
 
+      programs.zsh.shellAliases.n = "nvim";
       home.sessionVariables.SUDO_EDITOR = "nvim";
 
       xdg.configFile."nvim/init.lua".source =

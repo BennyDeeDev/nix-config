@@ -37,19 +37,6 @@
             "...." = "cd ../../..";
           };
           initContent = ''
-            zd() {
-              if (( $# == 0 )); then
-                builtin cd ~
-              elif [[ -d "$1" ]]; then
-                builtin cd -- "$1"
-              else
-                z "$@" && printf '\\U000F17A9 ' && pwd ||
-                  print -u2 "Error: Directory not found"
-              fi
-            }
-
-            alias cd=zd
-
             autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
             zle -N up-line-or-beginning-search
             zle -N down-line-or-beginning-search
@@ -76,11 +63,10 @@
         zoxide = {
           enable = true;
           enableZshIntegration = true;
-        };
-        direnv = {
-          enable = true;
-          enableZshIntegration = true;
-          nix-direnv.enable = true;
+          options = [
+            "--cmd"
+            "cd"
+          ];
         };
         bat = {
           enable = true;
