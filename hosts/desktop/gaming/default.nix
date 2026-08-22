@@ -1,13 +1,10 @@
-{ nix-flatpak }:
+{ jovian, nix-flatpak }:
 
 let
   bottles = import ./bottles.nix;
   flatpak = import ./flatpak.nix { inherit nix-flatpak; };
-  fonts = import ./fonts.nix;
-  gamescope = import ./gamescope.nix;
   lsfg = import ./lsfg.nix;
   ludusavi = import ./ludusavi.nix;
-  profile = import ./profile.nix;
   rclone = import ./rclone.nix;
   ryujinx = import ./ryujinx.nix;
   steam = import ./steam.nix;
@@ -16,8 +13,8 @@ in
 {
   nixos = {
     imports = [
+      jovian.nixosModules.jovian
       flatpak.nixos
-      gamescope.nixos
       steam.nixos
     ];
   };
@@ -26,10 +23,8 @@ in
     imports = [
       bottles.homeManager
       flatpak.homeManager
-      fonts.homeManager
       lsfg.homeManager
       ludusavi.homeManager
-      profile.homeManager
       rclone.homeManager
       ryujinx.homeManager
       steam-rom-manager.homeManager

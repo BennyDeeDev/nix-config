@@ -1,5 +1,6 @@
 inputs@{
   disko,
+  jovian,
   nix-flatpak,
   sops-nix,
   ...
@@ -7,7 +8,7 @@ inputs@{
 
 let
   profiles = import ../../profiles inputs;
-  gaming = import ./gaming { inherit nix-flatpak; };
+  gaming = import ./gaming { inherit jovian nix-flatpak; };
   hardware = import ./hardware.nix;
   host = import ./host.nix;
   sopsModule = import ../../modules/sops.nix { inherit sops-nix; };
