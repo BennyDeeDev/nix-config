@@ -9,7 +9,7 @@
         desktopSession = "niri";
       };
 
-      programs.dank-material-shell.greeter.enable = lib.mkForce false;
+      programs.dms-greeter.enable = lib.mkForce false;
 
       programs.steam = {
         enable = true;

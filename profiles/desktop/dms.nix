@@ -1,5 +1,5 @@
 {
-  dgop,
+  dank-greeter,
   dms,
   dms-plugin-registry,
 }:
@@ -11,7 +11,7 @@
       configHome = config.users.users.benjamin.home;
     in
     {
-      imports = [ dms.nixosModules.greeter ];
+      imports = [ dank-greeter.nixosModules.default ];
 
       users.groups.greeter = { };
       users.users.greeter = {
@@ -23,7 +23,7 @@
 
       services.upower.enable = true;
 
-      programs.dank-material-shell.greeter = {
+      programs.dms-greeter = {
         enable = true;
         compositor.name = "niri";
         configHome = configHome;
@@ -62,7 +62,6 @@
           restartIfChanged = true;
         };
         enableSystemMonitoring = true;
-        dgop.package = dgop.packages.${pkgs.stdenv.hostPlatform.system}.default;
         enableVPN = false;
         enableDynamicTheming = false;
         enableAudioWavelength = true;

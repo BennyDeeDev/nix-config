@@ -1,5 +1,5 @@
 {
-  dgop,
+  dank-greeter,
   dms,
   dms-plugin-registry,
   home-manager,
@@ -13,7 +13,11 @@ let
   boot = import ./boot.nix { inherit lanzaboote; };
   btrfs = import ./btrfs.nix;
   dmsFeature = import ./dms.nix {
-    inherit dgop dms dms-plugin-registry;
+    inherit
+      dank-greeter
+      dms
+      dms-plugin-registry
+      ;
   };
   fonts = import ./fonts.nix;
   ghostty = import ./ghostty.nix;

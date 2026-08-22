@@ -1,5 +1,5 @@
 {
-  dgop,
+  dank-greeter,
   dms,
   dms-plugin-registry,
   home-manager,
@@ -12,7 +12,7 @@
   nixos = import ./nixos { inherit sops-nix; };
   desktop = import ./desktop {
     inherit
-      dgop
+      dank-greeter
       dms
       dms-plugin-registry
       home-manager
