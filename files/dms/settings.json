@@ -14,9 +14,9 @@
     }
   },
   "matugenScheme": "scheme-rainbow",
-  "widgetBackgroundColor": "sc",
+  "widgetBackgroundColor": "sth",
   "cornerRadius": 12,
-  "niriLayoutGapsOverride": 10,
+  "niriLayoutGapsOverride": 12,
   "niriLayoutRadiusOverride": 0,
   "niriLayoutBorderSize": 1,
   "clockFormat": "24h",

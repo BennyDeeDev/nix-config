@@ -5,6 +5,33 @@
 {
   disko.devices = {
     disk = {
+      games = {
+        type = "disk";
+        device = "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_1TB_S7HDNJ0Y413952T";
+        content = {
+          type = "gpt";
+          partitions.games = {
+            size = "100%";
+            content = {
+              type = "filesystem";
+              format = "btrfs";
+              extraArgs = [
+                "-L"
+                "Games"
+              ];
+              mountpoint = "/mnt/games";
+              mountOptions = [
+                "compress=zstd"
+                "noatime"
+                "discard=async"
+                "X-mount.owner=benjamin"
+                "X-mount.group=users"
+                "X-mount.mode=0775"
+              ];
+            };
+          };
+        };
+      };
       main = {
         type = "disk";
         device = "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_with_Heatsink_1TB_S7HFNJ0Y704719Z";

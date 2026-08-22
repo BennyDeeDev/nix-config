@@ -15,7 +15,7 @@
             "/nix/store:ro"
             "~/Games/Switch:ro"
             "${nixConfig}/files/gaming/ryujinx:rw"
-            "/mnt/bazzite/bazzite/Games/Switch:ro"
+            "/mnt/games/Switch:ro"
           ];
           shared = [ "!network" ];
         };

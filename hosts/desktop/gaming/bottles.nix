@@ -8,7 +8,7 @@
           "/nix/store:ro"
           "~/Games/PC:rw"
           "${nixConfig}/files/gaming/bottles:rw"
-          "/mnt/bazzite/bazzite/Games/PC:rw"
+          "/mnt/games/PC:rw"
         ];
       };
 
@@ -16,7 +16,7 @@
         ".var/app/com.usebottles.bottles/data/bottles/bottles/Games-Exe-Runner-Proton/bottle.yml".source =
           config.lib.file.mkOutOfStoreSymlink "${nixConfig}/files/gaming/bottles/bottle.yml";
         ".var/app/com.usebottles.bottles/data/bottles/bottles/Games-Exe-Runner-Proton/dosdevices/d:".source =
-          config.lib.file.mkOutOfStoreSymlink "/mnt/bazzite/bazzite/Games/PC";
+          config.lib.file.mkOutOfStoreSymlink "/mnt/games/PC";
       };
     };
 }
