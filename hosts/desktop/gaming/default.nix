@@ -27,6 +27,7 @@ in
       ludusavi.homeManager
       rclone.homeManager
       ryujinx.homeManager
+      steam.homeManager
       steam-rom-manager.homeManager
     ];
   };

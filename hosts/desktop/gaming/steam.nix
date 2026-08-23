@@ -18,7 +18,23 @@
         localNetworkGameTransfers.openFirewall = true;
       };
 
-      services.blueman.enable = lib.mkForce false;
       services.displayManager.defaultSession = lib.mkForce "gamescope-wayland";
+    };
+
+  homeManager =
+    { lib, ... }:
+    {
+      xdg.desktopEntries.return-to-gaming-mode = {
+        name = "Return to Gaming Mode";
+        comment = "Exit Desktop Mode and return to Steam";
+        exec = "steamosctl switch-to-game-mode";
+        icon = "steam";
+        terminal = false;
+        categories = [ "Game" ];
+      };
+
+      xdg.configFile."gtk-3.0/bookmarks".text = lib.mkAfter ''
+        file:///mnt/games Games
+      '';
     };
 }

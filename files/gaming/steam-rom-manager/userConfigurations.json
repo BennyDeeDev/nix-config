@@ -87,8 +87,9 @@
             "icon": ""
         },
         "parserId": "17577169444784902",
-        "version": 25,
-        "disabled": true
+        "version": 27,
+        "disabled": false,
+        "group": ""
     },
     {
         "parserType": "Glob",
@@ -179,7 +180,8 @@
             "icon": ""
         },
         "parserId": "175907429754181166",
-        "version": 25,
-        "disabled": false
+        "version": 27,
+        "disabled": false,
+        "group": ""
     }
 ]

@@ -32,13 +32,14 @@
 	"clearLogOnTest": false,
 	"autoKillSteam": true,
 	"autoRestartSteam": true,
-	"version": 10,
+	"version": 11,
 	"fuzzyMatcher": {
 		"timestamps": {
-			"check": 1776886608349,
-			"download": 1776886608349
+			"check": 1787481239489,
+			"download": 1787481239489
 		},
 		"verbose": false,
 		"filterProviders": true
-	}
+	},
+	"parserGroups": []
 }

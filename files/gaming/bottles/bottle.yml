@@ -3,7 +3,7 @@ CompatData: ''
 Creation_Date: '2025-09-28 17:03:02.118139'
 Custom_Path: false
 DLL_Overrides: {}
-DXVK: dxvk-2.7.1-12-9963ecd
+DXVK: dxvk-3.0.2-2-fd666da
 Environment: Gaming
 Environment_Variables:
     WINEDEBUG: +loaddll
@@ -82,15 +82,15 @@ Parameters:
     winebridge: false
 Path: Games-Exe-Runner-Proton
 Registry_Rules: []
-Runner: ge-proton10-33
+Runner: ge-proton11-5
 RunnerPath: ''
 Sandbox:
     share_net: false
     share_sound: false
 State: 0
 Uninstallers: {}
-Update_Date: '2026-04-21 21:55:59.604710'
-VKD3D: vkd3d-proton-3.0
+Update_Date: '2026-08-23 12:44:06.366829'
+VKD3D: vkd3d-proton-3.0.1-5-238f157
 Versioning: false
 Versioning_Exclusion_Patterns: []
 Windows: win10

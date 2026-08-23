@@ -201,6 +201,9 @@
   "multiplayer_ldn_passphrase": "",
   "ldn_server": "",
   "use_hypervisor": true,
+  "enable_gdb_stub": false,
+  "gdb_stub_port": 0,
+  "debugger_suspend_on_start": false,
   "show_dirty_hacks": false,
   "dirty_hacks": []
 }
