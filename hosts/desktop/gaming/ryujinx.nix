@@ -29,7 +29,7 @@
           keys_dir="$HOME/.var/app/io.github.ryubing.Ryujinx/config/Ryujinx/system"
           if [[ ! -f $keys_dir/prod.keys ]]; then
             mkdir -p "$keys_dir"
-            ${pkgs.unzip}/bin/unzip -oj \
+            ${lib.getExe pkgs.unzip} -oj \
               '/mnt/nas/homelab/data/media/games/Switch/Firmware/ProdKeys.net-v20.3.0.zip' \
               -d "$keys_dir"
           fi
@@ -40,7 +40,7 @@
           if [[ ! -f $sentinel ]]; then
             mkdir -p "$registered"
             tmp=$(mktemp -d)
-            ${pkgs.unzip}/bin/unzip -oj \
+            ${lib.getExe pkgs.unzip} -oj \
               '/mnt/nas/homelab/data/media/games/Switch/Firmware/Firmware.20.3.0.zip' \
               -d "$tmp"
             for nca in "$tmp"/*.nca; do

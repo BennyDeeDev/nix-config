@@ -16,12 +16,12 @@
       home.activation.ludusaviBootstrap = lib.hm.dag.entryAfter [ "sops-nix.service" ] ''
         mkdir -p "$HOME/Backups/ludusavi"
         if [[ -z $(ls -A $HOME/Backups/ludusavi 2>/dev/null) ]]; then
-          ${pkgs.rclone}/bin/rclone sync \
+          ${lib.getExe pkgs.rclone} sync \
             --fast-list --ignore-checksum \
             "ludusavi-1759601223:/Ludusavi/ludusavi-backup" \
             "$HOME/Backups/ludusavi" && \
-          ${pkgs.ludusavi}/bin/ludusavi restore --force && \
-          ${pkgs.ludusavi}/bin/ludusavi backup --force || true
+          ${lib.getExe pkgs.ludusavi} restore --force && \
+          ${lib.getExe pkgs.ludusavi} backup --force || true
         fi
       '';
 
@@ -30,8 +30,8 @@
           Unit.Description = "Ludusavi backup (NAS sync via Cloud settings)";
           Service = {
             Type = "oneshot";
-            ExecStart = "${pkgs.ludusavi}/bin/ludusavi backup --force";
-            ExecStartPost = "${pkgs.ludusavi}/bin/ludusavi cloud upload --force";
+            ExecStart = "${lib.getExe pkgs.ludusavi} backup --force";
+            ExecStartPost = "${lib.getExe pkgs.ludusavi} cloud upload --force";
           };
         };
         timers.ludusavi-backup = {

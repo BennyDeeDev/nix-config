@@ -20,8 +20,8 @@
       home.activation.steamRomManagerBootstrap = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         sentinel="$HOME/.local/share/steam-rom-manager/bootstrapped"
         if [[ ! -f $sentinel ]]; then
-          pkill steam || true
-          ${pkgs.steam-rom-manager}/bin/steam-rom-manager add
+          ${lib.getExe' pkgs.procps "pkill"} steam || true
+          ${lib.getExe pkgs.steam-rom-manager} add
           mkdir -p "$(dirname $sentinel)"
           touch "$sentinel"
         fi

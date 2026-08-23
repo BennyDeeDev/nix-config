@@ -71,10 +71,10 @@
             "--keep-monthly 6"
           ];
           backupPrepareCommand = lib.optionalString (value.services != [ ]) ''
-            ${pkgs.systemd}/bin/systemctl stop ${lib.concatStringsSep " " value.services}
+            ${lib.getExe' config.systemd.package "systemctl"} stop ${lib.concatStringsSep " " value.services}
           '';
           backupCleanupCommand = lib.optionalString (value.services != [ ]) ''
-            ${pkgs.systemd}/bin/systemctl start ${lib.concatStringsSep " " value.services}
+            ${lib.getExe' config.systemd.package "systemctl"} start ${lib.concatStringsSep " " value.services}
           '';
         }) cfg;
 
@@ -118,7 +118,7 @@
                     # Case 3: snapshots exist → restore latest.
                     restic restore latest --target /
                   '';
-                  ExecStartPost = "${pkgs.coreutils}/bin/touch ${sentinel}";
+                  ExecStartPost = "${lib.getExe' pkgs.coreutils "touch"} ${sentinel}";
                   PrivateTmp = true;
                   CacheDirectory = "restic";
                 };

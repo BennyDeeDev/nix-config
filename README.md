@@ -246,6 +246,13 @@ structure and split a file into sensible, cohesive files, but it is not a
 hard limit. Do not fragment tightly coupled configuration merely to reduce
 the line count.
 
+### Executable Paths
+
+In Nix-generated files, use `lib.getExe` for a package's main program and
+`lib.getExe'` for a specific executable instead of constructing `/bin` paths.
+Prefer configured package options when available. Use stable profile paths only
+for mutable external configuration that may outlive its Nix store reference.
+
 ## Validation
 
 Format the Nix tree and verify that formatting is clean:
