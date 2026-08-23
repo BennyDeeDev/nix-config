@@ -9,6 +9,7 @@ let
   ryujinx = import ./ryujinx.nix;
   steam = import ./steam.nix;
   steam-rom-manager = import ./steam-rom-manager.nix;
+  windows = import ./windows.nix;
 in
 {
   nixos = {
@@ -16,6 +17,7 @@ in
       jovian.nixosModules.jovian
       flatpak.nixos
       steam.nixos
+      windows.nixos
     ];
   };
 
@@ -29,6 +31,7 @@ in
       ryujinx.homeManager
       steam.homeManager
       steam-rom-manager.homeManager
+      windows.homeManager
     ];
   };
 }

@@ -2,7 +2,6 @@
   gaming,
   profiles,
   sopsModule,
-  windows,
 }:
 
 {
@@ -20,7 +19,6 @@
             profiles.terminal.homeManager
             sopsModule.homeManager
             gaming.homeManager
-            windows.homeManager
           ];
 
           sops.defaultSopsFile = ../../secrets/desktop.yaml;

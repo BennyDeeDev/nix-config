@@ -8,7 +8,6 @@
       ...
     }:
     {
-      # The upstream service does not cover the initial restore or post-backup cloud upload.
       home.packages = [ pkgs.ludusavi ];
 
       home.file.".config/ludusavi/config.yaml".source =
