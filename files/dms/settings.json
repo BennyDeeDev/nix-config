@@ -86,10 +86,13 @@
           "id": "powerMenuButton",
           "enabled": true
         },
-        "launcherButton",
         {
-          "enabled": true,
-          "id": "workspaceSwitcher"
+          "id": "launcherButton",
+          "enabled": true
+        },
+        {
+          "id": "workspaceSwitcher",
+          "enabled": true
         }
       ],
       "name": "Main Bar",
@@ -100,35 +103,55 @@
       "position": 0,
       "rightWidgets": [
         {
-          "enabled": true,
-          "id": "privacyIndicator"
+          "id": "privacyIndicator",
+          "enabled": true
         },
         {
           "id": "idleInhibitor",
           "enabled": true
         },
-        "clipboard",
         {
-          "enabled": true,
+          "id": "clipboard",
+          "enabled": true
+        },
+        {
           "id": "cpuUsage",
+          "enabled": true,
           "minimumWidth": false
         },
         {
-          "enabled": true,
           "id": "cpuTemp",
-          "minimumWidth": true
+          "enabled": true,
+          "minimumWidth": false
         },
         {
-          "enabled": true,
           "id": "memUsage",
-          "showInGb": true,
-          "showSwap": false
+          "enabled": true,
+          "minimumWidth": false,
+          "showSwap": false,
+          "showInGb": true
         },
-        "notificationButton",
-        "battery",
+        {
+          "id": "notificationButton",
+          "enabled": true
+        },
+        {
+          "id": "battery",
+          "enabled": true,
+          "showBatteryPercent": true,
+          "showBatteryPercentOnlyOnBattery": false
+        },
         "controlCenterButton",
-        "weather",
-        "clock"
+        {
+          "id": "weather",
+          "enabled": true
+        },
+        {
+          "id": "clock",
+          "enabled": true,
+          "clockCompactMode": false,
+          "clockDateOrder": "dateFirst"
+        }
       ],
       "screenPreferences": [
         "all"
