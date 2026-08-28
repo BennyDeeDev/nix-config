@@ -35,7 +35,7 @@
       };
 
       systemd.tmpfiles.rules = [
-        "C ${config.jovian.decky-loader.stateDir}/settings/Deck-Shelves/settings.json 0644 decky decky - ${../../../files/decky/Deck-Shelves/settings.json}"
+        "C ${config.jovian.decky-loader.stateDir}/settings/Deck-Shelves/settings.json 0644 decky decky - ${../../../files/gaming/decky/Deck-Shelves/settings.json}"
       ];
 
       programs.dms-greeter.enable = lib.mkForce false;
