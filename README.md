@@ -20,6 +20,7 @@ NixOS, nix-darwin, and Home Manager configuration for the machines below.
 | `mbp-personal`         | Personal macOS workstation        |
 | `pi5-server`           | Home automation server            |
 | `pi5-kiosk`            | Planned kiosk                     |
+| `pi5-tv`               | Waydroid Android TV appliance     |
 | `images.pi5-bootstrap` | Raspberry Pi 5 bootstrap image    |
 
 ## Architecture

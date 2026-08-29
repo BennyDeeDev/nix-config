@@ -73,6 +73,10 @@
           system = "aarch64-linux";
           modules = [ (import ./hosts/pi5-kiosk inputs).nixos ];
         };
+        pi5-tv = nixpkgs.lib.nixosSystem {
+          system = "aarch64-linux";
+          modules = [ (import ./hosts/pi5-tv inputs).nixos ];
+        };
       };
 
       darwinConfigurations.mbp-personal = darwin.lib.darwinSystem {
