@@ -88,5 +88,11 @@
           system = "aarch64-linux";
           modules = [ (import ./images/pi5-bootstrap.nix inputs).nixos ];
         }).config.system.build.sdImage;
+
+      images.pi5-bootstrap-graphical =
+        (nixpkgs.lib.nixosSystem {
+          system = "aarch64-linux";
+          modules = [ (import ./images/pi5-bootstrap-graphical.nix inputs).nixos ];
+        }).config.system.build.sdImage;
     };
 }

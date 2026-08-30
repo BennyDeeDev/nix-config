@@ -14,6 +14,7 @@ in
     imports = [
       profiles.nixos.nixos
       profiles.pi5.nixos
+      profiles.pi5.graphical
       base.nixos
       nixos-hardware.nixosModules.raspberry-pi-5
       host.nixos

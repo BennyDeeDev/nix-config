@@ -39,7 +39,7 @@
     in
     {
       services.udev.extraRules = ''
-        KERNEL=="event*", KERNELS=="107c701400.hdmi", MODE="0666"
+        KERNEL=="event*", KERNELS=="107c701400.hdmi", GROUP="input", MODE="0660"
       '';
 
       services.udev.extraHwdb = ''

@@ -9,8 +9,8 @@ applications without Google Play:
 - RetroArch
 - Stremio
 
-Playback testing has not been performed yet. HDMI output, CEC navigation, and
-touch input have been validated on the target hardware.
+Playback testing has not been performed yet. HDMI output and CEC navigation
+have been validated on the target hardware.
 
 ## Hardware
 
@@ -48,11 +48,15 @@ machine exposes those paths through `/etc/waydroid-extra/images`. Waydroid is
 initialized when `/var/lib/waydroid/waydroid.cfg` is absent; existing Android
 state is left untouched.
 
-## Build the bootstrap image
+The graphical image is built with the Raspberry Pi firmware, DTBs, overlays,
+U-Boot, and generated `config.txt` already on its static firmware partition.
+The deployed host does not rewrite that FAT partition during normal NixOS
+switches.
 
-The bootstrap image uses cached NixOS packages and does not compile Android,
-APKs, or a custom kernel. It does download and extract the Android image
-archives.
+## Build an image
+
+The bootstrap image uses cached NixOS packages and does not include Android,
+APKs, or a custom kernel.
 
 From the repository root:
 
@@ -66,12 +70,28 @@ sync
 
 Replace `/dev/sdX` only after verifying the SD-card device with `lsblk`.
 
+The graphical image adds the shared Pi 5 graphical profile and statically
+populates the firmware partition with the Pi firmware, DTBs, overlays, U-Boot,
+and generated `config.txt`. It does not include the Android TV stack:
+
+```bash
+nix build .#images.pi5-bootstrap-graphical
+zstd -d result/sd-image/*.img.zst -o pi5-bootstrap-graphical.img
+lsblk
+sudo dd if=pi5-bootstrap-graphical.img of=/dev/sdX bs=4M status=progress conv=fsync
+sync
+```
+
+Use the graphical image for a fresh `pi5-tv` installation, then deploy the TV
+host configuration over SSH.
+
 The shared Pi 5 profile provides the existing `benjamin` key-only
 administration user.
 
 ## First boot
 
 Connect Ethernet and HDMI, insert the SD card, and power on the Pi. The
+graphical bootstrap starts NixOS with SSH access. After deploying `pi5-tv`, the
 expected sequence is:
 
 ```text
@@ -176,19 +196,15 @@ confirm and Back remappings are needed because the Linux VC4 driver emits
 `KEY_OK` and `KEY_EXIT`, while the Android image maps `KEY_ENTER` and `KEY_BACK`
 to the corresponding Android navigation actions.
 
-Two settings are intentionally manual:
+One setting is intentionally manual:
 
-- The touchscreen mount was added to
-  `/var/lib/waydroid/lxc/waydroid/config_nodes` using
-  `/dev/input/by-id/platform--event-if00` as `dev/input/event3`, and its
-  permissions were changed manually. A Waydroid reset removes this setup.
-- Android display density is tuned in Android rather than Nix. Use Developer
-  options `Smallest width`, starting around `1080 dp` for the 4K display. The
-  equivalent privileged shell command is `waydroid shell wm density 320`.
+- Android display density is tuned in Android rather than Nix. The privileged
+  shell command is `waydroid shell wm density 320`.
 
 The previous CMA experiments were removed. The host uses the device-tree
 default CMA reservation. The `modetest` HDMI checks were diagnostic only and
-did not change the host configuration.
+did not change the host configuration. The graphical image forces the known-
+good 1920x1080@60 mode; 4K remains intentionally unvalidated.
 
 ## Diagnostics
 
@@ -218,6 +234,23 @@ cat /proc/config.gz 2>/dev/null | grep -E 'CONFIG_(ANDROID_BINDER|DMABUF_HEAPS)'
 ls -la /dev/dma_heap /dev/dri
 sudo v4l2-ctl --list-devices
 sudo evtest
+```
+
+Check the native HDMI audio boundary before debugging Android audio:
+
+```bash
+aplay -l
+speaker-test -c 2 -t wav
+sudo -u tv env XDG_RUNTIME_DIR=/run/user/1001 wpctl status
+```
+
+If native audio works but Waydroid remains silent, inspect the Android Pulse
+bridge:
+
+```bash
+sudo waydroid shell getprop waydroid.pulse_runtime_path
+sudo waydroid shell dumpsys media.audio_flinger
+sudo waydroid logcat | grep -iE 'audio|pulse|alsa|AudioFlinger'
 ```
 
 ## Android state and image changes
