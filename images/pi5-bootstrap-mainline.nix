@@ -13,8 +13,11 @@ in
         "${modulesPath}/installer/sd-card/sd-image-aarch64.nix"
       ];
 
-      networking.hostName = "pi5-bootstrap";
       boot.kernelPackages = pkgs.linuxPackages;
+
+      networking.hostName = "pi5-bootstrap";
+      hardware.raspberry-pi.firmware.uboot.enable = true;
+
       security.sudo.wheelNeedsPassword = false;
     };
 }

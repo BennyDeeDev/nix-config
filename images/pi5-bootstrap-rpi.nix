@@ -14,7 +14,8 @@ in
       ];
 
       networking.hostName = "pi5-bootstrap";
-      system.stateVersion = "26.05";
+      hardware.raspberry-pi.firmware.uboot.enable = true;
+
       security.sudo.wheelNeedsPassword = false;
     };
 }
