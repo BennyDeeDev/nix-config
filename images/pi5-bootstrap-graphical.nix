@@ -1,4 +1,4 @@
-inputs@{ nixos-hardware, ... }:
+inputs@{ ... }:
 
 let
   profiles = import ../profiles inputs;
@@ -9,9 +9,7 @@ in
     {
       imports = [
         profiles.nixos.nixos
-        profiles.pi5.nixos
-        profiles.pi5.graphical
-        nixos-hardware.nixosModules.raspberry-pi-5
+        profiles.pi5Graphical.nixos
         "${modulesPath}/installer/sd-card/sd-image-aarch64.nix"
       ];
 
@@ -21,7 +19,6 @@ in
       boot.supportedFilesystems.zfs = lib.mkForce false;
       boot.initrd.supportedFilesystems.zfs = lib.mkForce false;
 
-      sdImage.firmwareSize = 64;
       hardware.raspberry-pi.firmware.uboot.enable = true;
     };
 }
