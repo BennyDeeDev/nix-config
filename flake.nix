@@ -58,9 +58,14 @@
       ];
 
       perSystem =
-        { lib, system, pkgs, ... }:
+        {
+          lib,
+          system,
+          pkgs,
+          ...
+        }:
         let
-          mkBootstrapImage =
+          mkPiBootstrapImage =
             image:
             (inputs.nixpkgs.lib.nixosSystem {
               modules = [
@@ -76,36 +81,48 @@
           formatter = pkgs.nixfmt-tree;
 
           packages = lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
-            pi5-bootstrap-mainline = mkBootstrapImage (import ./images/pi5-bootstrap-mainline.nix inputs).nixos;
-            pi5-bootstrap-rpi = mkBootstrapImage (import ./images/pi5-bootstrap-rpi.nix inputs).nixos;
+            pi5-bootstrap-mainline = mkPiBootstrapImage (import ./images/pi5-bootstrap-mainline.nix inputs)
+              .nixos;
+            pi5-bootstrap-rpi = mkPiBootstrapImage (import ./images/pi5-bootstrap-rpi.nix inputs).nixos;
           };
         };
 
-      flake = {
-        profiles = import ./profiles inputs;
+      flake =
+        let
+          mkPiSystem =
+            host: buildSystem:
+            inputs.nixpkgs.lib.nixosSystem {
+              modules = [
+                {
+                  nixpkgs.hostPlatform.system = "aarch64-linux";
+                  nixpkgs.buildPlatform.system = buildSystem;
+                }
+                (import host inputs).nixos
+              ];
+            };
+        in
+        {
+          profiles = import ./profiles inputs;
 
-        nixosConfigurations = {
-          desktop = inputs.nixpkgs.lib.nixosSystem {
-            system = "x86_64-linux";
-            modules = [ (import ./hosts/desktop inputs).nixos ];
+          nixosConfigurations = {
+            desktop = inputs.nixpkgs.lib.nixosSystem {
+              system = "x86_64-linux";
+              modules = [ (import ./hosts/desktop inputs).nixos ];
+            };
+
+            pi5-server = mkPiSystem ./hosts/pi5-server "aarch64-linux";
+            pi5-server-cross = mkPiSystem ./hosts/pi5-server "x86_64-linux";
+
+            pi5-kiosk = mkPiSystem ./hosts/pi5-kiosk "aarch64-linux";
+            pi5-kiosk-cross = mkPiSystem ./hosts/pi5-kiosk "x86_64-linux";
+
+            pi5-tv = mkPiSystem ./hosts/pi5-tv "aarch64-linux";
+            pi5-tv-cross = mkPiSystem ./hosts/pi5-tv "x86_64-linux";
           };
-          pi5-server = inputs.nixpkgs.lib.nixosSystem {
-            system = "aarch64-linux";
-            modules = [ (import ./hosts/pi5-server inputs).nixos ];
-          };
-          pi5-kiosk = inputs.nixpkgs.lib.nixosSystem {
-            system = "aarch64-linux";
-            modules = [ (import ./hosts/pi5-kiosk inputs).nixos ];
-          };
-          pi5-tv = inputs.nixpkgs.lib.nixosSystem {
-            system = "aarch64-linux";
-            modules = [ (import ./hosts/pi5-tv inputs).nixos ];
+
+          darwinConfigurations.mbp-personal = inputs.darwin.lib.darwinSystem {
+            modules = [ (import ./hosts/mbp-personal inputs).darwin ];
           };
         };
-
-        darwinConfigurations.mbp-personal = inputs.darwin.lib.darwinSystem {
-          modules = [ (import ./hosts/mbp-personal inputs).darwin ];
-        };
-      };
     };
 }

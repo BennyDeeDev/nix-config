@@ -273,6 +273,9 @@ nix eval --raw .#nixosConfigurations.pi5-server.config.system.build.toplevel.drv
 nix eval --raw .#nixosConfigurations.pi5-kiosk.config.system.build.toplevel.drvPath
 nix eval --raw .#pi5-bootstrap-mainline.drvPath
 nix eval --raw .#pi5-bootstrap-rpi.drvPath
+nix eval --raw .#nixosConfigurations.pi5-server-cross.config.system.build.toplevel.drvPath
+nix eval --raw .#nixosConfigurations.pi5-kiosk-cross.config.system.build.toplevel.drvPath
+nix eval --raw .#nixosConfigurations.pi5-tv-cross.config.system.build.toplevel.drvPath
 ```
 
 Build an output with `nix build --no-link <installable>`.

@@ -7,8 +7,6 @@
       imports = [ lanzaboote.nixosModules.lanzaboote ];
 
       boot = {
-        binfmt.emulatedSystems = [ "aarch64-linux" ];
-
         loader = {
           systemd-boot = {
             enable = lib.mkForce false;

@@ -16,21 +16,30 @@ From the cross-compile build box (your desktop):
 
 ```bash
 nix build .#pi5-bootstrap-mainline
-zstd -d result/sd-image/*.img.zst -o pi5-bootstrap-mainline.img
+zstd -d -f result/sd-image/*.img.zst -o pi5-bootstrap-mainline.img
+lsblk
+sudo umount /dev/sdX1
+sudo umount /dev/sdX2
 sudo dd if=pi5-bootstrap-mainline.img of=/dev/sdX bs=4M status=progress conv=fsync
+sync
+udisksctl power-off -b /dev/sdX
 ```
 
 Replace `/dev/sdX` with the SD card device — verify with `lsblk` first.
+Unmount every mounted partition before writing. If `umount` reports that a
+partition is not mounted, continue. If it reports that the device is busy,
+close any file manager or terminal using the card and retry. Confirm that the
+`MOUNTPOINTS` column is empty before running `dd`.
 
 ## First boot
 
-The bootstrap image sets `hostName = "pi5"`, runs sshd with password
-authentication disabled, and provisions the SSH public key from
+The bootstrap image sets `networking.hostName = "pi5-bootstrap"`, runs sshd with
+password authentication disabled, and provisions the SSH public key from
 `profiles/pi5/default.nix` into the `benjamin` user's `authorized_keys`. SSH in
 from any host holding the matching private key:
 
 ```bash
-ssh ssh benjamin@pi5.fritz.box
+ssh benjamin@pi5.fritz.box
 ```
 
 `benjamin` is in `wheel`; sudo prompts for the user password (set via
@@ -66,23 +75,26 @@ git commit
 
 ## Deploy a role configuration
 
-First-time role switch (bootstrap still running):
+From the x86 Linux desktop, use the `-cross` configuration. It builds the ARM64
+system on the desktop and activates it on the Pi.
+
+First-time server switch (bootstrap still running):
 
 ```bash
-nixos-rebuild switch --flake .#pi5-server \
+# Build and activate the server configuration.
+nixos-rebuild switch --no-reexec --flake .#pi5-server-cross \
   --target-host benjamin@pi5.fritz.box \
-  --build-host benjamin@pi5.fritz.box \
   --sudo
 ```
 
-Subsequent rebuilds (role config now running):
+To rebuild directly on the Pi instead:
 
 ```bash
-nixos-rebuild switch --flake .#pi5-server \
-  --target-host benjamin@pi5.fritz.box \
-  --build-host benjamin@pi5.fritz.box \
-  --sudo --ask-sudo-password
+sudo nixos-rebuild switch --flake .#pi5-server
 ```
+
+For the kiosk role, use `.#pi5-kiosk-cross` from the desktop or `.#pi5-kiosk`
+directly on the Pi.
 
 ## Flash ZBT-2 to OpenThread firmware (one-time, host-agnostic)
 

@@ -62,27 +62,26 @@ From the repository root:
 
 ```bash
 nix build .#pi5-bootstrap-rpi
-zstd -d result/sd-image/*.img.zst -o pi5-bootstrap-rpi.img
+zstd -d -f result/sd-image/*.img.zst -o pi5-bootstrap-rpi.img
 lsblk
+sudo umount /dev/sdX1
+sudo umount /dev/sdX2
 sudo dd if=pi5-bootstrap-rpi.img of=/dev/sdX bs=4M status=progress conv=fsync
 sync
+udisksctl power-off -b /dev/sdX
 ```
 
 Replace `/dev/sdX` only after verifying the SD-card device with `lsblk`.
+Unmount every mounted partition before writing. If `umount` reports that a
+partition is not mounted, continue. If it reports that the device is busy,
+close any file manager or terminal using the card and retry. Confirm that the
+`MOUNTPOINTS` column is empty before running `dd`.
 
 The RPi bootstrap image adds the shared Pi 5 graphical profile and statically
 populates the firmware partition with the Pi firmware, DTBs, overlays, U-Boot,
 and generated `config.txt`. It does not include the Android TV stack. Use it
 for a fresh `pi5-tv` installation, then deploy the TV host configuration over
 SSH:
-
-```bash
-nix build .#pi5-bootstrap-rpi
-zstd -d result/sd-image/*.img.zst -o pi5-bootstrap-rpi.img
-lsblk
-sudo dd if=pi5-bootstrap-rpi.img of=/dev/sdX bs=4M status=progress conv=fsync
-sync
-```
 
 The shared Pi 5 profile provides the existing `benjamin` key-only
 administration user.
@@ -106,18 +105,25 @@ as the `tv` user's `android-tv-apps.service`.
 
 ## Remote deployment
 
-Run this from the build machine after the Pi is reachable over SSH:
+Run this from the x86 Linux desktop after the Pi is reachable over SSH:
 
 ```bash
+# Build and activate the TV configuration.
 nixos-rebuild switch \
-  --flake .#pi5-tv \
+  --no-reexec \
+  --flake .#pi5-tv-cross \
   --target-host benjamin@192.168.178.163 \
   --sudo \
   --ask-elevate-password
 ```
 
-For later updates, run the same command from the repository checkout. NixOS
-generations remain available for rollback:
+To rebuild directly on the Pi instead, run this on the Pi:
+
+```bash
+sudo nixos-rebuild switch --flake .#pi5-tv
+```
+
+NixOS generations remain available for rollback:
 
 ```bash
 ssh benjamin@tv
