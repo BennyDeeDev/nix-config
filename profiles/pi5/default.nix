@@ -1,3 +1,5 @@
+{ nixos-hardware }:
+
 let
   filesystem = import ./filesystem.nix;
   openssh = import ./openssh.nix;
@@ -11,6 +13,7 @@ in
       openssh.nixos
       profile.nixos
       users.nixos
+      nixos-hardware.nixosModules.raspberry-pi-5
     ];
   };
 }

@@ -9,7 +9,7 @@ in
   nixos = {
     imports = [
       profiles.nixos.nixos
-      profiles.pi5Graphical.nixos
+      profiles.pi5.nixos
       host.nixos
       androidTv.nixos
     ];

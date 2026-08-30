@@ -1,7 +1,4 @@
-inputs@{
-  nixos-hardware,
-  ...
-}:
+inputs@{ ... }:
 
 let
   profiles = import ../../profiles inputs;
@@ -17,7 +14,6 @@ in
       profiles.pi5.nixos
       nasModule.nixos
       containerBackupModule.nixos
-      nixos-hardware.nixosModules.raspberry-pi-5
       homeAssistant.nixos
       host.nixos
     ];

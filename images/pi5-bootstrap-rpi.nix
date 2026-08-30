@@ -13,9 +13,8 @@ in
         "${modulesPath}/installer/sd-card/sd-image-aarch64.nix"
       ];
 
-      networking.hostName = "pi5";
-
-      # Passwordless wheel only on the bootstrap image
+      networking.hostName = "pi5-bootstrap";
+      system.stateVersion = "26.05";
       security.sudo.wheelNeedsPassword = false;
     };
 }

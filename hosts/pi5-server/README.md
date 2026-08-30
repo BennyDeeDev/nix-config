@@ -15,9 +15,9 @@ On the desktop host in this repo this is already set via
 From the cross-compile build box (your desktop):
 
 ```bash
-nix build .#images.pi5-bootstrap
-zstd -d result/sd-image/*.img.zst -o pi5-bootstrap.img
-sudo dd if=pi5-bootstrap.img of=/dev/sdX bs=4M status=progress conv=fsync
+nix build .#pi5-bootstrap-mainline
+zstd -d result/sd-image/*.img.zst -o pi5-bootstrap-mainline.img
+sudo dd if=pi5-bootstrap-mainline.img of=/dev/sdX bs=4M status=progress conv=fsync
 ```
 
 Replace `/dev/sdX` with the SD card device — verify with `lsblk` first.

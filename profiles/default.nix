@@ -21,7 +21,6 @@
     inherit lanzaboote;
   };
   macos = import ./macos { inherit home-manager; };
-  pi5 = import ./pi5;
-  pi5Graphical = import ./pi5-graphical { inherit nixos-hardware; };
+  pi5 = import ./pi5 { inherit nixos-hardware; };
   terminal = import ./terminal;
 }

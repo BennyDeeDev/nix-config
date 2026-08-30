@@ -1,7 +1,4 @@
-inputs@{
-  nixos-hardware,
-  ...
-}:
+inputs@{ ... }:
 
 let
   host = import ./host.nix;
@@ -12,7 +9,6 @@ in
     imports = [
       profiles.nixos.nixos
       profiles.pi5.nixos
-      nixos-hardware.nixosModules.raspberry-pi-5
       host.nixos
     ];
   };

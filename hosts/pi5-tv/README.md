@@ -61,29 +61,28 @@ APKs, or a custom kernel.
 From the repository root:
 
 ```bash
-nix build .#images.pi5-bootstrap
-zstd -d result/sd-image/*.img.zst -o pi5-bootstrap.img
+nix build .#pi5-bootstrap-rpi
+zstd -d result/sd-image/*.img.zst -o pi5-bootstrap-rpi.img
 lsblk
-sudo dd if=pi5-bootstrap.img of=/dev/sdX bs=4M status=progress conv=fsync
+sudo dd if=pi5-bootstrap-rpi.img of=/dev/sdX bs=4M status=progress conv=fsync
 sync
 ```
 
 Replace `/dev/sdX` only after verifying the SD-card device with `lsblk`.
 
-The graphical image adds the shared Pi 5 graphical profile and statically
+The RPi bootstrap image adds the shared Pi 5 graphical profile and statically
 populates the firmware partition with the Pi firmware, DTBs, overlays, U-Boot,
-and generated `config.txt`. It does not include the Android TV stack:
+and generated `config.txt`. It does not include the Android TV stack. Use it
+for a fresh `pi5-tv` installation, then deploy the TV host configuration over
+SSH:
 
 ```bash
-nix build .#images.pi5-bootstrap-graphical
-zstd -d result/sd-image/*.img.zst -o pi5-bootstrap-graphical.img
+nix build .#pi5-bootstrap-rpi
+zstd -d result/sd-image/*.img.zst -o pi5-bootstrap-rpi.img
 lsblk
-sudo dd if=pi5-bootstrap-graphical.img of=/dev/sdX bs=4M status=progress conv=fsync
+sudo dd if=pi5-bootstrap-rpi.img of=/dev/sdX bs=4M status=progress conv=fsync
 sync
 ```
-
-Use the graphical image for a fresh `pi5-tv` installation, then deploy the TV
-host configuration over SSH.
 
 The shared Pi 5 profile provides the existing `benjamin` key-only
 administration user.
@@ -176,11 +175,11 @@ service discovers it automatically.
 
 The current pinned artifacts are:
 
-| Application | Version        | Package                 | Asset                                  |
-| ----------- | -------------- | ----------------------- | -------------------------------------- |
-| NuvioTV     | `0.8.11-beta`  | `com.nuvio.tv`          | `app-full-arm64-v8a-release.apk`       |
-| SmartTube   | `32.10` stable | `org.smarttube.stable`  | `SmartTube_stable_32.10_arm64-v8a.apk` |
-| RetroArch   | `1.22.2`       | `com.retroarch.aarch64` | `RetroArch_aarch64.apk`                |
+| Application | Version        | Package                 | Asset                                           |
+| ----------- | -------------- | ----------------------- | ----------------------------------------------- |
+| NuvioTV     | `0.8.11-beta`  | `com.nuvio.tv`          | `app-full-arm64-v8a-release.apk`                |
+| SmartTube   | `32.10` stable | `org.smarttube.stable`  | `SmartTube_stable_32.10_arm64-v8a.apk`          |
+| RetroArch   | `1.22.2`       | `com.retroarch.aarch64` | `RetroArch_aarch64.apk`                         |
 | Stremio     | `1.10.4`       | `com.stremio.one`       | `com.stremio.one-1.10.4-33145732-arm64-v8a.apk` |
 
 To bump an application, update its version, version code, URL, and hash in its

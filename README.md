@@ -14,14 +14,15 @@ Right as I am writing this, I am dropping into the next Nix rabbit hole. It is i
 
 NixOS, nix-darwin, and Home Manager configuration for the machines below.
 
-| Output                 | Role                              |
-| ---------------------- | --------------------------------- |
-| `desktop`              | NixOS workstation and gaming host |
-| `mbp-personal`         | Personal macOS workstation        |
-| `pi5-server`           | Home automation server            |
-| `pi5-kiosk`            | Planned kiosk                     |
-| `pi5-tv`               | Waydroid Android TV appliance     |
-| `images.pi5-bootstrap` | Raspberry Pi 5 bootstrap image    |
+| Output                   | Role                                      |
+| ------------------------ | ----------------------------------------- |
+| `desktop`                | NixOS workstation and gaming host         |
+| `mbp-personal`           | Personal macOS workstation                |
+| `pi5-server`             | Home automation server                    |
+| `pi5-kiosk`              | Planned kiosk                             |
+| `pi5-tv`                 | Waydroid Android TV appliance             |
+| `pi5-bootstrap-mainline` | Raspberry Pi 5 mainline bootstrap image   |
+| `pi5-bootstrap-rpi`      | Raspberry Pi 5 RPi-kernel bootstrap image |
 
 ## Architecture
 
@@ -270,7 +271,8 @@ nix eval --raw .#darwinConfigurations.mbp-personal.system.drvPath
 nix eval --raw .#nixosConfigurations.desktop.config.system.build.toplevel.drvPath
 nix eval --raw .#nixosConfigurations.pi5-server.config.system.build.toplevel.drvPath
 nix eval --raw .#nixosConfigurations.pi5-kiosk.config.system.build.toplevel.drvPath
-nix eval --raw .#images.pi5-bootstrap.drvPath
+nix eval --raw .#pi5-bootstrap-mainline.drvPath
+nix eval --raw .#pi5-bootstrap-rpi.drvPath
 ```
 
 Build an output with `nix build --no-link <installable>`.
