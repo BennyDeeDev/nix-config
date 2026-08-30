@@ -2,7 +2,7 @@ inputs@{ ... }:
 
 let
   androidTv = import ./android-tv;
-  host = import ./host.nix;
+  host = import ./host.nix inputs;
   profiles = import ../../profiles inputs;
 in
 {

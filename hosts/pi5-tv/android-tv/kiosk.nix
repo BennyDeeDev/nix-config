@@ -6,32 +6,36 @@
       pkgs,
       ...
     }:
+    let
+      waydroid = lib.getExe config.virtualisation.waydroid.package;
+      androidTv = pkgs.writeShellScript "android-tv-waydroid-ui" ''
+        set -eu
+
+        ${lib.getExe pkgs.wlr-randr} --output HDMI-A-1 --mode 1920x1080@60Hz
+        exec ${waydroid} show-full-ui
+      '';
+    in
     {
       services.cage = {
         enable = true;
         extraArguments = [ "-s" ];
-        program = pkgs.writeShellScript "android-tv-waydroid-ui" ''
-          attempts=0
-          while ! ${lib.getExe pkgs.wlr-randr} 2>/dev/null | ${lib.getExe pkgs.gnugrep} -q '^HDMI-A-1'; do
-            if test "$attempts" -ge 30; then
-              echo "Could not find HDMI-A-1 in the Wayland outputs" >&2
-              exit 1
-            fi
-            ${lib.getExe' pkgs.coreutils "sleep"} 1
-            attempts=$((attempts + 1))
-          done
-
-          exec ${lib.getExe config.virtualisation.waydroid.package} show-full-ui
-        '';
+        program = androidTv;
         user = "tv";
       };
 
       services.seatd.enable = true;
 
+      systemd.services.cage-tty1 = {
+        after = [ "waydroid-container.service" ];
+        wants = [ "waydroid-container.service" ];
+      };
+
       systemd.services.cage-tty1.serviceConfig = {
+        Environment = "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1001/bus";
+        ExecStop = "-${waydroid} session stop";
         Restart = "on-failure";
         RestartSec = "2s";
-        TimeoutStopSec = "5s";
+        TimeoutStopSec = "30s";
       };
 
       users.users.tv = {

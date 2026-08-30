@@ -6,7 +6,7 @@
       ...
     }:
     let
-      cecInput = "/dev/input/by-path/platform-107c701400.hdmi-event";
+      cecInput = "/dev/input/cec-hdmi0";
       cecMount = "lxc.mount.entry = ${cecInput} dev/input/event1 none bind,create=file,optional 0 0";
       cecCtl = lib.getExe' pkgs.v4l-utils "cec-ctl";
       setupCec = pkgs.writeShellScript "android-tv-waydroid-cec" ''
@@ -14,8 +14,8 @@
 
         config_nodes=/var/lib/waydroid/lxc/waydroid/config_nodes
 
-        if test -e ${lib.escapeShellArg cecInput} \
-          && ! ${lib.getExe pkgs.gnugrep} -Fqx ${lib.escapeShellArg cecMount} "$config_nodes"; then
+        if test -e ${lib.escapeShellArg cecInput}; then
+          ${lib.getExe pkgs.gnused} -i '\| dev/input/event1 none bind,create=file,optional 0 0$|d' "$config_nodes"
           printf '%s\n' ${lib.escapeShellArg cecMount} >> "$config_nodes"
         fi
       '';
@@ -39,7 +39,7 @@
     in
     {
       services.udev.extraRules = ''
-        KERNEL=="event*", KERNELS=="107c701400.hdmi", GROUP="input", MODE="0660"
+        SUBSYSTEM=="input", KERNEL=="event*", ATTRS{name}=="vc4-hdmi-0", SYMLINK+="input/cec-hdmi0", OWNER="benjamin", GROUP="input", MODE="0660"
       '';
 
       services.udev.extraHwdb = ''
