@@ -56,6 +56,36 @@
   "dockLauncherEnabled": true,
   "dockLauncherLogoMode": "os",
   "dockShowTrash": true,
+  "dankIslandHomeLayout": [
+    {
+      "id": "media",
+      "enabled": true
+    },
+    {
+      "id": "notifications",
+      "enabled": true
+    },
+    {
+      "id": "clock",
+      "enabled": true
+    },
+    {
+      "id": "weather",
+      "enabled": false
+    },
+    {
+      "id": "status",
+      "enabled": false
+    },
+    {
+      "id": "volume",
+      "enabled": false
+    },
+    {
+      "id": "brightness",
+      "enabled": false
+    }
+  ],
   "osdAlwaysShowValue": true,
   "osdPosition": 4,
   "barConfigs": [
@@ -168,7 +198,8 @@
       "barInsetPadding": 8,
       "iconScale": 1,
       "maximizeWidgetText": false,
-      "removeWidgetPadding": false
+      "removeWidgetPadding": false,
+      "attachToScreenEdge": false
     }
   ],
   "desktopClockCustomColor": {
@@ -208,5 +239,5 @@
       "trigger": "qrg"
     }
   },
-  "configVersion": 16
+  "configVersion": 17
 }
