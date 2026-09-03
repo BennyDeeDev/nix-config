@@ -4,6 +4,7 @@ keys:
   - &desktop age1fhpkmpywlernhej78dvywqwu2ngtte9u7yx0lk9lxj3krqwerpuqy3mvw4
   - &desktop_hm age14gqtkkews0ttelvsuy0dky33q67jrv3vtyluun4te2zmymzp3uxs9qu4yt
   - &pi5-server age13sgj756jngug94tf3gcnjg79dsqcqm08x3tgrzphp2wj8gcd2ppqq3vucp
+  - &pi5-tv age1f83az0x3gz0kgna3t7umvzl9c9mw4hl0cj8037z6azuhdrgw4daqe6dgx5
 creation_rules:
   - path_regex: secrets/common\.ya?ml$
     key_groups:
@@ -13,6 +14,7 @@ creation_rules:
           - *desktop
           - *desktop_hm
           - *pi5-server
+          - *pi5-tv
   - path_regex: secrets/desktop\.ya?ml$
     key_groups:
       - age:

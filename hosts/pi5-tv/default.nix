@@ -1,7 +1,8 @@
 inputs@{ ... }:
 
 let
-  host = import ./host.nix;
+  androidTv = import ./android-tv;
+  host = import ./host.nix inputs;
   profiles = import ../../profiles inputs;
 in
 {
@@ -10,6 +11,7 @@ in
       profiles.nixos.nixos
       profiles.pi5.nixos
       host.nixos
+      androidTv.nixos
     ];
   };
 }

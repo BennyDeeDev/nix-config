@@ -9,6 +9,8 @@
       agents = ../../files/opencode/agents;
     };
 
-    programs.zsh.shellAliases.o = "OPENCODE_ENABLE_EXA=1 opencode";
+    programs.zsh.shellAliases.o = "oc-exa";
+    programs.zsh.shellAliases.oc-exa = "OPENCODE_ENABLE_EXA=1 OPENCODE_WEBSEARCH_PROVIDER=exa opencode";
+    programs.zsh.shellAliases.oc-parallel = "OPENCODE_ENABLE_PARALLEL=1 OPENCODE_WEBSEARCH_PROVIDER=parallel opencode";
   };
 }
