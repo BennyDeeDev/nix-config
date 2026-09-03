@@ -12,6 +12,8 @@
           config.lib.file.mkOutOfStoreSymlink "${nixConfig}/files/vscode/settings.json";
         ".config/Code/User/keybindings.json".source =
           config.lib.file.mkOutOfStoreSymlink "${nixConfig}/files/vscode/keybindings-linux.json";
+        ".config/Code/User/mcp.json".source =
+          config.lib.file.mkOutOfStoreSymlink "${nixConfig}/files/vscode/mcp.json";
       };
 
       home.activation.vscodeConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
