@@ -128,7 +128,6 @@ builtin = "Catppuccin"
 community_palette = "Catppuccin Mocha Mauve-Lavender"
 mode = "dark"
 source = "community"
-wallpaper_scheme = "m3-content"
 
     [theme.templates]
     builtin_ids = [ "btop", "gtk3", "gtk4", "ghostty", "helix", "niri", "starship" ]
