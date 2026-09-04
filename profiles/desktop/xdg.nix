@@ -2,6 +2,10 @@
   nixos =
     { pkgs, ... }:
     {
+      nixpkgs.overlays = [
+        (import ../../overlays/xdg-desktop-portal-gnome.nix)
+      ];
+
       xdg.portal = {
         enable = true;
         extraPortals = [ pkgs.xdg-desktop-portal-gtk ];

@@ -15,6 +15,11 @@ layout {
         proportion 0.5
         proportion 1.0
     }
+  
+    focus-ring {
+        width 2
+    }
 
     default-column-width { proportion 1.0; }
 }
+

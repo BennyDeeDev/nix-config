@@ -5,16 +5,7 @@ include "looknfeel.kdl"
 include "bindings.kdl"
 include "autostart.kdl"
 include "rules.kdl"
-
-// DMS-generated includes (written at runtime by the DMS service to ~/.config/niri/dms/)
-
-include optional=true "dms/colors.kdl"       // theme colors (focus-ring, border, shadow, tab-indicator)
-include optional=true "dms/layout.kdl"       // gaps, border width, corner radius, window-rule
-include optional=true "dms/alttab.kdl"       // recent-windows alt-tab corner radius
-include optional=true "dms/wpblur.kdl"       // wallpaper blur layer-rule
-include optional=true "dms/cursor.kdl"       // cursor theme/size
-include optional=true "dms/outputs.kdl"      // output display profiles
-include optional=true "dms/windowrules.kdl"  // DMS-managed window rules
+include "noctalia.kdl"
 
 workspace "www"
 workspace "term"

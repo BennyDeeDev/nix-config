@@ -1,9 +1,8 @@
 {
-  dank-greeter,
-  dms,
-  dms-plugin-registry,
   home-manager,
   lanzaboote,
+  noctalia,
+  noctalia-greeter,
   sops-nix,
   ...
 }:
@@ -12,10 +11,9 @@
   nixos = import ./nixos { inherit sops-nix; };
   desktop = import ./desktop {
     inherit
-      dank-greeter
-      dms
-      dms-plugin-registry
       home-manager
+      noctalia
+      noctalia-greeter
       ;
     inherit lanzaboote;
   };

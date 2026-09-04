@@ -9,7 +9,7 @@
         desktopSession = "niri";
       };
 
-      programs.dms-greeter.enable = lib.mkForce false;
+      programs.noctalia-greeter.enable = lib.mkForce false;
 
       programs.steam = {
         enable = true;

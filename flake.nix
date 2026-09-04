@@ -26,16 +26,12 @@
       url = "github:nix-darwin/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    dms = {
-      url = "github:AvengeMedia/DankMaterialShell/v1.6.0";
+    noctalia = {
+      url = "github:noctalia-dev/noctalia";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    dank-greeter = {
-      url = "github:AvengeMedia/dank-greeter/v1.6.0";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    dms-plugin-registry = {
-      url = "github:AvengeMedia/dms-plugin-registry";
+    noctalia-greeter = {
+      url = "github:noctalia-dev/noctalia-greeter";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     jovian = {
