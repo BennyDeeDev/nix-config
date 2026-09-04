@@ -1,18 +1,18 @@
 {
-  nixos = { pkgs, ... }: {
-    programs.niri = {
-      enable = true;
-      package = pkgs.niri;
+  nixos =
+    { pkgs, ... }:
+    {
+      programs.niri = {
+        enable = true;
+        package = pkgs.niri;
+      };
+      services.displayManager.defaultSession = "niri";
     };
-    services.displayManager.defaultSession = "niri";
-  };
 
   homeManager =
     { pkgs, ... }:
     {
-      home.packages = [
-        pkgs.xwayland-satellite
-      ];
+      home.packages = [ pkgs.xwayland-satellite ];
 
       xdg.configFile = {
         "niri/config.kdl".source = ../../files/niri/config.kdl;

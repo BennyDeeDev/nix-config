@@ -1,3 +1,4 @@
+spawn-at-startup "noctalia"
 spawn-at-startup "brave"
 spawn-at-startup "ghostty"
 spawn-at-startup "code"

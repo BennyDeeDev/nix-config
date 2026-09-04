@@ -1,9 +1,8 @@
 {
-  dank-greeter,
-  dms,
-  dms-plugin-registry,
   home-manager,
   lanzaboote,
+  noctalia,
+  noctalia-greeter,
 }:
 
 let
@@ -12,13 +11,6 @@ let
   bluetooth = import ./bluetooth.nix;
   boot = import ./boot.nix { inherit lanzaboote; };
   btrfs = import ./btrfs.nix;
-  dmsFeature = import ./dms.nix {
-    inherit
-      dank-greeter
-      dms
-      dms-plugin-registry
-      ;
-  };
   fonts = import ./fonts.nix;
   ghostty = import ./ghostty.nix;
   appsModule = import ../../modules/apps.nix;
@@ -29,8 +21,11 @@ let
   libvirt = import ./libvirt.nix;
   nautilus = import ./nautilus.nix;
   networkmanager = import ./networkmanager.nix;
-  nixos = import ./nixos.nix;
+  noctaliaFeature = import ./noctalia.nix {
+    inherit noctalia noctalia-greeter;
+  };
   niri = import ./niri.nix;
+  nixos = import ./nixos.nix;
   profile = import ./profile.nix;
   shares = import ./shares.nix;
   studioDisplay = import ./studio-display.nix;
@@ -49,7 +44,6 @@ in
       bluetooth.nixos
       boot.nixos
       btrfs.nixos
-      dmsFeature.nixos
       gnomeKeyring.nixos
       gnomeDisks.nixos
       input.nixos
@@ -57,6 +51,7 @@ in
       nautilus.nixos
       networkmanager.nixos
       nixos.nixos
+      noctaliaFeature.nixos
       niri.nixos
       profile.nixos
       shares.nixos
@@ -70,7 +65,6 @@ in
     imports = [
       audio.homeManager
       bluetooth.homeManager
-      dmsFeature.homeManager
       fonts.homeManager
       apps.homeManager
       appsModule.homeManager
@@ -80,6 +74,7 @@ in
       input.homeManager
       nautilus.homeManager
       networkmanager.homeManager
+      noctaliaFeature.homeManager
       niri.homeManager
       shares.homeManager
       studioDisplay.homeManager

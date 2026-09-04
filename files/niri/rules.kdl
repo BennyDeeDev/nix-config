@@ -1,3 +1,11 @@
+layer-rule {
+    match namespace="^noctalia-bar-"
+
+    background-effect {
+        blur false
+    }
+}
+
 window-rule {
     match at-startup=true app-id="brave-browser"
     open-on-workspace "www"
@@ -58,9 +66,6 @@ window-rule {
     default-window-height { proportion 0.5; }
 }
 
-// TODO: turn KeePassXC into a real scratchpad once niri lands scratch/hidden
-// workspaces (https://github.com/YaLTeR/niri/issues/845). For now it opens as
-// a small floating window.
 window-rule {
     match app-id="org.keepassxc.KeePassXC"
     open-floating true

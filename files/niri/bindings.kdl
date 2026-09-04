@@ -1,49 +1,39 @@
 binds {
-    // === Application Launchers ===
     Ctrl+Shift+T { spawn "ghostty"; }
     Ctrl+Shift+F { spawn "nautilus"; }
     Ctrl+Shift+B { spawn "brave"; }
     Ctrl+Shift+E { spawn "code"; }
-    Ctrl+Shift+P { spawn "keepassxc"; }
+    Ctrl+Shift+K { spawn "keepassxc"; }
     Ctrl+Shift+S { spawn "spotify"; }
 
-    // === DMS IPC ===
-    Ctrl+Space   { spawn "dms" "ipc" "call" "spotlight" "toggle"; }
-    Ctrl+Shift+L { spawn "dms" "ipc" "call" "lock" "lock"; }
-    Ctrl+Shift+W { spawn "dms" "restart"; }
-    Super+Comma  { spawn "dms" "ipc" "call" "settings" "focusOrToggle"; }
-    Super+N      { spawn "dms" "ipc" "call" "notifications" "toggle"; }
-    Super+M      { spawn "dms" "ipc" "call" "processlist" "focusOrToggle"; }
-    Super+V      { spawn "dms" "ipc" "call" "clipboard" "toggle"; }
+    Ctrl+Space   { spawn "noctalia" "msg" "panel-toggle" "launcher"; }
+    Ctrl+Shift+L { spawn "noctalia" "msg" "session" "lock"; }
+    Super+Comma  { spawn "noctalia" "msg" "settings-toggle"; }
+    Super+N      { spawn "noctalia" "msg" "panel-toggle" "notifications"; }
+    Super+V      { spawn "noctalia" "msg" "panel-toggle" "clipboard"; }
 
-    // === Window Management ===
     Ctrl+Q       { close-window; }
     Ctrl+Shift+Q { quit; }
     Ctrl+Shift+V { toggle-window-floating; }
 
-    // === Overview ===
     Super+Shift+O repeat=false { toggle-overview; }
 
-    // === Sizing ===
     Super+Shift+R { switch-preset-column-width; }
     Super+Minus       { set-column-width "-10%"; }
     Super+Equal       { set-column-width "+10%"; }
     Super+Shift+Minus { set-window-height "-10%"; }
     Super+Shift+Equal { set-window-height "+10%"; }
 
-    // === Focus Navigation ===
     Super+H { focus-column-left; }
     Super+L { focus-column-right; }
     Super+K { focus-window-up; }
     Super+J { focus-window-down; }
 
-    // === Window Movement ===
     Super+Shift+H { move-column-left; }
     Super+Shift+L { move-column-right; }
     Super+Shift+K { move-window-up; }
     Super+Shift+J { move-window-down; }
 
-    // === Tab Switching ===
     Ctrl+Tab       { focus-column-right-or-first; }
     Ctrl+Shift+Tab { focus-column-left-or-last; }
 
@@ -71,32 +61,24 @@ binds {
     Super+Shift+9 { move-window-to-workspace 9; }
     Super+Shift+0 { move-window-to-workspace 10; }
 
-    // === Screenshots ===
-    Print        { spawn "dms" "ipc" "call" "niri" "screenshot"; }
-    Ctrl+Shift+4 { spawn "dms" "ipc" "call" "niri" "screenshot"; }
+    Print        { spawn "noctalia" "msg" "screenshot-fullscreen"; }
+    Ctrl+Shift+4 { spawn "noctalia" "msg" "screenshot-region"; }
 
-    // === Audio Controls ===
-    XF86AudioRaiseVolume allow-when-locked=true { spawn "dms" "ipc" "call" "audio" "increment" "3"; }
-    XF86AudioLowerVolume allow-when-locked=true { spawn "dms" "ipc" "call" "audio" "decrement" "3"; }
-    XF86AudioMute        allow-when-locked=true { spawn "dms" "ipc" "call" "audio" "mute"; }
-    XF86AudioMicMute     allow-when-locked=true { spawn "dms" "ipc" "call" "audio" "mute"; }
+    XF86AudioRaiseVolume allow-when-locked=true { spawn "noctalia" "msg" "volume-up" "3"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn "noctalia" "msg" "volume-down" "3"; }
+    XF86AudioMute        allow-when-locked=true { spawn "noctalia" "msg" "volume-mute"; }
+    XF86AudioMicMute     allow-when-locked=true { spawn "noctalia" "msg" "mic-mute"; }
 
-    Alt+XF86AudioRaiseVolume { spawn "dms" "ipc" "call" "audio" "increment" "1"; }
-    Alt+XF86AudioLowerVolume { spawn "dms" "ipc" "call" "audio" "decrement" "1"; }
+    Alt+XF86AudioRaiseVolume { spawn "noctalia" "msg" "volume-up" "1"; }
+    Alt+XF86AudioLowerVolume { spawn "noctalia" "msg" "volume-down" "1"; }
 
-    // === Brightness Controls ===
-    // XF86MonBrightnessUp   allow-when-locked=true { spawn "dms" "ipc" "call" "brightness" "increment" "5"; }
-    // XF86MonBrightnessDown allow-when-locked=true { spawn "dms" "ipc" "call" "brightness" "decrement" "5"; }
-    // Alt+XF86MonBrightnessUp   { spawn "dms" "ipc" "call" "brightness" "increment" "1"; }
-    // Alt+XF86MonBrightnessDown { spawn "dms" "ipc" "call" "brightness" "decrement" "1"; }
     XF86MonBrightnessUp   allow-when-locked=true { spawn "asdbctl" "up" "-s" "5"; }
     XF86MonBrightnessDown allow-when-locked=true { spawn "asdbctl" "down" "-s" "5"; }
     Alt+XF86MonBrightnessUp   { spawn "asdbctl" "up" "-s" "1"; }
     Alt+XF86MonBrightnessDown { spawn "asdbctl" "down" "-s" "1"; }
 
-    // === Media Controls ===
-    XF86AudioPause allow-when-locked=true { spawn "dms" "ipc" "call" "mpris" "playPause"; }
-    XF86AudioPlay  allow-when-locked=true { spawn "dms" "ipc" "call" "mpris" "playPause"; }
-    XF86AudioPrev  allow-when-locked=true { spawn "dms" "ipc" "call" "mpris" "previous"; }
-    XF86AudioNext  allow-when-locked=true { spawn "dms" "ipc" "call" "mpris" "next"; }
+    XF86AudioPause allow-when-locked=true { spawn "playerctl" "play-pause"; }
+    XF86AudioPlay  allow-when-locked=true { spawn "playerctl" "play-pause"; }
+    XF86AudioPrev  allow-when-locked=true { spawn "playerctl" "previous"; }
+    XF86AudioNext  allow-when-locked=true { spawn "playerctl" "next"; }
 }
