@@ -20,6 +20,8 @@ in
   homeManager =
     { lib, ... }:
     {
+      imports = [ nasModule.homeManager ];
+
       xdg.configFile."gtk-3.0/bookmarks".text = lib.mkAfter ''
         file:///mnt/nas/benjamin NAS - Benjamin
         file:///mnt/nas/homelab NAS - Homelab
