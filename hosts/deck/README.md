@@ -179,9 +179,20 @@ DSC enabled
 A SteamOS update may break the Nix integration even though the Nix store and
 Home Manager configuration survive.
 
-SteamOS keeps `/nix` on persistent storage, but OS updates can replace the
-system-side shell and systemd integration used by Nix.
+SteamOS keeps `/nix` on persistent storage, but `/nix` is mounted after systemd
+initially scans its unit files. The Nix daemon units are symlinks into `/nix`,
+so systemd can miss them during boot.
 
-The simplest fix is to **rerun the same Nix installer used for the original
-installation**. This repaired the installation without removing the existing
-Nix store or Home Manager state.
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now nix-daemon.socket
+```
+
+`daemon-reload` makes systemd rescan the Nix units after `/nix` is mounted.
+`enable --now` enables socket activation for future boots and starts it now.
+Verify the daemon before running Nix operations:
+
+```bash
+nix store ping --store daemon
+``
+```
