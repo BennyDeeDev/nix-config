@@ -7,6 +7,7 @@ let
   ludusavi = import ./ludusavi.nix;
   ryujinx = import ./ryujinx.nix;
   steam = import ./steam.nix { inherit jovian; };
+  steamRomManagerModule = import ../../modules/steam-rom-manager.nix;
   steamRomManager = import ./steam-rom-manager.nix;
 in
 {
@@ -27,6 +28,7 @@ in
         ludusavi.homeManager
         ryujinx.homeManager
         steam.homeManager
+        steamRomManagerModule
         steamRomManager.homeManager
       ];
 

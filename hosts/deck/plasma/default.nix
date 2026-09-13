@@ -24,7 +24,7 @@
         effects.desktopSwitching.animation = "off";
         virtualDesktops = {
           number = 10;
-          rows = 2;
+          rows = 1;
         };
       };
     };

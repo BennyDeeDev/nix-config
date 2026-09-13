@@ -14,10 +14,14 @@ in
   programs.plasma.panels = [
     {
       location = "top";
-      height = 34;
+      height = 32;
       floating = true;
       widgets = [
-        "org.kde.plasma.lock_logout"
+        {
+          name = "org.kde.plasma.kickoff";
+          config.General.icon = "distributor-logo-steamdeck";
+        }
+        fixedSpacer
         "org.kde.plasma.pager"
         expandingSpacer
         "org.kde.plasma.mediacontroller"
@@ -32,42 +36,23 @@ in
         fixedSpacer
         "org.kde.plasma.brightness"
         fixedSpacer
-        {
-          systemMonitor = {
-            title = "Total CPU Use";
-            displayStyle = "org.kde.ksysguard.piechart";
-            sensors = [
-              {
-                name = "cpu/all/usage";
-                color = "86,159,204";
-                label = "CPU";
-              }
-            ];
-            totalSensors = [ "cpu/all/usage" ];
-            textOnlySensors = [
-              "cpu/all/cpuCount"
-              "cpu/all/coreCount"
-            ];
-          };
-        }
-        fixedSpacer
-        {
-          systemMonitor = {
-            title = "Memory Usage";
-            displayStyle = "org.kde.ksysguard.piechart";
-            sensors = [
-              {
-                name = "memory/physical/used";
-                color = "86,159,204";
-                label = "Memory";
-              }
-            ];
-            totalSensors = [ "memory/physical/usedPercent" ];
-            textOnlySensors = [ "memory/physical/total" ];
-          };
-        }
-        fixedSpacer
         "org.kde.plasma.battery"
+        fixedSpacer
+        {
+          name = "org.kde.plasma.systemmonitor.cpu";
+          config.Appearance.chartFace = "org.kde.ksysguard.piechart";
+        }
+        fixedSpacer
+        {
+          name = "org.kde.plasma.systemmonitor.memory";
+          config.Appearance.chartFace = "org.kde.ksysguard.piechart";
+        }
+        fixedSpacer
+        {
+          name = "org.kde.plasma.systemmonitor.diskusage";
+          config.Appearance.chartFace = "org.kde.ksysguard.piechart";
+        }
+        fixedSpacer
         "org.kde.plasma.marginsseparator"
         {
           digitalClock = {
@@ -78,12 +63,6 @@ in
             time = {
               format = "24h";
               showSeconds = "never";
-            };
-            font = {
-              family = "Noto Sans";
-              size = 11;
-              weight = 400;
-              style = "Regular";
             };
           };
         }
@@ -96,9 +75,6 @@ in
       lengthMode = "fit";
       hiding = "autohide";
       widgets = [
-        {
-          kickoff.icon = "distributor-logo-steamdeck";
-        }
         {
           iconTasks = {
             iconsOnly = true;
@@ -119,6 +95,22 @@ in
                 onlyInCurrentDesktop = false;
               };
             };
+          };
+        }
+        {
+          name = "org.kde.plasma.folder";
+          config.General = {
+            icon = "folder-downloads";
+            url = "file:///home/deck/Downloads";
+            useCustomIcon = true;
+          };
+        }
+        {
+          name = "org.kde.plasma.folder";
+          config.General = {
+            icon = "applications-all";
+            url = "applications:/";
+            useCustomIcon = true;
           };
         }
       ];

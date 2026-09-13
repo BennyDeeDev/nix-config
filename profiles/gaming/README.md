@@ -12,8 +12,18 @@ Home Manager only installs Ryujinx, grants access to the Switch directory, and
 creates that directory. It does not manage Ryujinx's mutable configuration,
 keys, firmware, controller mappings, or graphics settings.
 
+# Ludusavi
+
+Ludusavi scans Steam, Bottles, and the Switch manifest. Game entries are
+identified by title rather than by backup root. If a game with the same title
+exists in Steam and Bottles, the saves may be combined into one Ludusavi entry
+and can conflict with each other. Ludusavi has no per-root namespace for this
+case, so the collision cannot currently be avoided in this profile.
+
 # Steam ROM Manager
 
-1. Open Steam ROM Manager once on each host.
-2. Set the host's Steam Directory and ROMs Directory in Settings.
-3. Enable the required parsers and generate the app list.
+Home Manager generates the essential SRM settings and parser definitions.
+SRM supplies defaults for the remaining parser fields and normalizes its files
+when the UI saves them. UI changes to those generated files are overwritten by
+the next Home Manager activation; persistent shared changes belong in the gaming
+profile and host-specific changes belong in the host's SRM module.
