@@ -28,13 +28,15 @@ in
         expandingSpacer
         "org.kde.plasma.cameraindicator"
         fixedSpacer
-        "org.kde.plasma.volume"
+        "org.kde.plasma.notifications"
+        fixedSpacer
+        "org.kde.plasma.brightness"
         fixedSpacer
         "org.kde.plasma.networkmanagement"
         fixedSpacer
-        "org.kde.plasma.bluetooth"
+        "org.kde.plasma.volume"
         fixedSpacer
-        "org.kde.plasma.brightness"
+        "org.kde.plasma.bluetooth"
         fixedSpacer
         "org.kde.plasma.battery"
         fixedSpacer
