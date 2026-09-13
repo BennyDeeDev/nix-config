@@ -48,6 +48,22 @@
         }
         {
           parserType = "Glob";
+          configTitle = "Nintendo Switch - Eden";
+          parserId = "nintendo-switch-eden";
+          romDirectory = "${config.my.gaming.gamesPath}/Switch";
+          steamCategories = [ "Switch" ];
+          executableArgs = "--fullscreen \"\${filePath}\"";
+          executableModifier = "\"\${exePath}\"";
+          steamInputEnabled = "0";
+          disabled = false;
+          parserInputs.glob = "\${title} \\[0100*000\\]\\[v0\\]*.@(nsp|NSP|xci|XCI|nca|NCA|nro|NRO|nso|NSO)";
+          executable = {
+            path = "${config.home.homeDirectory}/Applications/Eden.appimage";
+            appendArgsToExecutable = true;
+          };
+        }
+        {
+          parserType = "Glob";
           configTitle = "PC - Bottles (Flatpak)";
           parserId = "pc-bottles";
           romDirectory = "${config.my.gaming.gamesPath}/PC";
