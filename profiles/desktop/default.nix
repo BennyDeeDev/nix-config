@@ -12,9 +12,6 @@ let
   boot = import ./boot.nix { inherit lanzaboote; };
   btrfs = import ./btrfs.nix;
   fonts = import ./fonts.nix;
-  ghostty = import ./ghostty.nix;
-  appsModule = import ../../modules/apps.nix;
-  ghosttyModule = import ../../modules/ghostty.nix;
   gnomeKeyring = import ./gnome-keyring.nix;
   gnomeDisks = import ./gnome-disks.nix;
   input = import ./input.nix;
@@ -33,7 +30,6 @@ let
   xdg = import ./xdg.nix;
   zsa = import ./zsa.nix;
   homeManagerModule = import ../../modules/home-manager.nix { inherit home-manager; };
-  vscodeModule = import ../../modules/vscode.nix;
 in
 {
   nixos = {
@@ -67,9 +63,6 @@ in
       bluetooth.homeManager
       fonts.homeManager
       apps.homeManager
-      appsModule.homeManager
-      ghosttyModule.homeManager
-      ghostty.homeManager
       gnomeKeyring.homeManager
       input.homeManager
       nautilus.homeManager
@@ -78,7 +71,6 @@ in
       niri.homeManager
       shares.homeManager
       studioDisplay.homeManager
-      vscodeModule.homeManager
       vscode.homeManager
       xdg.homeManager
     ];

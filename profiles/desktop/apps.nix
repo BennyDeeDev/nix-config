@@ -23,8 +23,6 @@
         baobab
         grim
         libnotify
-        stremio-linux-shell
-        vacuum-tube
         gnome-themes-extra
         yaru-theme
         glib

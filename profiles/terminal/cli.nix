@@ -31,7 +31,11 @@
             cat = "bat";
             ff = "fzf --preview 'bat --style=numbers --color=always {}'";
             nrs = "sudo nixos-rebuild switch --flake ${nixConfig}#${flakeHost}";
+            "nrs-local" = "sudo nixos-rebuild switch --flake .#${flakeHost}";
             drs = "sudo darwin-rebuild switch --flake ${nixConfig}#${flakeHost}";
+            "drs-local" = "sudo darwin-rebuild switch --flake .#${flakeHost}";
+            hms = "home-manager switch -b hm-backup --flake ${nixConfig}#${flakeHost}";
+            "hms-local" = "home-manager switch -b hm-backup --flake .#${flakeHost}";
             ".." = "cd ..";
             "..." = "cd ../..";
             "...." = "cd ../../..";

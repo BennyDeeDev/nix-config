@@ -1,7 +1,0 @@
-[
-  {
-    "title": "Microsoft Windows 11",
-    "target": "/run/current-system/sw/bin/systemctl",
-    "launchOptions": "--system start windows-reboot.service"
-  }
-]

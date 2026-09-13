@@ -5,6 +5,11 @@
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    plasma-manager = {
+      url = "github:nix-community/plasma-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
     disko = {
       url = "github:nix-community/disko/latest";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -42,6 +47,7 @@
 
   outputs =
     inputs@{
+      home-manager,
       nixpkgs,
       darwin,
       ...
@@ -69,6 +75,18 @@
           system = "aarch64-linux";
           modules = [ (import ./hosts/pi5-kiosk inputs).nixos ];
         };
+      };
+
+      homeConfigurations.deck = home-manager.lib.homeManagerConfiguration {
+        pkgs = import nixpkgs {
+          system = "x86_64-linux";
+          config.allowUnfree = true;
+        };
+        extraSpecialArgs = {
+          nixConfig = "/home/deck/Repos/nix-config";
+          flakeHost = "deck";
+        };
+        modules = [ (import ./hosts/deck inputs).homeManager ];
       };
 
       darwinConfigurations.mbp-personal = darwin.lib.darwinSystem {

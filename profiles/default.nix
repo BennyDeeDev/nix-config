@@ -1,6 +1,8 @@
 {
   home-manager,
+  jovian,
   lanzaboote,
+  nix-flatpak,
   noctalia,
   noctalia-greeter,
   sops-nix,
@@ -8,6 +10,8 @@
 }:
 
 {
+  apps = import ./apps;
+  gaming = import ./gaming { inherit jovian nix-flatpak; };
   nixos = import ./nixos { inherit sops-nix; };
   desktop = import ./desktop {
     inherit

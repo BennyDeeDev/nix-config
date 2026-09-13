@@ -14,13 +14,14 @@ Right as I am writing this, I am dropping into the next Nix rabbit hole. It is i
 
 NixOS, nix-darwin, and Home Manager configuration for the machines below.
 
-| Output                 | Role                              |
-| ---------------------- | --------------------------------- |
-| `desktop`              | NixOS workstation and gaming host |
-| `mbp-personal`         | Personal macOS workstation        |
-| `pi5-server`           | Home automation server            |
-| `pi5-kiosk`            | Planned kiosk                     |
-| `images.pi5-bootstrap` | Raspberry Pi 5 bootstrap image    |
+| Output                         | Role                              |
+| ------------------------------ | --------------------------------- |
+| `desktop`                      | NixOS workstation and gaming host |
+| `mbp-personal`                 | Personal macOS workstation        |
+| `pi5-server`                   | Home automation server            |
+| `pi5-kiosk`                    | Planned kiosk                     |
+| `homeConfigurations.deck`      | SteamOS Home Manager profile      |
+| `images.pi5-bootstrap`         | Raspberry Pi 5 bootstrap image    |
 
 ## Architecture
 
@@ -329,4 +330,5 @@ realized; it compares resulting closures and therefore does require builds.
 - [Desktop installation and Secure Boot](hosts/desktop/README.md)
 - [MacBook bootstrap](hosts/mbp-personal/README.md)
 - [Raspberry Pi deployment](hosts/pi5-server/README.md)
+- [Steam Deck Home Manager](hosts/deck/README.md)
 - [Secret management](secrets/README.md)

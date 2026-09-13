@@ -12,6 +12,7 @@
       };
       users.benjaminderksen = {
         imports = [
+          profiles.apps.homeManager
           profiles.terminal.homeManager
           profiles.macos.homeManager
           sopsModule.homeManager
