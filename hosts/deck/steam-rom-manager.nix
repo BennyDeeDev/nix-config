@@ -6,7 +6,7 @@
       ...
     }:
     let
-      configDir = "${nixConfig}/hosts/desktop/files/steam-rom-manager";
+      configDir = "${nixConfig}/hosts/deck/files/steam-rom-manager";
       link = config.lib.file.mkOutOfStoreSymlink;
     in
     {
@@ -17,8 +17,6 @@
           link "${configDir}/userConfigurations.json";
         ".config/steam-rom-manager/userData/manifests/media/media-apps.json".source =
           link "${configDir}/manifests/media/media-apps.json";
-        ".config/steam-rom-manager/userData/manifests/system/system-apps.json".source =
-          link "${configDir}/manifests/system/system-apps.json";
       };
     };
 }

@@ -12,6 +12,7 @@ let
   plasma = import ./plasma { inherit plasma-manager; };
   profiles = import ../../profiles inputs;
   sopsModule = import ../../modules/sops.nix { inherit sops-nix; };
+  steamRomManager = import ./steam-rom-manager.nix;
 in
 {
   homeManager =
@@ -26,6 +27,7 @@ in
         profiles.gaming.homeManager
         profiles.terminal.homeManager
         plasma.homeManager
+        steamRomManager.homeManager
       ];
 
       home = {
