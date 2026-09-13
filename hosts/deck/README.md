@@ -194,5 +194,4 @@ Verify the daemon before running Nix operations:
 
 ```bash
 nix store ping --store daemon
-``
 ```
