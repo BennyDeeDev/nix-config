@@ -2,13 +2,10 @@
   homeManager =
     {
       config,
-      lib,
-      pkgs,
       ...
     }:
     let
       home = config.home.homeDirectory;
-      sentinel = "${config.xdg.stateHome}/ludusavi/bootstraped";
     in
     {
       services.ludusavi = {
@@ -51,41 +48,5 @@
           apps.rclone.path = "rclone";
         };
       };
-
-      systemd.user.services.ludusavi-bootstrap = {
-        Unit = {
-          Description = "Bootstrap Ludusavi backups from the NAS";
-          ConditionPathExists = "!${sentinel}";
-          Wants = [
-            "network-online.target"
-            "sops-nix.service"
-          ];
-          After = [
-            "network-online.target"
-            "sops-nix.service"
-          ];
-        };
-        Service = {
-          Type = "oneshot";
-          RemainAfterExit = true;
-          Restart = "on-failure";
-          RestartSec = "2min";
-          StateDirectory = "ludusavi";
-          ExecStart = "${lib.getExe pkgs.ludusavi} cloud download --force";
-          ExecStartPost = "${lib.getExe' pkgs.coreutils "touch"} ${sentinel}";
-        };
-        Install.WantedBy = [ "default.target" ];
-      };
-
-      systemd.user.services.ludusavi.Unit = {
-        Requires = [ "ludusavi-bootstrap.service" ];
-        After = [ "ludusavi-bootstrap.service" ];
-      };
-
-      systemd.user.timers.ludusavi.Timer.Persistent = true;
-
-      systemd.user.tmpfiles.rules = [
-        "d ${home}/Backups/ludusavi 0700 - - -"
-      ];
     };
 }

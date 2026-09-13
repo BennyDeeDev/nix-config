@@ -15,7 +15,7 @@ let
 in
 {
   homeManager =
-    { ... }:
+    { lib, ... }:
     {
       imports = [
         homeManagerModule.homeManager
@@ -43,5 +43,6 @@ in
         "Restic"
       ];
       my.gaming.gamesPath = "/run/media/mmcblk0p1";
+      systemd.user.timers.ludusavi.Install.WantedBy = lib.mkForce [ ];
     };
 }
