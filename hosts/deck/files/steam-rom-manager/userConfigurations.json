@@ -56,8 +56,6 @@
         "executableModifier": "\"${exePath}\"",
         "startInDirectory": "",
         "titleModifier": "",
-        "fetchControllerTemplatesButton": null,
-        "removeControllersButton": null,
         "steamInputEnabled": "0",
         "imageProviders": [
             "sgdb",
@@ -130,7 +128,6 @@
                 ],
                 "sizes": [],
                 "sizesHero": [],
-                "sizesTall": null,
                 "sizesIcon": []
             }
         },
@@ -215,8 +212,6 @@
         "executableModifier": "",
         "startInDirectory": "",
         "titleModifier": "",
-        "fetchControllerTemplatesButton": null,
-        "removeControllersButton": null,
         "steamInputEnabled": "2",
         "imageProviders": [
             "sgdb",
@@ -289,7 +284,6 @@
                 ],
                 "sizes": [],
                 "sizesHero": [],
-                "sizesTall": null,
                 "sizesIcon": []
             }
         },
