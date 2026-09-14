@@ -1,8 +1,5 @@
 version = 1
 
-[global]
-dll = "/home/benjamin/.local/share/Steam/steamapps/common/Lossless Scaling/Lossless.dll"
-
 [[game]]
 exe = "Ryujinx"
 multiplier = 2

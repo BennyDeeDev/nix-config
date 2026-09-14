@@ -1,0 +1,282 @@
+[
+  {
+    "configTitle": "Nintendo Switch - Ryujinx(Flatpak)",
+    "defaultImage": {},
+    "disabled": true,
+    "executable": {
+      "appendArgsToExecutable": true,
+      "path": "/usr/bin/env",
+      "shortcutPassthrough": false
+    },
+    "executableArgs": "flatpak run io.github.ryubing.Ryujinx --fullscreen \"${filePath}\"",
+    "executableModifier": "\"${exePath}\"",
+    "imageProviderAPIs": {
+      "sgdb": {}
+    },
+    "localImages": {},
+    "onlineImageQueries": [
+      "${fuzzyTitle}"
+    ],
+    "overlayImages": {},
+    "parserId": "nintendo-switch-ryujinx",
+    "parserInputs": {
+      "glob": "${title} \\[0100*000\\]\\[v0\\]*.@(nsp|NSP|xci|XCI|nca|NCA|nro|NRO|nso|NSO)"
+    },
+    "parserType": "Glob",
+    "romDirectory": "/mnt/games/Switch",
+    "sortAsFromVariable": {
+      "limitToGroups": []
+    },
+    "steamCategories": [
+      "Switch"
+    ],
+    "steamDirectory": "${steamdirglobal}",
+    "steamInputEnabled": "0",
+    "titleFromVariable": {
+      "limitToGroups": []
+    },
+    "userAccounts": {
+      "specifiedAccounts": [
+        "tfopgonehitgg"
+      ]
+    },
+    "version": 29,
+    "group": ""
+  },
+  {
+    "parserType": "Glob",
+    "configTitle": "Nintendo Switch - Eden",
+    "group": "",
+    "steamDirectory": "${steamdirglobal}",
+    "romDirectory": "/mnt/games/Switch",
+    "steamCategories": [
+      "Switch"
+    ],
+    "executableArgs": "--fullscreen \"${filePath}\"",
+    "executableModifier": "\"${exePath}\"",
+    "startInDirectory": "",
+    "titleModifier": "",
+    "fetchControllerTemplatesButton": null,
+    "removeControllersButton": null,
+    "steamInputEnabled": "0",
+    "imageProviders": [
+      "sgdb",
+      "steamCDN"
+    ],
+    "onlineImageQueries": [
+      "${fuzzyTitle}"
+    ],
+    "imagePool": "",
+    "drmProtect": false,
+    "userAccounts": {
+      "specifiedAccounts": []
+    },
+    "parserInputs": {
+      "glob": "${title} \\[0100*000\\]\\[v0\\]*.@(nsp|NSP|xci|XCI|nca|NCA|nro|NRO|nso|NSO)"
+    },
+    "executable": {
+      "path": "/home/benjamin/Applications/Eden.appimage",
+      "shortcutPassthrough": false,
+      "appendArgsToExecutable": true
+    },
+    "titleFromVariable": {
+      "limitToGroups": [],
+      "caseInsensitiveVariables": false,
+      "skipFileIfVariableWasNotFound": false
+    },
+    "sortAsFromVariable": {
+      "limitToGroups": []
+    },
+    "fuzzyMatch": {
+      "replaceDiacritics": true,
+      "removeCharacters": true,
+      "removeBrackets": true
+    },
+    "controllers": {
+      "gamecube": null,
+      "wii": null,
+      "ps3": null,
+      "ps4": null,
+      "ps5": null,
+      "ps5_edge": null,
+      "xbox360": null,
+      "xboxone": null,
+      "xboxelite": null,
+      "switch_joycon_left": null,
+      "switch_joycon_right": null,
+      "switch_joycon_pair": null,
+      "switch_pro": null,
+      "switch2_pro": null,
+      "neptune": null,
+      "triton": null,
+      "steamcontroller_gordon": null,
+      "generic": null,
+      "8bitdo": null,
+      "rog_ally": null,
+      "legion_go_s": null
+    },
+    "imageProviderAPIs": {
+      "sgdb": {
+        "nsfw": false,
+        "humor": false,
+        "styles": [],
+        "stylesHero": [],
+        "stylesLogo": [],
+        "stylesIcon": [],
+        "imageMotionTypes": [
+          "static"
+        ],
+        "sizes": [],
+        "sizesHero": [],
+        "sizesIcon": [],
+        "sizesTall": null
+      }
+    },
+    "overlayImages": {
+      "tall": null,
+      "long": null,
+      "hero": null,
+      "logo": null,
+      "icon": null
+    },
+    "defaultImage": {
+      "tall": null,
+      "long": null,
+      "hero": null,
+      "logo": null,
+      "icon": null
+    },
+    "localImages": {
+      "tall": null,
+      "long": null,
+      "hero": null,
+      "logo": null,
+      "icon": null
+    },
+    "parserId": "nintendo-switch-eden",
+    "version": 29
+  },
+  {
+    "configTitle": "PC - Bottles (Flatpak)",
+    "defaultImage": {},
+    "disabled": true,
+    "executable": {
+      "appendArgsToExecutable": true,
+      "path": "/usr/bin/env",
+      "shortcutPassthrough": false
+    },
+    "executableArgs": "flatpak run --command=bottles-cli --unshare=network com.usebottles.bottles run -b \"Games Exe Runner Proton\" -e \"${filePath}\"",
+    "executableModifier": "\"${exePath}\"",
+    "imageProviderAPIs": {
+      "sgdb": {}
+    },
+    "localImages": {},
+    "onlineImageQueries": [
+      "${fuzzyTitle}"
+    ],
+    "overlayImages": {},
+    "parserId": "pc-bottles",
+    "parserInputs": {
+      "glob": "${title}/{,!(NoDVD|_Redist|_CommonRedist|EasyAntiCheat|BattlEye|exec|Engine|AdvGuide|ArtbookOST|Gameface|Crashpad|ERD_ArtbookOST)/}!(unins*|*[Cc]rash*|*[Rr]eport*|crs-*|*[Ss]etup*|patcher*|*[Bb]enchmark*|*[Ll]anguage*|*[Mm]onitor*|*_EAC|RapidCRC*|*[Ss]hipping*|*DED*|*[Pp]rotected*|dxweb*|?*[Ll]auncher*|*32|*.profile).exe"
+    },
+    "parserType": "Glob",
+    "romDirectory": "/mnt/games/PC",
+    "sortAsFromVariable": {
+      "limitToGroups": []
+    },
+    "steamCategories": [
+      "PC - Bottles (Flatpak)"
+    ],
+    "steamDirectory": "${steamdirglobal}",
+    "steamInputEnabled": "1",
+    "titleFromVariable": {
+      "limitToGroups": []
+    },
+    "titleModifier": "${/:/|${title}|}",
+    "userAccounts": {
+      "specifiedAccounts": [
+        "tfopgonehitgg"
+      ]
+    },
+    "version": 29
+  },
+  {
+    "configTitle": "Desktop Media",
+    "defaultImage": {},
+    "executable": {
+      "shortcutPassthrough": false
+    },
+    "imageProviderAPIs": {
+      "sgdb": {}
+    },
+    "localImages": {},
+    "onlineImageQueries": [
+      "${fuzzyTitle}"
+    ],
+    "overlayImages": {},
+    "parserId": "desktop-media",
+    "parserInputs": {
+      "manualManifests": "/home/benjamin/.config/steam-rom-manager/userData/manifests/media"
+    },
+    "parserType": "Manual",
+    "sortAsFromVariable": {
+      "limitToGroups": []
+    },
+    "steamCategories": [
+      "Media"
+    ],
+    "steamDirectory": "${steamdirglobal}",
+    "steamInputEnabled": "2",
+    "titleFromVariable": {
+      "limitToGroups": []
+    },
+    "userAccounts": {
+      "specifiedAccounts": [
+        "tfopgonehitgg"
+      ]
+    },
+    "version": 29,
+    "executableModifier": "",
+    "disabled": true
+  },
+  {
+    "configTitle": "System Apps",
+    "defaultImage": {},
+    "disabled": true,
+    "executable": {
+      "path": "",
+      "shortcutPassthrough": false,
+      "appendArgsToExecutable": false
+    },
+    "imageProviderAPIs": {
+      "sgdb": {}
+    },
+    "localImages": {},
+    "onlineImageQueries": [
+      "${fuzzyTitle}"
+    ],
+    "overlayImages": {},
+    "parserId": "system-apps",
+    "parserInputs": {
+      "manualManifests": "/home/benjamin/.config/steam-rom-manager/userData/manifests/system"
+    },
+    "parserType": "Manual",
+    "sortAsFromVariable": {
+      "limitToGroups": []
+    },
+    "steamCategories": [
+      "System"
+    ],
+    "steamDirectory": "${steamdirglobal}",
+    "steamInputEnabled": "2",
+    "titleFromVariable": {
+      "limitToGroups": []
+    },
+    "userAccounts": {
+      "specifiedAccounts": [
+        "tfopgonehitgg"
+      ]
+    },
+    "version": 29
+  }
+]
