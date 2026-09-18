@@ -9,5 +9,6 @@ for file in packages/*.nix; do
 
   nix run github:Mic92/nix-update -- \
     --flake \
+    --version-regex '^v([0-9]+\.[0-9]+\.[0-9]+)$' \
     "$package"
 done

@@ -16,7 +16,7 @@ let
 in
 {
   homeManager =
-    { lib, ... }:
+    { lib, pkgs, ... }:
     {
       imports = [
         homeManagerModule.homeManager
@@ -29,6 +29,8 @@ in
         plasma.homeManager
         steamRomManager.homeManager
       ];
+
+      home.packages = [ inputs.self.packages.${pkgs.system}.eden-steamdeck-pgo ];
 
       home = {
         username = "deck";
