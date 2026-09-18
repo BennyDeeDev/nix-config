@@ -23,7 +23,7 @@
             "glob": "${title} \\[0100*000\\]\\[v0\\]*.@(nsp|NSP|xci|XCI|nca|NCA|nro|NRO|nso|NSO)"
         },
         "parserType": "Glob",
-        "romDirectory": "/run/media/mmcblk0p1/Switch",
+        "romDirectory": "/run/media/deck/976d3eeb-4b99-4f9b-b67c-a708c59432e7/Switch",
         "sortAsFromVariable": {
             "limitToGroups": []
         },
@@ -48,16 +48,14 @@
         "configTitle": "Nintendo Switch - Eden",
         "group": "",
         "steamDirectory": "${steamdirglobal}",
-        "romDirectory": "/run/media/mmcblk0p1/Switch",
+        "romDirectory": "/run/media/deck/976d3eeb-4b99-4f9b-b67c-a708c59432e7/Switch",
         "steamCategories": [
             "Switch"
         ],
-        "executableArgs": "--fullscreen \"${filePath}\"",
+        "executableArgs": "LD_PRELOAD=\"\" %command% -f -g \"${filePath}\"",
         "executableModifier": "\"${exePath}\"",
-        "startInDirectory": "",
+        "startInDirectory": "/usr/bin",
         "titleModifier": "",
-        "fetchControllerTemplatesButton": null,
-        "removeControllersButton": null,
         "steamInputEnabled": "0",
         "imageProviders": [
             "sgdb",
@@ -79,7 +77,7 @@
         "executable": {
             "path": "/home/deck/.nix-profile/bin/eden-steamdeck-pgo",
             "shortcutPassthrough": false,
-            "appendArgsToExecutable": true
+            "appendArgsToExecutable": false
         },
         "titleFromVariable": {
             "limitToGroups": [],
@@ -130,7 +128,6 @@
                 ],
                 "sizes": [],
                 "sizesHero": [],
-                "sizesTall": null,
                 "sizesIcon": []
             }
         },
@@ -182,7 +179,7 @@
             "glob": "${title}/{,!(NoDVD|_Redist|_CommonRedist|EasyAntiCheat|BattlEye|exec|Engine|AdvGuide|ArtbookOST|Gameface|Crashpad|ERD_ArtbookOST)/}!(unins*|*[Cc]rash*|*[Rr]eport*|crs-*|*[Ss]etup*|patcher*|*[Bb]enchmark*|*[Ll]anguage*|*[Mm]onitor*|*_EAC|RapidCRC*|*[Ss]hipping*|*DED*|*[Pp]rotected*|dxweb*|?*[Ll]auncher*|*32|*.profile).exe"
         },
         "parserType": "Glob",
-        "romDirectory": "/run/media/mmcblk0p1/PC",
+        "romDirectory": "/run/media/deck/976d3eeb-4b99-4f9b-b67c-a708c59432e7/PC",
         "sortAsFromVariable": {
             "limitToGroups": []
         },

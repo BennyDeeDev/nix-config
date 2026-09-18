@@ -46,7 +46,7 @@ in
         "Ludusavi"
         "Restic"
       ];
-      my.gaming.gamesPath = "/run/media/mmcblk0p1";
+      my.gaming.gamesPath = "/run/media/deck/976d3eeb-4b99-4f9b-b67c-a708c59432e7";
       systemd.user.timers.ludusavi.Install.WantedBy = lib.mkForce [ ];
     };
 }

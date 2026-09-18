@@ -1,6 +1,6 @@
 {
 	"environmentVariables": {
-		"romsDirectory": "/run/media/mmcblk0p1",
+		"romsDirectory": "/run/media/deck/976d3eeb-4b99-4f9b-b67c-a708c59432e7",
 		"steamDirectory": "/home/deck/.local/share/Steam/",
 		"userAccounts": [
 			"tfopgonehitgg"
@@ -12,8 +12,8 @@
 	"version": 11,
 	"fuzzyMatcher": {
 		"timestamps": {
-			"check": 1789382267975,
-			"download": 1789382267975
+			"check": 1789744197062,
+			"download": 1789744197062
 		},
 		"verbose": false,
 		"filterProviders": true
