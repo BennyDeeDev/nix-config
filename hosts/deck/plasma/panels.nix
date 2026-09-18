@@ -99,22 +99,6 @@ in
             };
           };
         }
-        {
-          name = "org.kde.plasma.folder";
-          config.General = {
-            icon = "applications-all";
-            url = "applications:/";
-            useCustomIcon = true;
-          };
-        }
-        {
-          name = "org.kde.plasma.folder";
-          config.General = {
-            icon = "folder-downloads";
-            url = "file:///home/deck/Downloads";
-            useCustomIcon = true;
-          };
-        }
       ];
     }
   ];

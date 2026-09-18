@@ -1,27 +1,67 @@
 # Steam Deck Home Manager
 
-## First activation
+## Reinstall or bootstrap
 
-From the checkout on the Steam Deck:
+Run these steps after a fresh SteamOS installation.
+
+### 1. Set the password
 
 ```bash
+passwd
+```
+
+### 2. Install Nix
+
+```bash
+curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install | sh -s -- --daemon
+```
+
+Open a new shell after the installer finishes.
+
+### 3. Enter the bootstrap shell
+
+Set the experimental features once and load the tools needed for bootstrap:
+
+```bash
+export NIX_CONFIG='experimental-features = nix-command flakes'
+nix shell nixpkgs#gh nixpkgs#git nixpkgs#age nixpkgs#sops nixpkgs#age-plugin-yubikey
+```
+
+Keep this shell open through the following steps.
+
+### 4. Clone the repository
+
+Authenticate GitHub:
+
+```bash
+gh auth login
+```
+
+Then clone the repository:
+
+```bash
+mkdir -p ~/Repos
+gh repo clone BennyDeeDev/nix-config ~/Repos/nix-config
 cd ~/Repos/nix-config
-
-nix --extra-experimental-features "nix-command flakes" \
-  run github:nix-community/home-manager -- \
-  switch -b hm-backup --flake .#deck
 ```
 
-After activation, use the generated `hms` alias or run:
+### 5. Generate the host age key
+
+Home Manager uses this key for unattended decryption. Generate it before the
+first activation.
+
+Generate the key and print its public key:
 
 ```bash
-home-manager switch -b hm-backup --flake ~/Repos/nix-config#deck
+mkdir -p ~/.config/sops/age
+age-keygen -o ~/.config/sops/age/keys.txt
 ```
 
-## YubiKey age support
+Add the printed `age1...` key as the `&deck` recipient in `.sops.yaml`.
 
-SteamOS includes PC/SC but not the optional CCID reader driver. Install the
-driver in the current SteamOS image before using YubiKey-backed age identities:
+### 6. Install the YubiKey reader driver
+
+Install `ccid` before rekeying the encrypted files.
 
 ```bash
 sudo steamos-readonly disable
@@ -39,8 +79,63 @@ Verify that the reader is available:
 age-plugin-yubikey --list-all
 ```
 
-The `ccid` package is installed outside Home Manager and may need to be
-reinstalled after a SteamOS image update.
+### 7. Enroll the host key in SOPS
+
+Use the hardcoded YubiKey age identity for this command. Do not use the new
+host key here.
+
+```bash
+export SOPS_AGE_KEY='AGE-PLUGIN-YUBIKEY-17Z2J5Q5Z709P64S7VFQZT'
+```
+
+Update the encrypted files separately:
+
+```bash
+sops updatekeys secrets/common.yaml
+```
+
+```bash
+sops updatekeys secrets/desktop.yaml
+```
+
+Do not activate Home Manager from the rekey shell. Start a new shell, or
+clear the YubiKey identity first:
+
+```bash
+unset SOPS_AGE_KEY
+```
+
+### 8. First activation
+
+From the checkout on the Steam Deck:
+
+```bash
+cd ~/Repos/nix-config
+
+nix run github:nix-community/home-manager -- switch -b hm-backup --flake '.#deck'
+```
+
+After activation, use the generated `hms` alias.
+
+### 9. Set up the Nix GPU libraries
+
+```bash
+sudo /nix/store/<store-hash>-non-nixos-gpu/bin/non-nixos-gpu-setup
+```
+
+### 10. Set Zsh as the login shell
+
+```bash
+chsh -s /bin/zsh
+```
+
+# Technical Considerations
+
+## YubiKey age support
+
+SteamOS includes PC/SC but not the optional CCID reader driver. The `ccid`
+package is installed outside Home Manager and may need to be reinstalled after
+a SteamOS image update.
 
 ## Plasma session restore
 
