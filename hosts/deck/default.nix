@@ -48,5 +48,15 @@ in
       ];
       my.gaming.gamesPath = "/run/media/deck/976d3eeb-4b99-4f9b-b67c-a708c59432e7";
       systemd.user.timers.ludusavi.Install.WantedBy = lib.mkForce [ ];
+      systemd.user.services.sdgyrodsu = {
+        Unit.Description = "Cemuhook DSU server for the Steam Deck Gyroscope";
+        Service = {
+          ExecStart = "${inputs.jovian.legacyPackages.${pkgs.system}.sdgyrodsu}/bin/sdgyrodsu";
+          PrivateTmp = true;
+          ProtectSystem = "strict";
+          ProtectHome = true;
+        };
+        Install.WantedBy = [ "graphical-session.target" ];
+      };
     };
 }
