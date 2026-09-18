@@ -13,6 +13,9 @@
       enable = true;
       overrideConfig = true;
 
+      configFile.dolphinrc.General.GlobalViewProps = true;
+      dataFile."dolphin/view_properties/global/.directory".Dolphin.ViewMode = 1;
+
       input.keyboard = {
         repeatRate = 25;
         repeatDelay = 150;
