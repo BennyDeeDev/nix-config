@@ -2,6 +2,7 @@
   appimageTools,
   dwarfs,
   fetchurl,
+  lib,
   runCommand,
 }:
 
@@ -43,5 +44,12 @@ appimageTools.wrapAppImage (finalAttrs: {
       --replace-fail 'Exec=eden %f' 'Exec=${finalAttrs.pname} %f'
   '';
 
-  meta.mainProgram = finalAttrs.pname;
+  meta = {
+    description = "Nintendo Switch emulator";
+    homepage = "https://eden-emu.dev";
+    license = lib.licenses.gpl3Plus;
+    mainProgram = finalAttrs.pname;
+    platforms = [ "x86_64-linux" ];
+    sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
+  };
 })

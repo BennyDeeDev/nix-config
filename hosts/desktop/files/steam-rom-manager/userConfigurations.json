@@ -75,7 +75,7 @@
       "glob": "${title} \\[0100*000\\]\\[v0\\]*.@(nsp|NSP|xci|XCI|nca|NCA|nro|NRO|nso|NSO)"
     },
     "executable": {
-      "path": "/home/benjamin/Applications/Eden.appimage",
+      "path": "/home/benjamin/.nix-profile/bin/eden-rog-ally-pgo-lsfg",
       "shortcutPassthrough": false,
       "appendArgsToExecutable": true
     },

@@ -30,8 +30,6 @@ in
         steamRomManager.homeManager
       ];
 
-      home.packages = [ inputs.self.packages.${pkgs.system}.eden-steamdeck-pgo ];
-
       home = {
         username = "deck";
         homeDirectory = "/home/deck";
@@ -47,6 +45,7 @@ in
         "Restic"
       ];
       my.gaming.gamesPath = "/run/media/deck/976d3eeb-4b99-4f9b-b67c-a708c59432e7";
+      my.gaming.edenPackage = inputs.self.packages.${pkgs.system}.eden-steamdeck-pgo;
       systemd.user.timers.ludusavi.Install.WantedBy = lib.mkForce [ ];
       systemd.user.services.sdgyrodsu = {
         Unit.Description = "Cemuhook DSU server for the Steam Deck Gyroscope";

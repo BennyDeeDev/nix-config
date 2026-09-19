@@ -1,9 +1,0 @@
-version = 1
-
-[[game]]
-exe = "Ryujinx"
-multiplier = 2
-flow_scale = 1.0
-performance_mode = false
-hdr_mode = false
-# experimental_present_mode = "fifo"

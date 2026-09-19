@@ -1,9 +1,13 @@
-{ jovian, nix-flatpak }:
+{
+  jovian,
+  nix-flatpak,
+  self,
+}:
 
 let
   bottles = import ./bottles.nix;
   flatpak = import ./flatpak.nix { inherit nix-flatpak; };
-  lsfg = import ./lsfg.nix;
+  lsfg = import ./lsfg.nix { inherit self; };
   ludusavi = import ./ludusavi.nix;
   ryujinx = import ./ryujinx.nix;
   steam = import ./steam.nix { inherit jovian; };
@@ -33,6 +37,11 @@ in
       options.my.gaming.gamesPath = lib.mkOption {
         type = lib.types.str;
         description = "Host-specific root directory for gaming data.";
+      };
+
+      options.my.gaming.edenPackage = lib.mkOption {
+        type = lib.types.package;
+        description = "Host-specific Eden package.";
       };
 
       config.systemd.user.tmpfiles.rules = [

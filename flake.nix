@@ -57,10 +57,14 @@
 
       packages.x86_64-linux =
         let
-          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+          pkgs = import nixpkgs {
+            system = "x86_64-linux";
+            config.allowUnfree = true;
+          };
         in
         {
           eden-rog-ally-pgo = pkgs.callPackage ./packages/eden-rog-ally-pgo.nix { };
+          lsfg-vk = pkgs.callPackage ./packages/lsfg-vk.nix { };
           eden-steamdeck-pgo = pkgs.callPackage ./packages/eden-steamdeck-pgo.nix { };
         };
 

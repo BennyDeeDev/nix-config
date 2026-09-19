@@ -6,12 +6,13 @@
   noctalia,
   noctalia-greeter,
   sops-nix,
+  self,
   ...
 }:
 
 {
   apps = import ./apps;
-  gaming = import ./gaming { inherit jovian nix-flatpak; };
+  gaming = import ./gaming { inherit jovian nix-flatpak self; };
   nixos = import ./nixos { inherit sops-nix; };
   desktop = import ./desktop {
     inherit

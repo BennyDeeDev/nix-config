@@ -19,6 +19,7 @@ let
       sopsModule
       windows
       ;
+    edenPackage = inputs.self.packages.x86_64-linux.eden-rog-ally-pgo;
   };
 in
 {

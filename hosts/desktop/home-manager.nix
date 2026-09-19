@@ -1,4 +1,5 @@
 {
+  edenPackage,
   profiles,
   sopsModule,
   windows,
@@ -15,7 +16,7 @@ in
         flakeHost = "desktop";
       };
       users.benjamin =
-        { ... }:
+        { pkgs, ... }:
         {
           imports = [
             profiles.apps.homeManager
@@ -30,6 +31,7 @@ in
           sops.defaultSopsFile = ../../secrets/desktop.yaml;
           my.sops.yubikeyIdentity = "AGE-PLUGIN-YUBIKEY-17Z2J5Q5Z709P64S7VFQZT";
           my.gaming.gamesPath = "/mnt/games";
+          my.gaming.edenPackage = edenPackage;
 
           home = {
             username = "benjamin";
