@@ -75,7 +75,7 @@
             "glob": "${title} \\[0100*000\\]\\[v0\\]*.@(nsp|NSP|xci|XCI|nca|NCA|nro|NRO|nso|NSO)"
         },
         "executable": {
-            "path": "/home/deck/.nix-profile/bin/eden-steamdeck-pgo-lsfg",
+            "path": "/home/deck/.nix-profile/bin/eden-steamdeck-pgo",
             "shortcutPassthrough": false,
             "appendArgsToExecutable": false
         },
