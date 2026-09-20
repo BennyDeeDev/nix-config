@@ -131,6 +131,14 @@ chsh -s /bin/zsh
 
 # Technical Considerations
 
+## Nix shell profile
+
+Standalone Home Manager on SteamOS does not automatically add the system Nix
+profile to `PATH`, and SteamOS updates may remove the global profile hook.
+`hosts/deck/default.nix` therefore adds `/nix/var/nix/profiles/default/bin`
+through `home.sessionPath`, so new shells can find `nix` while the daemon
+continues to run through socket activation.
+
 ## YubiKey age support
 
 SteamOS includes PC/SC but not the optional CCID reader driver. The `ccid`
