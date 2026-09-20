@@ -285,8 +285,17 @@ sudo systemctl enable --now nix-daemon.socket
 
 `daemon-reload` makes systemd rescan the Nix units after `/nix` is mounted.
 `enable --now` enables socket activation for future boots and starts it now.
-Verify the daemon before running Nix operations:
+
+If the shell reports `nix: command not found`, restore the Nix profile hook in
+the current shell:
 
 ```bash
+. /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+```
+
+Verify the shell and daemon before running Nix operations:
+
+```bash
+nix --version
 nix store ping --store daemon
 ```
