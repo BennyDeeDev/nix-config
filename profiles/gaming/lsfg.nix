@@ -26,7 +26,6 @@
     in
     {
       home.packages = [
-        lsfgVk
         eden
         edenWithLsfg
       ];
