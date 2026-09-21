@@ -6,7 +6,7 @@ let
     LC_COLLATE = "de_DE.UTF-8";
     LC_IDENTIFICATION = "de_DE.UTF-8";
     LC_MEASUREMENT = "de_DE.UTF-8";
-    LC_MESSAGES = "de_DE.UTF-8";
+    LC_MESSAGES = baseLocale;
     LC_MONETARY = "de_DE.UTF-8";
     LC_NAME = "de_DE.UTF-8";
     LC_NUMERIC = "de_DE.UTF-8";

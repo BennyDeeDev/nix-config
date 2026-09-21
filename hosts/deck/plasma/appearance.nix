@@ -2,9 +2,9 @@
 
 {
   programs.plasma.configFile.kdeglobals.KDE = {
-    AutomaticDarkLightLookAndFeel = true;
-    LookAndFeelPackage = "org.kde.breeze.desktop";
-    NightLookAndFeelPackage = "org.kde.breezedark.desktop";
+    AutomaticLookAndFeel = true;
+    DefaultDarkLookAndFeel = "org.kde.breezedark.desktop";
+    DefaultLightLookAndFeel = "org.kde.breeze.desktop";
   };
 
   programs.plasma.configFile = {
