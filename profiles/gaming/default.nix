@@ -9,7 +9,6 @@ let
   flatpak = import ./flatpak.nix { inherit nix-flatpak; };
   lsfg = import ./lsfg.nix { inherit self; };
   ludusavi = import ./ludusavi.nix;
-  ryujinx = import ./ryujinx.nix;
   steam = import ./steam.nix { inherit jovian; };
   steamRomManager = import ./steam-rom-manager.nix;
 in
@@ -29,7 +28,6 @@ in
         flatpak.homeManager
         lsfg.homeManager
         ludusavi.homeManager
-        ryujinx.homeManager
         steam.homeManager
         steamRomManager.homeManager
       ];
