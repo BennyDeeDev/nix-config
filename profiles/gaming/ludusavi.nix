@@ -24,7 +24,7 @@
             }
             {
               store = "otherWine";
-              path = "${home}/.var/app/com.usebottles.bottles/data/bottles/bottles/Games-Exe-Runner-Proton";
+              path = "${home}/.var/app/com.usebottles.bottles/data/bottles/bottles/gaming-bottle";
             }
           ];
           backup = {
