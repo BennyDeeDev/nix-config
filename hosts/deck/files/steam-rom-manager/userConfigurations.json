@@ -252,7 +252,7 @@
             ]
         },
         "parserInputs": {
-            "glob": "{/run/media/deck/976d3eeb-4b99-4f9b-b67c-a708c59432e7/PC,/home/deck/Games/PC}/**/${title}.srm-launcher.bat"
+            "glob": "{/run/media/deck/976d3eeb-4b99-4f9b-b67c-a708c59432e7/PC,/home/deck/Games/PC}/**/${title}/srm-launcher.bat"
         },
         "executable": {
             "path": "/usr/bin/env",
