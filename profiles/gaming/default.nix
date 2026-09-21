@@ -40,6 +40,8 @@ in
       config.systemd.user.tmpfiles.rules = [
         "d ${config.my.gaming.gamesPath}/PC 0755 - - -"
         "d ${config.my.gaming.gamesPath}/Switch 0755 - - -"
+        "d ${config.my.gaming.gamesPath}/Switch/30fps 0755 - - -"
+        "d ${config.my.gaming.gamesPath}/Switch/60fps 0755 - - -"
       ];
     };
 }
