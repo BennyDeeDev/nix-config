@@ -1,7 +1,7 @@
 { sops-nix }:
 
 let
-  locale = import ./locale.nix;
+  localeModule = import ../../modules/locale.nix;
   nixModule = import ../../modules/nix.nix;
   profile = import ./profile.nix;
   programs = import ./programs.nix;
@@ -10,7 +10,7 @@ in
 {
   nixos = {
     imports = [
-      locale.nixos
+      localeModule.nixos
       nixModule.nixos
       profile.nixos
       programs.nixos

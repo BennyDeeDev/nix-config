@@ -7,6 +7,7 @@ inputs@{
 
 let
   homeManagerModule = import ../../modules/home-manager.nix { inherit home-manager; };
+  localeModule = import ../../modules/locale.nix;
   nasModule = import ../../modules/nas.nix;
   nixModule = import ../../modules/nix.nix;
   plasma = import ./plasma { inherit plasma-manager; };
@@ -23,6 +24,7 @@ in
         nasModule.homeManager
         nixModule.homeManager
         sopsModule.homeManager
+        localeModule.homeManager
         profiles.apps.homeManager
         profiles.gaming.homeManager
         profiles.terminal.homeManager

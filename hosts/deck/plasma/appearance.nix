@@ -1,3 +1,5 @@
+{ config, ... }:
+
 {
   programs.plasma.configFile.kdeglobals.KDE = {
     AutomaticDarkLightLookAndFeel = true;
@@ -9,14 +11,14 @@
     "ktimezonedrc".TimeZones.LocalZone = "Europe/Berlin";
 
     "plasma-localerc".Formats = {
-      LC_ADDRESS = "de_DE.UTF-8";
-      LC_MEASUREMENT = "de_DE.UTF-8";
-      LC_MONETARY = "de_DE.UTF-8";
-      LC_NAME = "de_DE.UTF-8";
-      LC_NUMERIC = "de_DE.UTF-8";
-      LC_PAPER = "de_DE.UTF-8";
-      LC_TELEPHONE = "de_DE.UTF-8";
-      LC_TIME = "en_DE.UTF-8";
+      LC_ADDRESS = config.home.language.address;
+      LC_MEASUREMENT = config.home.language.measurement;
+      LC_MONETARY = config.home.language.monetary;
+      LC_NAME = config.home.language.name;
+      LC_NUMERIC = config.home.language.numeric;
+      LC_PAPER = config.home.language.paper;
+      LC_TELEPHONE = config.home.language.telephone;
+      LC_TIME = config.home.language.time;
     };
   };
 
