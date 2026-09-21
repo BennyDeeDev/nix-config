@@ -39,11 +39,6 @@ in
         description = "Host-specific root directory for gaming data.";
       };
 
-      options.my.gaming.edenPackage = lib.mkOption {
-        type = lib.types.package;
-        description = "Host-specific Eden package.";
-      };
-
       config.systemd.user.tmpfiles.rules = [
         "d ${config.my.gaming.gamesPath}/PC 0755 - - -"
         "d ${config.my.gaming.gamesPath}/Switch 0755 - - -"

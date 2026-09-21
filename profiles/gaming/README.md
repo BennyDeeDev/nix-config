@@ -2,9 +2,18 @@
 
 ## LSFG-VK 2.0
 
-The gaming profile exposes an LSFG-enabled launcher for the host-selected Eden
-package. The launcher enables 2x frame generation with environment variables and
-preserves the existing Vulkan implicit-layer search paths.
+The gaming profile exposes generic LSFG-enabled launchers. They configure the
+Vulkan layer for one command without enabling it globally, and preserve the
+existing Vulkan implicit-layer search paths.
+
+```bash
+lsfg-vk-2x eden-steamdeck-pgo
+lsfg-vk-3x eden-steamdeck-pgo
+lsfg-vk-4x eden-steamdeck-pgo
+```
+
+The same launchers can wrap other executables or Steam's `%command%` launch
+placeholder.
 
 Before using the launcher, switch Lossless Scaling to Steam's `lsfg-vk` branch:
 

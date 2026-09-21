@@ -31,7 +31,7 @@ in
           sops.defaultSopsFile = ../../secrets/desktop.yaml;
           my.sops.yubikeyIdentity = "AGE-PLUGIN-YUBIKEY-17Z2J5Q5Z709P64S7VFQZT";
           my.gaming.gamesPath = "/mnt/games";
-          my.gaming.edenPackage = edenPackage;
+          home.packages = [ edenPackage ];
 
           home = {
             username = "benjamin";

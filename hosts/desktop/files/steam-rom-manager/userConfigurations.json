@@ -1,49 +1,5 @@
 [
   {
-    "configTitle": "Nintendo Switch - Ryujinx(Flatpak)",
-    "defaultImage": {},
-    "disabled": true,
-    "executable": {
-      "appendArgsToExecutable": true,
-      "path": "/usr/bin/env",
-      "shortcutPassthrough": false
-    },
-    "executableArgs": "flatpak run io.github.ryubing.Ryujinx --fullscreen \"${filePath}\"",
-    "executableModifier": "\"${exePath}\"",
-    "imageProviderAPIs": {
-      "sgdb": {}
-    },
-    "localImages": {},
-    "onlineImageQueries": [
-      "${fuzzyTitle}"
-    ],
-    "overlayImages": {},
-    "parserId": "nintendo-switch-ryujinx",
-    "parserInputs": {
-      "glob": "${title} \\[0100*000\\]\\[v0\\]*.@(nsp|NSP|xci|XCI|nca|NCA|nro|NRO|nso|NSO)"
-    },
-    "parserType": "Glob",
-    "romDirectory": "/mnt/games/Switch",
-    "sortAsFromVariable": {
-      "limitToGroups": []
-    },
-    "steamCategories": [
-      "Switch"
-    ],
-    "steamDirectory": "${steamdirglobal}",
-    "steamInputEnabled": "0",
-    "titleFromVariable": {
-      "limitToGroups": []
-    },
-    "userAccounts": {
-      "specifiedAccounts": [
-        "tfopgonehitgg"
-      ]
-    },
-    "version": 29,
-    "group": ""
-  },
-  {
     "parserType": "Glob",
     "configTitle": "Nintendo Switch - Eden",
     "group": "",
@@ -72,7 +28,7 @@
       "specifiedAccounts": []
     },
     "parserInputs": {
-      "glob": "${title} \\[0100*000\\]\\[v0\\]*.@(nsp|NSP|xci|XCI|nca|NCA|nro|NRO|nso|NSO)"
+      "glob": "**/${title} \\[0100*000\\]\\[v0\\]*.@(nsp|NSP|xci|XCI|nca|NCA|nro|NRO|nso|NSO)"
     },
     "executable": {
       "path": "/home/benjamin/.nix-profile/bin/eden-rog-ally-pgo-lsfg",
