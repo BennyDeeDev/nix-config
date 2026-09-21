@@ -8,6 +8,10 @@
       home = config.home.homeDirectory;
     in
     {
+      systemd.user.tmpfiles.rules = [
+        "d ${home}/Backups/ludusavi 0755 - - -"
+      ];
+
       services.ludusavi = {
         enable = true;
         frequency = "*:0/15";

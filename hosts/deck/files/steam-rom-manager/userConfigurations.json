@@ -28,7 +28,7 @@
             ]
         },
         "parserInputs": {
-            "glob": "**/${title} \\[0100*000\\]\\[v0\\]*.@(nsp|NSP|xci|XCI|nca|NCA|nro|NRO|nso|NSO)"
+            "glob": "{/run/media/deck/976d3eeb-4b99-4f9b-b67c-a708c59432e7/Switch/30fps,/home/deck/Games/Switch/30fps}/**/${title} \\[0100*000\\]\\[v0\\]*.@(nsp|NSP|xci|XCI|nca|NCA|nro|NRO|nso|NSO)"
         },
         "executable": {
             "path": "/home/deck/.nix-profile/bin/eden-steamdeck-pgo",
@@ -140,7 +140,7 @@
             ]
         },
         "parserInputs": {
-            "glob": "**/${title} \\[0100*000\\]\\[v0\\]*.@(nsp|NSP|xci|XCI|nca|NCA|nro|NRO|nso|NSO)"
+            "glob": "{/run/media/deck/976d3eeb-4b99-4f9b-b67c-a708c59432e7/Switch/60fps,/home/deck/Games/Switch/60fps}/**/${title} \\[0100*000\\]\\[v0\\]*.@(nsp|NSP|xci|XCI|nca|NCA|nro|NRO|nso|NSO)"
         },
         "executable": {
             "path": "/home/deck/.nix-profile/bin/eden-steamdeck-pgo",
@@ -236,8 +236,6 @@
         "executableModifier": "\"${exePath}\"",
         "startInDirectory": "",
         "titleModifier": "${/:/|${title}|}",
-        "fetchControllerTemplatesButton": null,
-        "removeControllersButton": null,
         "steamInputEnabled": "0",
         "imageProviders": [
             "sgdb",
@@ -254,7 +252,7 @@
             ]
         },
         "parserInputs": {
-            "glob": "**/${title}.srm-launcher.bat"
+            "glob": "{/run/media/deck/976d3eeb-4b99-4f9b-b67c-a708c59432e7/PC,/home/deck/Games/PC}/**/${title}.srm-launcher.bat"
         },
         "executable": {
             "path": "/usr/bin/env",
@@ -310,7 +308,6 @@
                 ],
                 "sizes": [],
                 "sizesHero": [],
-                "sizesTall": null,
                 "sizesIcon": []
             }
         },

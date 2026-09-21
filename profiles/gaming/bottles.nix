@@ -6,8 +6,8 @@
         packages = [ "com.usebottles.bottles" ];
         overrides."com.usebottles.bottles".Context.filesystems = [
           "/nix/store:ro"
-          "${config.my.gaming.gamesPath}/PC:rw"
-        ];
+        ]
+        ++ map (gamesPath: "${gamesPath}/PC:rw") config.my.gaming.gamesPaths;
       };
     };
 }

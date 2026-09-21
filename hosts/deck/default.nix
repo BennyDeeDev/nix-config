@@ -47,7 +47,10 @@ in
         "Ludusavi-Deck"
         "Restic"
       ];
-      my.gaming.gamesPath = "/run/media/deck/976d3eeb-4b99-4f9b-b67c-a708c59432e7";
+      my.gaming.gamesPaths = [
+        "/run/media/deck/976d3eeb-4b99-4f9b-b67c-a708c59432e7"
+        "/home/deck/Games"
+      ];
       my.gaming.ludusaviBackupPath = "/Ludusavi-Deck";
       home.packages = [ inputs.self.packages.${pkgs.system}.eden-steamdeck-pgo ];
       systemd.user.services.sdgyrodsu = {
