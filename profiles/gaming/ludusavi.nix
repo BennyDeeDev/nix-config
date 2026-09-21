@@ -10,11 +10,17 @@
     {
       services.ludusavi = {
         enable = true;
-        frequency = "*-*-* 03:00:00";
+        frequency = "*:0/15";
         settings = {
           manifest.secondary = [
             {
-              url = "https://raw.githubusercontent.com/BennyDeeDev/ludusavi-emudeck-manifest-flatpak/main/manifest.yml";
+              path = "${builtins.toFile "ludusavi-eden-manifest.yml" ''
+                "Eden":
+                  files:
+                    "<xdgData>/eden/nand/user/save":
+                      tags: [save]
+                      when: [{ os: linux }]
+              ''}";
             }
           ];
           roots = [
@@ -29,7 +35,7 @@
           ];
           backup = {
             path = "${home}/Backups/ludusavi";
-            retention.full = 40;
+            retention.full = 50;
             format = {
               chosen = "zip";
             };
@@ -42,7 +48,7 @@
               port = 445;
               username = "benjamin";
             };
-            path = "/Ludusavi/ludusavi-backup";
+            path = config.my.gaming.ludusaviBackupPath;
             synchronize = true;
           };
           apps.rclone.path = "rclone";

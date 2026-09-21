@@ -16,7 +16,7 @@ let
 in
 {
   homeManager =
-    { lib, pkgs, ... }:
+    { pkgs, ... }:
     {
       imports = [
         homeManagerModule.homeManager
@@ -44,11 +44,12 @@ in
         "Homelab"
         "Benjamin"
         "Ludusavi"
+        "Ludusavi-Deck"
         "Restic"
       ];
       my.gaming.gamesPath = "/run/media/deck/976d3eeb-4b99-4f9b-b67c-a708c59432e7";
+      my.gaming.ludusaviBackupPath = "/Ludusavi-Deck";
       home.packages = [ inputs.self.packages.${pkgs.system}.eden-steamdeck-pgo ];
-      systemd.user.timers.ludusavi.Install.WantedBy = lib.mkForce [ ];
       systemd.user.services.sdgyrodsu = {
         Unit.Description = "Cemuhook DSU server for the Steam Deck Gyroscope";
         Service = {
