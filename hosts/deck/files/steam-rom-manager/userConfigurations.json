@@ -236,7 +236,7 @@
         "executableModifier": "\"${exePath}\"",
         "startInDirectory": "",
         "titleModifier": "${/:/|${title}|}",
-        "steamInputEnabled": "0",
+        "steamInputEnabled": "2",
         "imageProviders": [
             "sgdb",
             "steamCDN"

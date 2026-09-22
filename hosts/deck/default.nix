@@ -40,6 +40,8 @@ in
 
       home.sessionPath = [ "/nix/var/nix/profiles/default/bin" ];
 
+      services.flatpak.packages = [ "com.valvesoftware.SteamLink" ];
+
       sops.defaultSopsFile = ../../secrets/desktop.yaml;
       my.sops.yubikeyIdentity = "AGE-PLUGIN-YUBIKEY-17Z2J5Q5Z709P64S7VFQZT";
       my.nas.shares = [
