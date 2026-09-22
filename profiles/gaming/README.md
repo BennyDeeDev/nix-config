@@ -28,3 +28,35 @@ LSFG-VK 2.0. The `lsfg-vk` branch must provide this file:
 ```bash
 ls -l "$HOME/.local/share/Steam/steamapps/common/Lossless Scaling/lsfg-vk.dll"
 ```
+
+## Bottles Steam Deck Controller Fix
+
+When running Windows games through Bottles Flatpak in Steam Deck Gaming Mode,
+Wine may expose the Steam Deck controller as two simultaneously active XInput
+controllers.
+
+In KDE Desktop Mode, only one controller responds. In Gaming Mode, both
+controllers receive the same inputs. This can cause broken menu navigation,
+unresponsive D-pad controls, and mouse interaction issues, even when controller
+input works correctly during gameplay.
+
+The issue was reproduced with Soda 11 and occurs with Steam Input enabled or
+disabled.
+
+### Fix
+
+Disable Wine's SDL controller backend to eliminate the duplicate controller
+while keeping XInput functional.
+
+Launch Wine's Control Panel inside the existing bottle:
+
+```bash
+flatpak run --command=bottles-cli --unshare=network \
+  com.usebottles.bottles tools -b gaming-bottle control
+```
+
+Open **Game Controllers → Advanced**, uncheck **Enable SDL**, and apply the
+changes.
+
+Restart the game to ensure Wine initializes its controller backends with the
+updated configuration.
