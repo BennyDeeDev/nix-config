@@ -1,7 +1,8 @@
 [
   {
     "title": "Stremio",
-    "target": "/home/deck/.nix-profile/bin/stremio"
+    "target": "/usr/bin/env",
+    "launchOptions": "flatpak run com.stremio.Stremio"
   },
   {
     "title": "Vacuum Tube",

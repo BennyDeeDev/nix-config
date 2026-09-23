@@ -10,7 +10,6 @@ let
   boot = import ./boot.nix { inherit lanzaboote; };
   btrfs = import ./btrfs.nix;
   libvirt = import ./libvirt.nix;
-  networkmanager = import ./networkmanager.nix;
   profile = import ./profile.nix;
   studioDisplay = import ./studio-display.nix;
   zsa = import ./zsa.nix;
@@ -26,7 +25,6 @@ in
       boot.nixos
       btrfs.nixos
       libvirt.nixos
-      networkmanager.nixos
       profile.nixos
       studioDisplay.nixos
       zsa.nixos

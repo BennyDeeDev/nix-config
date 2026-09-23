@@ -128,6 +128,11 @@ Dedicated files are appropriate when a feature owns settings, payloads,
 plugins, services, timers, permissions, firewall policy, coordinated
 dependencies, activation behavior, or an independent lifecycle.
 
+A single one-line setting does not deserve its own file. Fold it into the
+relevant `profile.nix` or `host.nix`; keep a separate file when the feature
+contains multiple related settings or has one of the ownership boundaries
+listed above.
+
 Prefer upstream `programs.*`, `services.*`, and `virtualisation.*` modules
 when they represent the intended behavior. When a direct package is retained
 despite a related module, leave a short comment explaining the decision.
