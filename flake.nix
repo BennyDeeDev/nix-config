@@ -60,13 +60,6 @@
           eden-steamdeck-pgo = pkgs.callPackage ./packages/eden-steamdeck-pgo.nix { };
         };
 
-      formatter = nixpkgs.lib.genAttrs [
-        "aarch64-darwin"
-        "aarch64-linux"
-        "x86_64-darwin"
-        "x86_64-linux"
-      ] (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
-
       nixosConfigurations = {
         desktop = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
