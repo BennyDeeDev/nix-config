@@ -9,6 +9,7 @@ let
   profiles = import ../../profiles inputs;
   hardware = import ./hardware.nix;
   host = import ./host.nix;
+  nasModule = import ../../modules/nas.nix;
   sopsModule = import ../../modules/sops.nix { inherit sops-nix; };
   secrets = import ./secrets.nix;
   users = import ./users.nix;
@@ -26,7 +27,9 @@ in
   nixos = {
     imports = [
       profiles.nixos.nixos
-      profiles.desktop.nixos
+      profiles.nixosDesktop.nixos
+      nasModule.nixos
+      profiles.kde.nixos
       profiles.gaming.nixos
       windows.nixos
       disko.nixosModules.disko

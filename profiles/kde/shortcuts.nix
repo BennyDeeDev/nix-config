@@ -1,5 +1,5 @@
 {
-programs.plasma.shortcuts.kwin = {
+  programs.plasma.shortcuts.kwin = {
     "Switch to Desktop 1" = "Meta+F1";
     "Switch to Desktop 2" = "Meta+F2";
     "Switch to Desktop 3" = "Meta+F3";

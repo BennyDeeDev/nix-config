@@ -10,7 +10,6 @@ let
   lsfg = import ./lsfg.nix { inherit self; };
   ludusavi = import ./ludusavi.nix;
   steam = import ./steam.nix { inherit jovian; };
-  steamRomManager = import ./steam-rom-manager.nix;
 in
 {
   nixos = {
@@ -21,7 +20,12 @@ in
   };
 
   homeManager =
-    { config, lib, ... }:
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
     {
       imports = [
         bottles.homeManager
@@ -29,7 +33,12 @@ in
         lsfg.homeManager
         ludusavi.homeManager
         steam.homeManager
-        steamRomManager.homeManager
+      ];
+
+      config.home.packages = with pkgs; [
+        steam-rom-manager
+        stremio-linux-shell
+        vacuum-tube
       ];
 
       options.my.gaming.gamesPath = lib.mkOption {

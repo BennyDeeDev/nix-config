@@ -5,7 +5,6 @@
       enable32Bit = true;
     };
 
-    programs.dconf.enable = true;
     security.sudo.extraConfig = ''
       Defaults timestamp_type=tty,timestamp_timeout=-1
     '';

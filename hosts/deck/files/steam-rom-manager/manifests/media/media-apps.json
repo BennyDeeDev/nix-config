@@ -1,13 +1,11 @@
 [
   {
     "title": "Stremio",
-    "target": "/usr/bin/env",
-    "launchOptions": "flatpak run com.stremio.Stremio"
+    "target": "/home/deck/.nix-profile/bin/stremio"
   },
   {
     "title": "Vacuum Tube",
-    "target": "/usr/bin/env",
-    "launchOptions": "flatpak run rocks.shy.VacuumTube"
+    "target": "/home/deck/.nix-profile/bin/VacuumTube"
   },
   {
     "title": "Steam Link",

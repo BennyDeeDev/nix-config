@@ -1,3 +1,5 @@
+{ config, ... }:
+
 let
   fixedSpacer = {
     panelSpacer = {
@@ -19,7 +21,7 @@ in
       widgets = [
         {
           name = "org.kde.plasma.kickoff";
-          config.General.icon = "distributor-logo-steamdeck";
+          config.General.icon = config.my.kde.kickoffIcon;
         }
         fixedSpacer
         "org.kde.plasma.pager"
@@ -88,6 +90,7 @@ in
               "applications:spotify.desktop"
               "applications:org.keepassxc.KeePassXC.desktop"
               "preferred://filemanager"
+              "applications:org.kde.plasma-systemmonitor.desktop"
               "applications:systemsettings.desktop"
             ];
             behavior = {
@@ -97,6 +100,22 @@ in
                 onlyInCurrentDesktop = false;
               };
             };
+          };
+        }
+        {
+          name = "org.kde.plasma.folder";
+          config.General = {
+            icon = "folder-downloads";
+            url = "file://${config.home.homeDirectory}/Downloads";
+            useCustomIcon = true;
+          };
+        }
+        {
+          name = "org.kde.plasma.folder";
+          config.General = {
+            icon = "applications-all";
+            url = "applications:/";
+            useCustomIcon = true;
           };
         }
       ];

@@ -16,10 +16,5 @@
       enable = true;
       onCalendar = "weekly";
     };
-
-    services.flatpak.packages = [
-      "com.stremio.Stremio"
-      "rocks.shy.VacuumTube"
-    ];
   };
 }

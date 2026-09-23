@@ -1,5 +1,5 @@
 {
-  nixos = { ... }: {
+  nixos = {
     hardware.bluetooth = {
       enable = true;
       powerOnBoot = true;
@@ -12,10 +12,4 @@
       };
     };
   };
-
-  homeManager =
-    { pkgs, ... }:
-    {
-      home.packages = [ pkgs.bluetui ];
-    };
 }

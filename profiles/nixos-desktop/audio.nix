@@ -1,5 +1,5 @@
 {
-  nixos = { ... }: {
+  nixos = {
     security.rtkit.enable = true;
 
     services.pipewire = {
@@ -12,17 +12,4 @@
       jack.enable = true;
     };
   };
-
-  homeManager =
-    { pkgs, ... }:
-    {
-      home.packages = with pkgs; [
-        playerctl
-        wiremix
-        pamixer
-        pavucontrol
-        pulseaudio
-      ];
-    };
-
 }

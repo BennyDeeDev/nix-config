@@ -10,10 +10,8 @@
         enable = true;
         autoStart = true;
         user = "benjamin";
-        desktopSession = "niri";
+        desktopSession = "plasma";
       };
-
-      programs.noctalia-greeter.enable = lib.mkForce false;
 
       programs.steam = {
         enable = true;

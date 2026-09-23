@@ -32,19 +32,20 @@ files/       Application payloads
 hosts/       Machine identity, hardware, disks, and unique policy
 images/      Image outputs
 modules/     Reusable modules selected explicitly
-profiles/    Explicit NixOS, desktop, macOS, Pi, and terminal bundles
+profiles/    Explicit NixOS, NixOS desktop, KDE, macOS, Pi, and terminal bundles
 secrets/     Encrypted SOPS documents
 ```
 
 Profile composition is explicit. `nixos` provides the generic NixOS foundation;
-`desktop`, `macos`, `terminal`, and `pi5` are complete opinionated bundles.
+`nixosDesktop`, `kde`, `macos`, `terminal`, and `pi5` are complete opinionated bundles.
 `profiles/default.nix` is their explicit catalog; the root `flake.nix` exports
 that catalog for other flakes as `.#profiles`. Each host selects whole
 profiles and reusable host modules:
 
 ```text
 profiles/nixos/default.nix
-profiles/desktop/default.nix
+profiles/nixos-desktop/default.nix
+profiles/kde/default.nix
 profiles/macos/default.nix
 profiles/terminal/default.nix
 profiles/pi5/default.nix
@@ -72,9 +73,10 @@ only the mutable checkout path is passed to Home Manager through
 `profiles/nixos/` contains the generic NixOS foundation shared by
 workstations, servers, and images.
 
-`profiles/desktop/` is the complete NixOS workstation policy. It combines the
-system foundation with the Niri desktop, GUI applications, fonts, and desktop
-integration. Its Home Manager facet contains the NixOS-only user packages.
+`profiles/nixos-desktop/` is the complete NixOS workstation policy. It combines
+the system foundation with GUI applications and desktop integration. The
+desktop environment is selected separately; `profiles/kde/` provides the shared
+KDE Plasma configuration for the NixOS desktop and Steam Deck.
 
 `profiles/terminal/` contains the shell, command-line tools, and terminal
 editors. `profiles/macos/` contains shared macOS system policy and applications.
@@ -103,14 +105,14 @@ the profile facet needed by the consuming system:
         system = "x86_64-linux";
         modules = [
           profiles.nixos.nixos
-          profiles.desktop.homeManager
+          profiles.nixosDesktop.homeManager
         ];
       };
     };
 }
 ```
 
-Available profile entries are `nixos`, `desktop`, `macos`, `pi5`, and
+Available profile entries are `nixos`, `nixosDesktop`, `kde`, `macos`, `pi5`, and
 `terminal`. Each profile exposes only the facets it supports, such as
 `.nixos`, `.darwin`, or `.homeManager`. The profile files and their referenced
 configuration assets are kept inside the flake source, so relative paths keep

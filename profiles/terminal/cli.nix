@@ -9,7 +9,7 @@
       ...
     }:
     {
-      xdg.enable = true;
+      xdg.enable = lib.mkIf pkgs.stdenv.hostPlatform.isLinux true;
 
       programs = {
         zsh = {
