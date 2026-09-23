@@ -1,12 +1,10 @@
 { nix-flatpak }:
 
 {
-  nixos =
-    { ... }:
-    {
-      imports = [ nix-flatpak.nixosModules.nix-flatpak ];
-      services.flatpak.enable = true;
-    };
+  nixos = {
+    imports = [ nix-flatpak.nixosModules.nix-flatpak ];
+    services.flatpak.enable = true;
+  };
 
   homeManager = {
     imports = [ nix-flatpak.homeManagerModules.nix-flatpak ];

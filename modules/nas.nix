@@ -82,12 +82,8 @@ in
     let
       cfg = config.my.nas;
       remote = "nas";
-      mountRoot = "${config.home.homeDirectory}/mnt/nas";
       lower = share: lib.toLower share;
-      mountPath = share: "${mountRoot}/${lower share}";
-      cachePath = share: "${config.xdg.cacheHome}/rclone/${lower share}";
-      serviceName = share: "rclone-nas-${lower share}";
-      fusermount = lib.getExe' pkgs.fuse3 "fusermount3";
+      mountPath = share: "${config.home.homeDirectory}/mnt/nas/${lower share}";
     in
     {
       options.my.nas = nasOptions lib;
@@ -116,7 +112,7 @@ in
         systemd.user.services = lib.listToAttrs (
           map (
             share:
-            lib.nameValuePair (serviceName share) {
+            lib.nameValuePair "rclone-nas-${lower share}" {
               Unit = {
                 Description = "Mount NAS ${share} with rclone";
                 After = [
@@ -137,11 +133,11 @@ in
                   "${remote}:${share}"
                   (mountPath share)
                   "--config=${config.xdg.configHome}/rclone/rclone.conf"
-                  "--cache-dir=${cachePath share}"
+                  "--cache-dir=${config.xdg.cacheHome}/rclone/${lower share}"
                   "--vfs-cache-mode=writes"
                   "--umask=022"
                 ];
-                ExecStop = "-${fusermount} -uz ${mountPath share}";
+                ExecStop = "-${lib.getExe' pkgs.fuse3 "fusermount3"} -uz ${mountPath share}";
                 Restart = "on-failure";
                 RestartSec = "10s";
               };

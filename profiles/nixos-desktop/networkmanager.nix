@@ -1,5 +1,5 @@
 {
-  nixos = { ... }: {
+  nixos = {
     networking.networkmanager.enable = true;
   };
 }

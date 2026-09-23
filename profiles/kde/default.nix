@@ -4,17 +4,6 @@ let
   localeModule = import ../../modules/locale.nix;
   extraPackages =
     pkgs: with pkgs; [
-      kdePackages.kcalc
-      kdePackages.kcharselect
-      kdePackages.kclock
-      kdePackages.kcolorchooser
-      kdePackages.kolourpaint
-      kdePackages.ksystemlog
-      kdePackages.sddm-kcm
-      kdiff3
-      kdePackages.isoimagewriter
-      kdePackages.partitionmanager
-      hardinfo2
       wayland-utils
       wl-clipboard
       haruna

@@ -221,8 +221,10 @@ programs.helix.enable = true;
 
 ### Let Bindings
 
-Use a `let` binding only when the bound value is used more than once. Keep
-one-off expressions inline instead of introducing a local name.
+Use a `let` binding when the bound value is shared. Composition files named
+`default.nix` may keep aliases for imported modules when that makes the import
+list easier to read, even if an alias is used once. Package definitions may
+also keep shared values such as a version or source.
 
 ### Custom Module Options
 
@@ -258,12 +260,7 @@ for mutable external configuration that may outlive its Nix store reference.
 
 ## Validation
 
-Format the Nix tree and verify that formatting is clean:
-
-```sh
-nix fmt
-nix fmt -- --ci
-```
+Use `nixfmt` to format Nix files.
 
 Evaluate the active outputs without activating them:
 

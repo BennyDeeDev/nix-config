@@ -14,23 +14,6 @@ let
     LC_TELEPHONE = "de_DE.UTF-8";
     LC_TIME = "en_GB.UTF-8";
   };
-  localeSettings = extraLocaleSettings // {
-    LANG = baseLocale;
-  };
-  homeLanguage = {
-    base = baseLocale;
-    ctype = extraLocaleSettings.LC_CTYPE;
-    collate = extraLocaleSettings.LC_COLLATE;
-    numeric = extraLocaleSettings.LC_NUMERIC;
-    time = extraLocaleSettings.LC_TIME;
-    monetary = extraLocaleSettings.LC_MONETARY;
-    messages = extraLocaleSettings.LC_MESSAGES;
-    paper = extraLocaleSettings.LC_PAPER;
-    name = extraLocaleSettings.LC_NAME;
-    address = extraLocaleSettings.LC_ADDRESS;
-    telephone = extraLocaleSettings.LC_TELEPHONE;
-    measurement = extraLocaleSettings.LC_MEASUREMENT;
-  };
 in
 {
   nixos = {
@@ -45,7 +28,22 @@ in
   };
 
   homeManager = {
-    home.language = homeLanguage;
-    systemd.user.sessionVariables = localeSettings;
+    home.language = {
+      base = baseLocale;
+      ctype = extraLocaleSettings.LC_CTYPE;
+      collate = extraLocaleSettings.LC_COLLATE;
+      numeric = extraLocaleSettings.LC_NUMERIC;
+      time = extraLocaleSettings.LC_TIME;
+      monetary = extraLocaleSettings.LC_MONETARY;
+      messages = extraLocaleSettings.LC_MESSAGES;
+      paper = extraLocaleSettings.LC_PAPER;
+      name = extraLocaleSettings.LC_NAME;
+      address = extraLocaleSettings.LC_ADDRESS;
+      telephone = extraLocaleSettings.LC_TELEPHONE;
+      measurement = extraLocaleSettings.LC_MEASUREMENT;
+    };
+    systemd.user.sessionVariables = extraLocaleSettings // {
+      LANG = baseLocale;
+    };
   };
 }

@@ -6,10 +6,6 @@ let
     ];
   };
 
-  nixSystemSettings = nixSettings // {
-    auto-optimise-store = true;
-  };
-
   nixGc = {
     automatic = true;
     dates = "weekly";
@@ -18,7 +14,9 @@ let
 
   common = {
     nixpkgs.config.allowUnfree = true;
-    nix.settings = nixSystemSettings;
+    nix.settings = nixSettings // {
+      auto-optimise-store = true;
+    };
   };
 in
 {

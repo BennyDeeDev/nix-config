@@ -1,15 +1,13 @@
 {
-  nixos =
-    { ... }:
-    {
-      programs = {
-        fuse = {
-          enable = true;
-        };
-        nix-ld = {
-          enable = true;
-        };
+  nixos = {
+    programs = {
+      fuse = {
+        enable = true;
       };
-      services.envfs.enable = true;
+      nix-ld = {
+        enable = true;
+      };
     };
+    services.envfs.enable = true;
+  };
 }
