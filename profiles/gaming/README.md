@@ -60,3 +60,80 @@ changes.
 
 Restart the game to ensure Wine initializes its controller backends with the
 updated configuration.
+
+## Game Launchers
+
+Each PC game has a `my.launcher.bat` in its game directory:
+
+```text
+PC/<Game Name>/my.launcher.bat
+```
+
+The batch file launches the game relative to its own directory. Generic example:
+
+```bat
+"%~dp0Gameface\Binaries\Win64\Game.exe"
+```
+
+`%~dp0` means the directory containing the batch file. Steam ROM Manager finds
+these files and launches them through the portable bottle:
+
+```bash
+flatpak run --command=bottles-cli --unshare=network \
+  com.usebottles.bottles run \
+  -b "gaming-portable-bottle" \
+  -e "<path-to-my.launcher.bat>"
+```
+
+## Portable Gaming Setup
+
+This setup keeps selected gaming data on removable storage so compatible
+systems can share games, saves, and application data. Each application has its
+own portable configuration.
+
+### Portable Bottles
+
+Create a bottle using this custom Bottles directory:
+
+```text
+/run/media/<user>/976d3eeb-4b99-4f9b-b67c-a708c59432e7/Bottles
+```
+
+Set its `bottle.yml`:
+
+```yaml
+Custom_Path: false
+Environment_Variables:
+  USER: portable
+Path: gaming-portable-bottle
+```
+
+Home Manager registers the bottle by creating a symlink:
+
+```text
+~/.var/app/com.usebottles.bottles/data/bottles/bottles/gaming-portable-bottle
+-> /run/media/<user>/976d3eeb-4b99-4f9b-b67c-a708c59432e7/Bottles/gaming-portable-bottle
+```
+
+This lets Bottles find the portable prefix while keeping the actual bottle on
+the SD card. Do not use `placeholder.yml`; the shared `bottle.yml` keeps its
+relative `Path`.
+
+Start it with:
+
+```bash
+flatpak run com.usebottles.bottles --bottle "gaming-portable-bottle"
+```
+
+### Portable Eden
+
+Set Eden's firmware and keys first.
+
+Open **Eden -> Emulation -> Configure -> System**, then set both the **NAND**
+and **Save Data** paths to:
+
+```text
+/run/media/<user>/976d3eeb-4b99-4f9b-b67c-a708c59432e7/Eden/nand
+```
+
+Replace `<user>` with `deck` or `benjamin`, then restart Eden.

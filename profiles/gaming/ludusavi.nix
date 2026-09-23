@@ -21,7 +21,7 @@
               path = "${builtins.toFile "ludusavi-eden-manifest.yml" ''
                 "Eden":
                   files:
-                    "<xdgData>/eden/nand/user/save":
+                    "${config.my.gaming.portableGamesPath}/Eden/nand":
                       tags: [save]
                       when: [{ os: linux }]
               ''}";
@@ -34,7 +34,7 @@
             }
             {
               store = "otherWine";
-              path = "${home}/.var/app/com.usebottles.bottles/data/bottles/bottles/gaming-bottle";
+              path = "${config.my.gaming.portableGamesPath}/Bottles/gaming-portable-bottle";
             }
           ];
           backup = {

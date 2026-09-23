@@ -28,7 +28,7 @@
       "specifiedAccounts": []
     },
     "parserInputs": {
-      "glob": "**/${title} \\[0100*000\\]\\[v0\\]*.@(nsp|NSP|xci|XCI|nca|NCA|nro|NRO|nso|NSO)"
+      "glob": "{/mnt/games/Switch,/run/media/benjamin/976d3eeb-4b99-4f9b-b67c-a708c59432e7/Switch}/**/${title} \\[0100*000\\]\\[v0\\]*.@(nsp|NSP|xci|XCI|nca|NCA|nro|NRO|nso|NSO)"
     },
     "executable": {
       "path": "/home/benjamin/.nix-profile/bin/eden-rog-ally-pgo-lsfg",
@@ -115,13 +115,12 @@
   {
     "configTitle": "PC - Bottles (Flatpak)",
     "defaultImage": {},
-    "disabled": true,
     "executable": {
       "appendArgsToExecutable": true,
       "path": "/usr/bin/env",
       "shortcutPassthrough": false
     },
-    "executableArgs": "flatpak run --command=bottles-cli --unshare=network com.usebottles.bottles run -b \"Games Exe Runner Proton\" -e \"${filePath}\"",
+    "executableArgs": "flatpak run --command=bottles-cli --unshare=network com.usebottles.bottles run -b \"gaming-portable-bottle\" -e \"${filePath}\"",
     "executableModifier": "\"${exePath}\"",
     "imageProviderAPIs": {
       "sgdb": {}
@@ -133,7 +132,7 @@
     "overlayImages": {},
     "parserId": "pc-bottles",
     "parserInputs": {
-      "glob": "${title}/{,!(NoDVD|_Redist|_CommonRedist|EasyAntiCheat|BattlEye|exec|Engine|AdvGuide|ArtbookOST|Gameface|Crashpad|ERD_ArtbookOST)/}!(unins*|*[Cc]rash*|*[Rr]eport*|crs-*|*[Ss]etup*|patcher*|*[Bb]enchmark*|*[Ll]anguage*|*[Mm]onitor*|*_EAC|RapidCRC*|*[Ss]hipping*|*DED*|*[Pp]rotected*|dxweb*|?*[Ll]auncher*|*32|*.profile).exe"
+      "glob": "{/mnt/games/PC,/run/media/benjamin/976d3eeb-4b99-4f9b-b67c-a708c59432e7/PC}/**/${title}/my.launcher.bat"
     },
     "parserType": "Glob",
     "romDirectory": "/mnt/games/PC",
@@ -141,7 +140,7 @@
       "limitToGroups": []
     },
     "steamCategories": [
-      "PC - Bottles (Flatpak)"
+      "PC - Bottles"
     ],
     "steamDirectory": "${steamdirglobal}",
     "steamInputEnabled": "1",

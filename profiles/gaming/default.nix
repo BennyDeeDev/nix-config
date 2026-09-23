@@ -32,9 +32,14 @@ in
         steamRomManager.homeManager
       ];
 
-      options.my.gaming.gamesPaths = lib.mkOption {
-        type = lib.types.listOf lib.types.str;
-        description = "Host-specific root directories for gaming data.";
+      options.my.gaming.gamesPath = lib.mkOption {
+        type = lib.types.str;
+        description = "Host-specific local root directory for gaming data.";
+      };
+
+      options.my.gaming.portableGamesPath = lib.mkOption {
+        type = lib.types.str;
+        description = "Host-specific removable root directory for gaming data.";
       };
 
       options.my.gaming.ludusaviBackupPath = lib.mkOption {
@@ -42,14 +47,11 @@ in
         description = "Remote path for Ludusavi backups.";
       };
 
-      config.systemd.user.tmpfiles.rules = lib.concatMap (
-        gamesPath:
-        map (subdirectory: "d ${gamesPath}/${subdirectory} 0755 - - -") [
-          "PC"
-          "Switch"
-          "Switch/30fps"
-          "Switch/60fps"
-        ]
-      ) config.my.gaming.gamesPaths;
+      config.systemd.user.tmpfiles.rules = [
+        "d ${config.my.gaming.gamesPath}/PC 0755 - - -"
+        "d ${config.my.gaming.gamesPath}/Switch 0755 - - -"
+        "d ${config.my.gaming.gamesPath}/Switch/30fps 0755 - - -"
+        "d ${config.my.gaming.gamesPath}/Switch/60fps 0755 - - -"
+      ];
     };
 }
