@@ -3,9 +3,6 @@
 {
   nixos =
     { config, lib, ... }:
-    let
-      cfg = config.my.sops;
-    in
     {
       imports = [ sops-nix.nixosModules.sops ];
 
@@ -24,7 +21,7 @@
           sshKeyPaths = [ ];
         };
 
-        services.pcscd.enable = cfg.smartcard.enable;
+        services.pcscd.enable = config.my.sops.smartcard.enable;
       };
     };
 
@@ -36,8 +33,7 @@
       ...
     }:
     let
-      cfg = config.my.sops;
-      identityFile = "${config.xdg.configHome}/sops/age/identity.txt";
+      sopsAgeDir = "${config.xdg.configHome}/sops/age";
     in
     {
       imports = [ sops-nix.homeManagerModules.sops ];
@@ -56,16 +52,16 @@
         ];
 
         sops.age = {
-          keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
+          keyFile = "${sopsAgeDir}/keys.txt";
           generateKey = true;
         };
 
         xdg.configFile."sops/age/identity.txt" = {
-          text = cfg.yubikeyIdentity;
+          text = config.my.sops.yubikeyIdentity;
         };
 
         home.sessionVariables = {
-          SOPS_AGE_KEY_FILE = identityFile;
+          SOPS_AGE_KEY_FILE = "${sopsAgeDir}/identity.txt";
         };
       };
     };

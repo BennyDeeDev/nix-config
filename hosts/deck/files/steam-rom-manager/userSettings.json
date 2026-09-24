@@ -1,0 +1,45 @@
+{
+	"environmentVariables": {
+		"romsDirectory": "/run/media/deck/976d3eeb-4b99-4f9b-b67c-a708c59432e7",
+		"steamDirectory": "/home/deck/.local/share/Steam/",
+		"userAccounts": [
+			"tfopgonehitgg"
+		],
+		"retroarchPath": "",
+		"raCoresDirectory": "",
+		"localImagesDirectory": ""
+	},
+	"version": 11,
+	"fuzzyMatcher": {
+		"timestamps": {
+			"check": 1790261466662,
+			"download": 1790261466662
+		},
+		"verbose": false,
+		"filterProviders": true
+	},
+	"previewSettings": {
+		"retrieveCurrentSteamImages": true,
+		"disableCategories": false,
+		"deleteDisabledShortcuts": false,
+		"imageZoomPercentage": 30,
+		"imageLoadStrategy": "loadLazy",
+		"hideUserAccount": false
+	},
+	"enabledProviders": [
+		"sgdb",
+		"steamCDN"
+	],
+	"batchDownloadSize": 50,
+	"dnsServers": [],
+	"language": "en-US",
+	"theme": "Deck",
+	"emudeckInstall": false,
+	"autoUpdate": true,
+	"offlineMode": false,
+	"navigationWidth": 425,
+	"clearLogOnTest": false,
+	"autoKillSteam": false,
+	"autoRestartSteam": false,
+	"parserGroups": []
+}

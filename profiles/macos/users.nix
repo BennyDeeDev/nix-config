@@ -1,9 +1,12 @@
 { config, lib, ... }:
+let
+  primaryUser = config.system.primaryUser;
+in
 {
-  config = lib.mkIf (config.system.primaryUser != null) {
-    users.users.${config.system.primaryUser} = {
-      name = config.system.primaryUser;
-      home = "/Users/${config.system.primaryUser}";
+  config = lib.mkIf (primaryUser != null) {
+    users.users.${primaryUser} = {
+      name = primaryUser;
+      home = "/Users/${primaryUser}";
     };
   };
 }

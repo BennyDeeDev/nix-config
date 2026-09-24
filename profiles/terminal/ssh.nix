@@ -1,10 +1,8 @@
 {
-  homeManager =
-    { ... }:
-    {
-      programs.ssh = {
-        enable = true;
-        enableDefaultConfig = false;
-      };
+  homeManager = {
+    programs.ssh = {
+      enable = true;
+      enableDefaultConfig = false;
     };
+  };
 }

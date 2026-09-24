@@ -1,0 +1,16 @@
+[
+  {
+    "title": "Stremio",
+    "target": "/usr/bin/env",
+    "launchOptions": "flatpak run com.stremio.Stremio"
+  },
+  {
+    "title": "Vacuum Tube",
+    "target": "/home/deck/.nix-profile/bin/VacuumTube"
+  },
+  {
+    "title": "Steam Link",
+    "target": "/usr/bin/env",
+    "launchOptions": "flatpak run com.valvesoftware.SteamLink"
+  }
+]

@@ -9,6 +9,86 @@
     }:
     let
       cfg = config.my.containerBackups;
+      resticPasswordFile = config.sops.secrets."restic-repo-password".path;
+      systemctlExe = lib.getExe' config.systemd.package "systemctl";
+      mkResticBackup =
+        _: value:
+        let
+          serviceList = lib.concatStringsSep " " value.services;
+        in
+        {
+          inherit (value) repository paths timerConfig;
+          passwordFile = resticPasswordFile;
+          pruneOpts = [
+            "--keep-daily 7"
+            "--keep-weekly 4"
+            "--keep-monthly 6"
+          ];
+          backupPrepareCommand = lib.optionalString (value.services != [ ]) ''
+            ${systemctlExe} stop ${serviceList}
+          '';
+          backupCleanupCommand = lib.optionalString (value.services != [ ]) ''
+            ${systemctlExe} start ${serviceList}
+          '';
+        };
+      mkRestoreServices =
+        name: value:
+        let
+          sentinel = "/var/lib/.${name}-provisioned";
+          restoreName = "container-backup-restore-${name}";
+          serviceNames = map (service: lib.removeSuffix ".service" service) value.services;
+        in
+        {
+          ${restoreName} = {
+            description = "Restore ${name} backup (first-provision only)";
+            wants = [ "network-online.target" ];
+            after = [ "network-online.target" ];
+            unitConfig = {
+              ConditionPathExists = "!${sentinel}";
+              RequiresMountsFor = lib.optional (value.mountPoint != null) "${value.mountPoint}";
+            };
+            serviceConfig = {
+              Type = "oneshot";
+              Restart = "on-failure";
+              RestartSec = "2min";
+              Environment = [
+                "RESTIC_REPOSITORY=${value.repository}"
+                "RESTIC_PASSWORD_FILE=${resticPasswordFile}"
+                "RESTIC_CACHE_DIR=/var/cache/restic"
+              ];
+              ExecStart = pkgs.writeShellScript "restore-${name}" ''
+                set -euo pipefail
+
+                # Initialize repo if needed (no-op if already exists).
+                restic init 2>/dev/null || true
+
+                # Case 1: repo unreachable → fail hard, systemd retries in 2 min.
+                count=$(restic snapshots --json | jq 'length')
+
+                # Case 2: 0 snapshots → nothing to restore.
+                [[ "$count" -eq 0 ]] && { echo "no snapshots to restore"; exit 0; }
+
+                # Case 3: snapshots exist → restore latest.
+                restic restore latest --target /
+              '';
+              ExecStartPost = "${lib.getExe' pkgs.coreutils "touch"} ${sentinel}";
+              PrivateTmp = true;
+              CacheDirectory = "restic";
+            };
+            path = [
+              pkgs.restic
+              pkgs.jq
+            ];
+          };
+
+          "restic-backups-${name}" = lib.optionalAttrs (value.mountPoint != null) {
+            unitConfig.RequiresMountsFor = [ "${value.mountPoint}" ];
+          };
+        }
+        // lib.genAttrs serviceNames (_: {
+          after = [ "${restoreName}.service" ];
+          requires = [ "${restoreName}.service" ];
+        });
     in
     {
       options.my.containerBackups = lib.mkOption {
@@ -62,82 +142,9 @@
       config = lib.mkIf (cfg != { }) {
         sops.secrets."restic-repo-password" = { };
 
-        services.restic.backups = lib.mapAttrs (name: value: {
-          inherit (value) repository paths timerConfig;
-          passwordFile = config.sops.secrets."restic-repo-password".path;
-          pruneOpts = [
-            "--keep-daily 7"
-            "--keep-weekly 4"
-            "--keep-monthly 6"
-          ];
-          backupPrepareCommand = lib.optionalString (value.services != [ ]) ''
-            ${lib.getExe' config.systemd.package "systemctl"} stop ${lib.concatStringsSep " " value.services}
-          '';
-          backupCleanupCommand = lib.optionalString (value.services != [ ]) ''
-            ${lib.getExe' config.systemd.package "systemctl"} start ${lib.concatStringsSep " " value.services}
-          '';
-        }) cfg;
+        services.restic.backups = lib.mapAttrs mkResticBackup cfg;
 
-        systemd.services = lib.mkMerge (
-          lib.mapAttrsToList (
-            name: value:
-            let
-              sentinel = "/var/lib/.${name}-provisioned";
-              restoreName = "container-backup-restore-${name}";
-            in
-            {
-              ${restoreName} = {
-                description = "Restore ${name} backup (first-provision only)";
-                wants = [ "network-online.target" ];
-                after = [ "network-online.target" ];
-                unitConfig = {
-                  ConditionPathExists = "!${sentinel}";
-                  RequiresMountsFor = lib.optional (value.mountPoint != null) "${value.mountPoint}";
-                };
-                serviceConfig = {
-                  Type = "oneshot";
-                  Restart = "on-failure";
-                  RestartSec = "2min";
-                  Environment = [
-                    "RESTIC_REPOSITORY=${value.repository}"
-                    "RESTIC_PASSWORD_FILE=${config.sops.secrets."restic-repo-password".path}"
-                    "RESTIC_CACHE_DIR=/var/cache/restic"
-                  ];
-                  ExecStart = pkgs.writeShellScript "restore-${name}" ''
-                    set -euo pipefail
-
-                    # Initialize repo if needed (no-op if already exists).
-                    restic init 2>/dev/null || true
-
-                    # Case 1: repo unreachable → fail hard, systemd retries in 2 min.
-                    count=$(restic snapshots --json | jq 'length')
-
-                    # Case 2: 0 snapshots → nothing to restore.
-                    [[ "$count" -eq 0 ]] && { echo "no snapshots to restore"; exit 0; }
-
-                    # Case 3: snapshots exist → restore latest.
-                    restic restore latest --target /
-                  '';
-                  ExecStartPost = "${lib.getExe' pkgs.coreutils "touch"} ${sentinel}";
-                  PrivateTmp = true;
-                  CacheDirectory = "restic";
-                };
-                path = [
-                  pkgs.restic
-                  pkgs.jq
-                ];
-              };
-
-              "restic-backups-${name}" = lib.optionalAttrs (value.mountPoint != null) {
-                unitConfig.RequiresMountsFor = [ "${value.mountPoint}" ];
-              };
-            }
-            // lib.genAttrs (map (s: lib.removeSuffix ".service" s) value.services) (_: {
-              after = [ "${restoreName}.service" ];
-              requires = [ "${restoreName}.service" ];
-            })
-          ) cfg
-        );
+        systemd.services = lib.mkMerge (lib.mapAttrsToList mkRestoreServices cfg);
       };
     };
 }

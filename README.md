@@ -14,13 +14,14 @@ Right as I am writing this, I am dropping into the next Nix rabbit hole. It is i
 
 NixOS, nix-darwin, and Home Manager configuration for the machines below.
 
-| Output                 | Role                              |
-| ---------------------- | --------------------------------- |
-| `desktop`              | NixOS workstation and gaming host |
-| `mbp-personal`         | Personal macOS workstation        |
-| `pi5-server`           | Home automation server            |
-| `pi5-kiosk`            | Planned kiosk                     |
-| `images.pi5-bootstrap` | Raspberry Pi 5 bootstrap image    |
+| Output                         | Role                              |
+| ------------------------------ | --------------------------------- |
+| `desktop`                      | NixOS workstation and gaming host |
+| `mbp-personal`                 | Personal macOS workstation        |
+| `pi5-server`                   | Home automation server            |
+| `pi5-kiosk`                    | Planned kiosk                     |
+| `homeConfigurations.deck`      | SteamOS Home Manager profile      |
+| `images.pi5-bootstrap`         | Raspberry Pi 5 bootstrap image    |
 
 ## Architecture
 
@@ -31,19 +32,20 @@ files/       Application payloads
 hosts/       Machine identity, hardware, disks, and unique policy
 images/      Image outputs
 modules/     Reusable modules selected explicitly
-profiles/    Explicit NixOS, desktop, macOS, Pi, and terminal bundles
+profiles/    Explicit NixOS, NixOS desktop, KDE, macOS, Pi, and terminal bundles
 secrets/     Encrypted SOPS documents
 ```
 
 Profile composition is explicit. `nixos` provides the generic NixOS foundation;
-`desktop`, `macos`, `terminal`, and `pi5` are complete opinionated bundles.
+`nixosDesktop`, `kde`, `macos`, `terminal`, and `pi5` are complete opinionated bundles.
 `profiles/default.nix` is their explicit catalog; the root `flake.nix` exports
 that catalog for other flakes as `.#profiles`. Each host selects whole
 profiles and reusable host modules:
 
 ```text
 profiles/nixos/default.nix
-profiles/desktop/default.nix
+profiles/nixos-desktop/default.nix
+profiles/kde/default.nix
 profiles/macos/default.nix
 profiles/terminal/default.nix
 profiles/pi5/default.nix
@@ -55,25 +57,31 @@ Feature files return the module-system facets they support:
 {
   nixos = { ... };
   homeManager = { ... };
+  homeManagerExclusive = { ... };
   darwin = { ... };
 }
 ```
 
-Unsupported facets are omitted. Shared modules are platform-neutral; NixOS and
+Unsupported facets are omitted. `homeManager` is the inclusive default facet
+and may be imported by NixOS-integrated Home Manager, nix-darwin-integrated Home
+Manager, or standalone Home Manager. `homeManagerExclusive` is only for
+standalone Home Manager configurations outside NixOS and nix-darwin; never
+import it into a NixOS or nix-darwin system, including their nested Home
+Manager configurations. Shared modules are platform-neutral; NixOS and
 Darwin-specific behavior belongs in their respective profiles. Host modules
-compose profile facets and reusable modules directly. `flake.nix`
-only instantiates outputs and provides their external flake dependencies;
-only the mutable checkout path is passed to Home Manager through
-`extraSpecialArgs`.
+compose profile facets and reusable modules directly. `flake.nix` only
+instantiates outputs and provides their external flake dependencies; only the
+mutable checkout path is passed to Home Manager through `extraSpecialArgs`.
 
 ## Ownership
 
 `profiles/nixos/` contains the generic NixOS foundation shared by
 workstations, servers, and images.
 
-`profiles/desktop/` is the complete NixOS workstation policy. It combines the
-system foundation with the Niri desktop, GUI applications, fonts, and desktop
-integration. Its Home Manager facet contains the NixOS-only user packages.
+`profiles/nixos-desktop/` is the complete NixOS workstation policy. It combines
+the system foundation with GUI applications and desktop integration. The
+desktop environment is selected separately; `profiles/kde/` provides the shared
+KDE Plasma configuration for the NixOS desktop and Steam Deck.
 
 `profiles/terminal/` contains the shell, command-line tools, and terminal
 editors. `profiles/macos/` contains shared macOS system policy and applications.
@@ -102,14 +110,14 @@ the profile facet needed by the consuming system:
         system = "x86_64-linux";
         modules = [
           profiles.nixos.nixos
-          profiles.desktop.homeManager
+          profiles.nixosDesktop.homeManager
         ];
       };
     };
 }
 ```
 
-Available profile entries are `nixos`, `desktop`, `macos`, `pi5`, and
+Available profile entries are `nixos`, `nixosDesktop`, `kde`, `macos`, `pi5`, and
 `terminal`. Each profile exposes only the facets it supports, such as
 `.nixos`, `.darwin`, or `.homeManager`. The profile files and their referenced
 configuration assets are kept inside the flake source, so relative paths keep
@@ -124,6 +132,11 @@ within one clear usage domain.
 Dedicated files are appropriate when a feature owns settings, payloads,
 plugins, services, timers, permissions, firewall policy, coordinated
 dependencies, activation behavior, or an independent lifecycle.
+
+A single one-line setting does not deserve its own file. Fold it into the
+relevant `profile.nix` or `host.nix`; keep a separate file when the feature
+contains multiple related settings or has one of the ownership boundaries
+listed above.
 
 Prefer upstream `programs.*`, `services.*`, and `virtualisation.*` modules
 when they represent the intended behavior. When a direct package is retained
@@ -218,8 +231,148 @@ programs.helix.enable = true;
 
 ### Let Bindings
 
-Use a `let` binding only when the bound value is used more than once. Keep
-one-off expressions inline instead of introducing a local name.
+#### Import Bindings
+
+Bind every `import` expression in the nearest enclosing `let` before using it.
+Do not inline imports in `imports` lists, output definitions, or function
+arguments.
+
+```nix
+let
+  importedValue = import ./value.nix;
+in
+{
+  value = importedValue;
+}
+```
+
+#### Related Bindings
+
+Define related aliases together and use the same style, even when an individual
+alias is used only once.
+
+```nix
+let
+  firstBuilder = library.firstBuilder;
+  secondBuilder = library.secondBuilder;
+  thirdBuilder = library.thirdBuilder;
+in
+{
+  first = firstBuilder { value = 1; };
+  second = secondBuilder { value = 2; };
+  third = thirdBuilder { value = 3; };
+}
+```
+
+#### Meaningful Reuse
+
+For values outside the structural rules, create a binding only when the name
+adds meaning and the value is used more than once. Keep a clear expression
+inline when the binding would only shorten it.
+
+```nix
+let
+  outputDirectory = value.path;
+in
+{
+  first = "${outputDirectory}/first";
+  second = "${outputDirectory}/second";
+}
+```
+
+#### Declarative Configuration
+
+Keep simple values and explicit configuration data inline. Bind a repeated
+configuration fragment only when the binding gives it a meaningful concept.
+
+```nix
+{
+  first = {
+    option = true;
+  };
+
+  second = {
+    option = true;
+  };
+}
+```
+
+### Collection Mapping
+
+#### List Mapping
+
+Use `map` for list-to-list transformations. Bind the transformation in `let` so
+the mapping logic is separate from the collection operation.
+
+```nix
+let
+  transform = item: item.value;
+in
+map transform items
+```
+
+#### Attribute Mapping
+
+Use `lib.mapAttrs` for attrset-to-attrset transformations that preserve keys.
+Use `lib.mapAttrs'` when the transformation changes keys.
+
+```nix
+let
+  mkValue = name: value: {
+    inherit name value;
+  };
+in
+{
+  result = lib.mapAttrs mkValue source;
+}
+```
+
+#### Attribute Lists
+
+Use `lib.mapAttrsToList` when transforming an attrset into a list.
+
+```nix
+let
+  toValue = name: value: "${name}=${value}";
+in
+lib.mapAttrsToList toValue source
+```
+
+#### Generated Attributes
+
+Use `lib.genAttrs` when names become an attrset with the same keys. Use
+`lib.genAttrs'` when the generated keys differ.
+
+```nix
+let
+  mkValue = name: "value-${name}";
+in
+lib.genAttrs names mkValue
+```
+
+#### Explicit Pairs
+
+Use `lib.listToAttrs` with `lib.nameValuePair` when constructing explicit
+name-value pairs is clearest.
+
+```nix
+let
+  toPair = name: lib.nameValuePair name (valueFor name);
+in
+lib.listToAttrs (map toPair names)
+```
+
+#### Explicit Collections
+
+Keep small, explicit lists and attrsets readable. Do not generate them only to
+remove repetition.
+
+```nix
+{
+  first = true;
+  second = true;
+}
+```
 
 ### Custom Module Options
 
@@ -233,6 +386,9 @@ module options. Current examples include `my.sops`, `my.nas`, and
 Prefer the application's native configuration format when configuration is
 substantial or likely to grow. For example, use a real Lua file for Neovim
 instead of encoding the configuration through Nix attrset hacks.
+
+Use `pkgs.stdenv.hostPlatform.isLinux` for platform checks; treat the `else`
+branch as Darwin instead of checking `isDarwin` directly.
 
 Prefer `config.lib.file.mkOutOfStoreSymlink` for configuration files that need
 to remain editable at runtime, especially when theme switches or other live
@@ -255,12 +411,7 @@ for mutable external configuration that may outlive its Nix store reference.
 
 ## Validation
 
-Format the Nix tree and verify that formatting is clean:
-
-```sh
-nix fmt
-nix fmt -- --ci
-```
+Use `nixfmt` to format Nix files.
 
 Evaluate the active outputs without activating them:
 
@@ -329,4 +480,5 @@ realized; it compares resulting closures and therefore does require builds.
 - [Desktop installation and Secure Boot](hosts/desktop/README.md)
 - [MacBook bootstrap](hosts/mbp-personal/README.md)
 - [Raspberry Pi deployment](hosts/pi5-server/README.md)
+- [Steam Deck Home Manager](hosts/deck/README.md)
 - [Secret management](secrets/README.md)

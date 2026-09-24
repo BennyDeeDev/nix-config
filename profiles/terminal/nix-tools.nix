@@ -18,6 +18,7 @@
       home.packages = [
         pkgs.dix
         pkgs.nix-diff
+        pkgs.nixfmt
       ];
     };
 }

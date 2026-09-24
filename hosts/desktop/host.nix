@@ -15,5 +15,16 @@
           options r8125 s5wol=1 aspm=0
         '';
       };
+
+      my.nas = {
+        uid = 1000;
+        gid = 100;
+        shares = [
+          "Homelab"
+          "Benjamin"
+          "Ludusavi"
+          "Restic"
+        ];
+      };
     };
 }

@@ -5,6 +5,11 @@
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    plasma-manager = {
+      url = "github:nix-community/plasma-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
     disko = {
       url = "github:nix-community/disko/latest";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -26,14 +31,6 @@
       url = "github:nix-darwin/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    noctalia = {
-      url = "github:noctalia-dev/noctalia";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    noctalia-greeter = {
-      url = "github:noctalia-dev/noctalia-greeter";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     jovian = {
       url = "github:Jovian-Experiments/Jovian-NixOS";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -42,43 +39,68 @@
 
   outputs =
     inputs@{
+      home-manager,
       nixpkgs,
       darwin,
       ...
     }:
-    {
+    let
       profiles = import ./profiles inputs;
+      desktop = import ./hosts/desktop inputs;
+      pi5Server = import ./hosts/pi5-server inputs;
+      pi5Kiosk = import ./hosts/pi5-kiosk inputs;
+      deck = import ./hosts/deck inputs;
+      mbpPersonal = import ./hosts/mbp-personal inputs;
+      pi5Bootstrap = import ./images/pi5-bootstrap.nix inputs;
+      nixosSystem = nixpkgs.lib.nixosSystem;
+      darwinSystem = darwin.lib.darwinSystem;
+      homeManagerConfiguration = home-manager.lib.homeManagerConfiguration;
+      pkgsX86Linux = import nixpkgs {
+        system = "x86_64-linux";
+        config.allowUnfree = true;
+      };
+    in
+    {
+      inherit profiles;
 
-      formatter = nixpkgs.lib.genAttrs [
-        "aarch64-darwin"
-        "aarch64-linux"
-        "x86_64-darwin"
-        "x86_64-linux"
-      ] (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
+      packages.x86_64-linux = {
+        eden-rog-ally-pgo = pkgsX86Linux.callPackage ./packages/eden-rog-ally-pgo.nix { };
+        lsfg-vk = pkgsX86Linux.callPackage ./packages/lsfg-vk.nix { };
+        eden-steamdeck-pgo = pkgsX86Linux.callPackage ./packages/eden-steamdeck-pgo.nix { };
+      };
 
       nixosConfigurations = {
-        desktop = nixpkgs.lib.nixosSystem {
+        desktop = nixosSystem {
           system = "x86_64-linux";
-          modules = [ (import ./hosts/desktop inputs).nixos ];
+          modules = [ desktop.nixos ];
         };
-        pi5-server = nixpkgs.lib.nixosSystem {
+        pi5-server = nixosSystem {
           system = "aarch64-linux";
-          modules = [ (import ./hosts/pi5-server inputs).nixos ];
+          modules = [ pi5Server.nixos ];
         };
-        pi5-kiosk = nixpkgs.lib.nixosSystem {
+        pi5-kiosk = nixosSystem {
           system = "aarch64-linux";
-          modules = [ (import ./hosts/pi5-kiosk inputs).nixos ];
+          modules = [ pi5Kiosk.nixos ];
         };
       };
 
-      darwinConfigurations.mbp-personal = darwin.lib.darwinSystem {
-        modules = [ (import ./hosts/mbp-personal inputs).darwin ];
+      homeConfigurations.deck = homeManagerConfiguration {
+        pkgs = pkgsX86Linux;
+        extraSpecialArgs = {
+          nixConfig = "/home/deck/Repos/nix-config";
+          flakeHost = "deck";
+        };
+        modules = [ deck.homeManager ];
+      };
+
+      darwinConfigurations.mbp-personal = darwinSystem {
+        modules = [ mbpPersonal.darwin ];
       };
 
       images.pi5-bootstrap =
-        (nixpkgs.lib.nixosSystem {
+        (nixosSystem {
           system = "aarch64-linux";
-          modules = [ (import ./images/pi5-bootstrap.nix inputs).nixos ];
+          modules = [ pi5Bootstrap.nixos ];
         }).config.system.build.sdImage;
     };
 }

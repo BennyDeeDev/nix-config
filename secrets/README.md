@@ -12,6 +12,20 @@ This repo uses [sops-nix](https://github.com/Mic92/sops-nix) with [age](https://
 - **Secret files**: encrypted YAML under `secrets/`, scoped per-file via `.sops.yaml` `path_regex`.
 - **`.sops.yaml`**: at repo root. Maps `path_regex` to recipient lists. Consulted at encryption time only; decryption trusts the recipient list baked into each encrypted file's header.
 
+## Host and edit identities
+
+- **Generated host key**: Home Manager generates `~/.config/sops/age/keys.txt` and `sops-nix.service` uses it for unattended rebuilds. Its public key must be enrolled in the relevant encrypted files with `sops updatekeys`.
+- **YubiKey edit key**: Interactive `sops` commands use `~/.config/sops/age/identity.txt`, which contains the YubiKey identity pointer. After activating Home Manager, existing shells may not have the session variable yet; export it before rekeying or editing:
+
+  ```bash
+  export SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/identity.txt"
+  sops updatekeys secrets/common.yaml
+  sops updatekeys secrets/desktop.yaml
+  ```
+
+The YubiKey is used for these interactive commands; routine Home Manager rebuilds use
+the generated host key and do not require a touch.
+
 ## One-time YubiKey setup
 
 On a new or factory-reset YubiKey, the public factory defaults are PIN `123456`
@@ -83,6 +97,22 @@ sops secrets/common.yaml
 git add secrets/common.yaml
 git commit
 ```
+
+## Remove a secret
+
+Use `sops unset` to remove a key from an encrypted document. Do not edit the
+encrypted YAML ciphertext directly:
+
+```bash
+# plug in YubiKey
+export SOPS_AGE_KEY_FILE=<path to identity.txt>
+sops unset secrets/common.yaml '["obsolete-key"]'
+git add secrets/common.yaml
+git commit
+```
+
+Use JSON-style paths for nested keys, for example
+`'["services"]["example"]["password"]'`.
 
 ## Higher-security variant: desktop decrypts via YubiKey
 

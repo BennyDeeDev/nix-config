@@ -1,7 +1,5 @@
 # Disk layout for Samsung SSD 990 PRO with Heatsink 1TB (serial S7HFNJ0Y704719Z)
 # Device identified by serial to survive NVMe enumeration changes
-{ ... }:
-
 {
   disko.devices = {
     disk = {

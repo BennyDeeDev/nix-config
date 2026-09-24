@@ -1,24 +1,38 @@
 let
+  nixSettings = {
+    experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
+  };
+
+  nixGc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 30d";
+  };
+
   common = {
     nixpkgs.config.allowUnfree = true;
-
-    nix.settings = {
+    nix.settings = nixSettings // {
       auto-optimise-store = true;
-      experimental-features = [
-        "nix-command"
-        "flakes"
-      ];
     };
   };
 in
 {
+  homeManager =
+    { pkgs, ... }:
+    {
+      nix = {
+        package = pkgs.nix;
+        settings = nixSettings;
+        gc = nixGc;
+      };
+    };
+
   nixos = common // {
     nix = common.nix // {
-      gc = {
-        automatic = true;
-        dates = "weekly";
-        options = "--delete-older-than 30d";
-      };
+      gc = nixGc;
     };
   };
 

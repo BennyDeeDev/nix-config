@@ -24,7 +24,15 @@ in
     ];
   };
 
-  homeManager = {
-    programs.home-manager.enable = true;
-  };
+  homeManager =
+    {
+      lib,
+      pkgs,
+      ...
+    }:
+    {
+      news.display = "silent";
+      targets.genericLinux.enable = lib.mkIf pkgs.stdenv.hostPlatform.isLinux true;
+      programs.home-manager.enable = true;
+    };
 }

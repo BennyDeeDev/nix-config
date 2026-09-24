@@ -3,8 +3,31 @@
     programs.opencode = {
       enable = true;
       package = pkgs.opencode;
-      settings = builtins.fromJSON (builtins.readFile ../../files/opencode/opencode.json);
-      tui = builtins.fromJSON (builtins.readFile ../../files/opencode/tui.json);
+      settings = {
+        default_agent = "plan";
+        autoupdate = false;
+        compaction = {
+          auto = true;
+          prune = true;
+        };
+        permission = {
+          read = "allow";
+          edit = "allow";
+          webfetch = "allow";
+          websearch = "allow";
+          external_directory = "allow";
+          bash = "allow";
+        };
+      };
+      tui = {
+        theme = "catppuccin";
+        attention = {
+          enabled = true;
+          notifications = false;
+          sound = true;
+          volume = 0.25;
+        };
+      };
       context = ../../files/opencode/AGENTS.md;
       agents = ../../files/opencode/agents;
     };

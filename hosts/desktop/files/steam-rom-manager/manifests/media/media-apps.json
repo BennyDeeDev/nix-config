@@ -1,0 +1,11 @@
+[
+  {
+    "title": "Stremio",
+    "target": "/usr/bin/env",
+    "launchOptions": "flatpak run com.stremio.Stremio"
+  },
+  {
+    "title": "Vacuum Tube",
+    "target": "/etc/profiles/per-user/benjamin/bin/VacuumTube"
+  }
+]

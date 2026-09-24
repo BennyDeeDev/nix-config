@@ -6,7 +6,7 @@
         name = "BennyDeeDev";
         email = "45900418+BennyDeeDev@users.noreply.github.com";
       };
-      personalRepositoryInclude = repository: {
+      mkInclude = repository: {
         condition = "gitdir:${repository}";
         contents = {
           user = personalIdentity;
@@ -36,7 +36,7 @@
             pull.rebase = true;
             user = config.my.git.identity;
           };
-          includes = map personalRepositoryInclude config.my.git.personalRepositories;
+          includes = map mkInclude config.my.git.personalRepositories;
         };
 
         programs.gh = {
