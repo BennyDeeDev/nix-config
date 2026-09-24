@@ -244,6 +244,9 @@ Prefer the application's native configuration format when configuration is
 substantial or likely to grow. For example, use a real Lua file for Neovim
 instead of encoding the configuration through Nix attrset hacks.
 
+Use `pkgs.stdenv.hostPlatform.isLinux` for platform checks; treat the `else`
+branch as Darwin instead of checking `isDarwin` directly.
+
 Prefer `config.lib.file.mkOutOfStoreSymlink` for configuration files that need
 to remain editable at runtime, especially when theme switches or other live
 changes are expected. Link those files from the mutable nix-config checkout
