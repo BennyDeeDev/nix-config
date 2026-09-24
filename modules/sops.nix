@@ -32,6 +32,9 @@
       pkgs,
       ...
     }:
+    let
+      sopsAgeDir = "${config.xdg.configHome}/sops/age";
+    in
     {
       imports = [ sops-nix.homeManagerModules.sops ];
 
@@ -49,7 +52,7 @@
         ];
 
         sops.age = {
-          keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
+          keyFile = "${sopsAgeDir}/keys.txt";
           generateKey = true;
         };
 
@@ -58,7 +61,7 @@
         };
 
         home.sessionVariables = {
-          SOPS_AGE_KEY_FILE = "${config.xdg.configHome}/sops/age/identity.txt";
+          SOPS_AGE_KEY_FILE = "${sopsAgeDir}/identity.txt";
         };
       };
     };

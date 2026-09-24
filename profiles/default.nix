@@ -9,7 +9,7 @@
   ...
 }:
 
-{
+let
   apps = import ./apps;
   gaming = import ./gaming { inherit jovian nix-flatpak self; };
   nixos = import ./nixos { inherit sops-nix; };
@@ -18,4 +18,16 @@
   macos = import ./macos { inherit home-manager; };
   pi5 = import ./pi5;
   terminal = import ./terminal;
+in
+{
+  inherit
+    apps
+    gaming
+    nixos
+    nixosDesktop
+    kde
+    macos
+    pi5
+    terminal
+    ;
 }

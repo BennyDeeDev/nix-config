@@ -1,8 +1,11 @@
 {
   homeManager =
     { lib, pkgs, ... }:
+    let
+      isLinux = pkgs.stdenv.hostPlatform.isLinux;
+    in
     {
-      programs.ghostty.settings = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
+      programs.ghostty.settings = lib.mkIf isLinux {
         keybind = [
           "ctrl+c=copy_to_clipboard"
           "ctrl+v=paste_from_clipboard"
@@ -52,7 +55,7 @@
         ];
       };
 
-      programs.vscode.profiles.default.keybindings = lib.mkIf pkgs.stdenv.hostPlatform.isLinux [
+      programs.vscode.profiles.default.keybindings = lib.mkIf isLinux [
         {
           key = "ctrl+c";
           command = "workbench.action.terminal.copySelection";

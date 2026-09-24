@@ -52,6 +52,9 @@
       deck = import ./hosts/deck inputs;
       mbpPersonal = import ./hosts/mbp-personal inputs;
       pi5Bootstrap = import ./images/pi5-bootstrap.nix inputs;
+      nixosSystem = nixpkgs.lib.nixosSystem;
+      darwinSystem = darwin.lib.darwinSystem;
+      homeManagerConfiguration = home-manager.lib.homeManagerConfiguration;
       pkgsX86Linux = import nixpkgs {
         system = "x86_64-linux";
         config.allowUnfree = true;
@@ -67,21 +70,21 @@
       };
 
       nixosConfigurations = {
-        desktop = nixpkgs.lib.nixosSystem {
+        desktop = nixosSystem {
           system = "x86_64-linux";
           modules = [ desktop.nixos ];
         };
-        pi5-server = nixpkgs.lib.nixosSystem {
+        pi5-server = nixosSystem {
           system = "aarch64-linux";
           modules = [ pi5Server.nixos ];
         };
-        pi5-kiosk = nixpkgs.lib.nixosSystem {
+        pi5-kiosk = nixosSystem {
           system = "aarch64-linux";
           modules = [ pi5Kiosk.nixos ];
         };
       };
 
-      homeConfigurations.deck = home-manager.lib.homeManagerConfiguration {
+      homeConfigurations.deck = homeManagerConfiguration {
         pkgs = pkgsX86Linux;
         extraSpecialArgs = {
           nixConfig = "/home/deck/Repos/nix-config";
@@ -90,12 +93,12 @@
         modules = [ deck.homeManager ];
       };
 
-      darwinConfigurations.mbp-personal = darwin.lib.darwinSystem {
+      darwinConfigurations.mbp-personal = darwinSystem {
         modules = [ mbpPersonal.darwin ];
       };
 
       images.pi5-bootstrap =
-        (nixpkgs.lib.nixosSystem {
+        (nixosSystem {
           system = "aarch64-linux";
           modules = [ pi5Bootstrap.nixos ];
         }).config.system.build.sdImage;

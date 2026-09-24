@@ -80,7 +80,6 @@ in
     }:
     let
       cfg = config.my.nas;
-      remote = "nas";
       mountPath = share: "${config.home.homeDirectory}/mnt/nas/${lib.toLower share}";
       mkMount = share: {
         enable = true;
@@ -97,7 +96,7 @@ in
         programs.rclone = {
           enable = true;
 
-          remotes.${remote} = {
+          remotes.nas = {
             config = {
               type = "smb";
               host = cfg.server;

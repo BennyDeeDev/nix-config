@@ -6,10 +6,12 @@
     }:
     let
       home = config.home.homeDirectory;
+      portableGamesPath = config.my.gaming.portableGamesPath;
+      backupPath = "${home}/Backups/ludusavi";
     in
     {
       systemd.user.tmpfiles.rules = [
-        "d ${home}/Backups/ludusavi 0755 - - -"
+        "d ${backupPath} 0755 - - -"
       ];
 
       services.ludusavi = {
@@ -21,7 +23,7 @@
               path = "${builtins.toFile "ludusavi-eden-manifest.yml" ''
                 "Eden":
                   files:
-                    "${config.my.gaming.portableGamesPath}/Eden/nand":
+                    "${portableGamesPath}/Eden/nand":
                       tags: [save]
                       when: [{ os: linux }]
               ''}";
@@ -34,17 +36,17 @@
             }
             {
               store = "otherWine";
-              path = "${config.my.gaming.portableGamesPath}/Bottles/gaming-portable-bottle";
+              path = "${portableGamesPath}/Bottles/gaming-portable-bottle";
             }
           ];
           backup = {
-            path = "${home}/Backups/ludusavi";
+            path = backupPath;
             retention.full = 50;
             format = {
               chosen = "zip";
             };
           };
-          restore.path = "${home}/Backups/ludusavi";
+          restore.path = backupPath;
           cloud = {
             remote.Smb = {
               id = "nas";

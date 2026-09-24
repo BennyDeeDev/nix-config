@@ -231,43 +231,148 @@ programs.helix.enable = true;
 
 ### Let Bindings
 
-Use a `let` binding when the bound value is shared. Composition files named
-`default.nix` may keep aliases for imported modules when that makes the import
-list easier to read, even if an alias is used once. Package definitions may
-also keep shared values such as a version or source.
+#### Import Bindings
+
+Bind every `import` expression in the nearest enclosing `let` before using it.
+Do not inline imports in `imports` lists, output definitions, or function
+arguments.
+
+```nix
+let
+  importedValue = import ./value.nix;
+in
+{
+  value = importedValue;
+}
+```
+
+#### Related Bindings
+
+Define related aliases together and use the same style, even when an individual
+alias is used only once.
+
+```nix
+let
+  firstBuilder = library.firstBuilder;
+  secondBuilder = library.secondBuilder;
+  thirdBuilder = library.thirdBuilder;
+in
+{
+  first = firstBuilder { value = 1; };
+  second = secondBuilder { value = 2; };
+  third = thirdBuilder { value = 3; };
+}
+```
+
+#### Meaningful Reuse
+
+For values outside the structural rules, create a binding only when the name
+adds meaning and the value is used more than once. Keep a clear expression
+inline when the binding would only shorten it.
+
+```nix
+let
+  outputDirectory = value.path;
+in
+{
+  first = "${outputDirectory}/first";
+  second = "${outputDirectory}/second";
+}
+```
+
+#### Declarative Configuration
+
+Keep simple values and explicit configuration data inline. Bind a repeated
+configuration fragment only when the binding gives it a meaningful concept.
+
+```nix
+{
+  first = {
+    option = true;
+  };
+
+  second = {
+    option = true;
+  };
+}
+```
 
 ### Collection Mapping
 
-Choose collection helpers based on the input and output collection:
+#### List Mapping
 
-- Use `map` for list-to-list transformations.
-- Use `lib.mapAttrs` for attrset-to-attrset transformations that preserve keys.
-- Use `lib.mapAttrs'` when mapping an attrset and changing its keys.
-- Use `lib.mapAttrsToList` for attrset-to-list transformations.
-- Use `lib.genAttrs` when a list of names becomes an attrset with the same names.
-- Use `lib.genAttrs'` when a list becomes an attrset with generated names.
-- Use `lib.listToAttrs` with `lib.nameValuePair` when constructing explicit
-  name-value pairs is clearest.
+Use `map` for list-to-list transformations. Bind the transformation in `let` so
+the mapping logic is separate from the collection operation.
 
-For non-trivial mappings, bind the transformation to a named function in
-`let` instead of nesting anonymous functions:
+```nix
+let
+  transform = item: item.value;
+in
+map transform items
+```
+
+#### Attribute Mapping
+
+Use `lib.mapAttrs` for attrset-to-attrset transformations that preserve keys.
+Use `lib.mapAttrs'` when the transformation changes keys.
+
+```nix
+let
+  mkValue = name: value: {
+    inherit name value;
+  };
+in
+{
+  result = lib.mapAttrs mkValue source;
+}
+```
+
+#### Attribute Lists
+
+Use `lib.mapAttrsToList` when transforming an attrset into a list.
+
+```nix
+let
+  toValue = name: value: "${name}=${value}";
+in
+lib.mapAttrsToList toValue source
+```
+
+#### Generated Attributes
+
+Use `lib.genAttrs` when names become an attrset with the same keys. Use
+`lib.genAttrs'` when the generated keys differ.
 
 ```nix
 let
   mkValue = name: "value-${name}";
 in
-{
-  values = lib.genAttrs names mkValue;
-}
+lib.genAttrs names mkValue
 ```
 
-Do not use attrset mapping helpers on lists. Avoid wrapping simple same-key
-mappings in `lib.listToAttrs (map ...)` when `lib.genAttrs` expresses the
-intent directly.
+#### Explicit Pairs
 
-Use collection helpers to clarify an existing transformation. Do not convert
-small, explicit lists or attribute sets into generated structures only to
-remove repetition; keep simple configuration tables readable and explicit.
+Use `lib.listToAttrs` with `lib.nameValuePair` when constructing explicit
+name-value pairs is clearest.
+
+```nix
+let
+  toPair = name: lib.nameValuePair name (valueFor name);
+in
+lib.listToAttrs (map toPair names)
+```
+
+#### Explicit Collections
+
+Keep small, explicit lists and attrsets readable. Do not generate them only to
+remove repetition.
+
+```nix
+{
+  first = true;
+  second = true;
+}
+```
 
 ### Custom Module Options
 

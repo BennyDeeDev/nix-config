@@ -9,21 +9,28 @@
     }:
     let
       cfg = config.my.containerBackups;
-      mkResticBackup = _: value: {
-        inherit (value) repository paths timerConfig;
-        passwordFile = config.sops.secrets."restic-repo-password".path;
-        pruneOpts = [
-          "--keep-daily 7"
-          "--keep-weekly 4"
-          "--keep-monthly 6"
-        ];
-        backupPrepareCommand = lib.optionalString (value.services != [ ]) ''
-          ${lib.getExe' config.systemd.package "systemctl"} stop ${lib.concatStringsSep " " value.services}
-        '';
-        backupCleanupCommand = lib.optionalString (value.services != [ ]) ''
-          ${lib.getExe' config.systemd.package "systemctl"} start ${lib.concatStringsSep " " value.services}
-        '';
-      };
+      resticPasswordFile = config.sops.secrets."restic-repo-password".path;
+      systemctlExe = lib.getExe' config.systemd.package "systemctl";
+      mkResticBackup =
+        _: value:
+        let
+          serviceList = lib.concatStringsSep " " value.services;
+        in
+        {
+          inherit (value) repository paths timerConfig;
+          passwordFile = resticPasswordFile;
+          pruneOpts = [
+            "--keep-daily 7"
+            "--keep-weekly 4"
+            "--keep-monthly 6"
+          ];
+          backupPrepareCommand = lib.optionalString (value.services != [ ]) ''
+            ${systemctlExe} stop ${serviceList}
+          '';
+          backupCleanupCommand = lib.optionalString (value.services != [ ]) ''
+            ${systemctlExe} start ${serviceList}
+          '';
+        };
       mkRestoreServices =
         name: value:
         let
@@ -46,7 +53,7 @@
               RestartSec = "2min";
               Environment = [
                 "RESTIC_REPOSITORY=${value.repository}"
-                "RESTIC_PASSWORD_FILE=${config.sops.secrets."restic-repo-password".path}"
+                "RESTIC_PASSWORD_FILE=${resticPasswordFile}"
                 "RESTIC_CACHE_DIR=/var/cache/restic"
               ];
               ExecStart = pkgs.writeShellScript "restore-${name}" ''

@@ -6,15 +6,19 @@
       pkgs,
       ...
     }:
+    let
+      systemctlExe = lib.getExe' config.systemd.package "systemctl";
+      efibootmgrExe = lib.getExe pkgs.efibootmgr;
+    in
     {
       systemd.services.windows-reboot = {
         description = "Set Windows as the next EFI boot target and reboot";
         serviceConfig = {
           Type = "oneshot";
-          ExecStartPost = "${lib.getExe' config.systemd.package "systemctl"} reboot";
+          ExecStartPost = "${systemctlExe} reboot";
         };
         script = ''
-          boot_number="$(${lib.getExe pkgs.efibootmgr} |
+          boot_number="$(${efibootmgrExe} |
             ${lib.getExe pkgs.gnugrep} -m1 -E \
               '^Boot[[:xdigit:]]{4}[*]?[[:space:]]+Windows Boot Manager([[:space:]]|$)' |
             ${lib.getExe' pkgs.coreutils "cut"} -c 5-8)"
@@ -24,7 +28,7 @@
             exit 1
           fi
 
-          ${lib.getExe pkgs.efibootmgr} --bootnext "$boot_number"
+          ${efibootmgrExe} --bootnext "$boot_number"
         '';
       };
 
@@ -48,7 +52,7 @@
             destination = "/share/wayland-sessions";
             desktopName = "Windows";
             comment = "Reboot to Windows Boot Manager";
-            exec = "${lib.getExe' config.systemd.package "systemctl"} --system start windows-reboot.service";
+            exec = "${systemctlExe} --system start windows-reboot.service";
             type = "Application";
             categories = [ "System" ];
             extraConfig = {
