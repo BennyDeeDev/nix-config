@@ -19,7 +19,7 @@ in
   homeManager = {
     imports = [
       homeManagerModule.homeManager
-      nasModule.homeManager
+      nasModule.homeManagerExclusive
       nixModule.homeManager
       sopsModule.homeManager
       profiles.apps.homeManager

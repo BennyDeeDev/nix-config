@@ -98,6 +98,22 @@ git add secrets/common.yaml
 git commit
 ```
 
+## Remove a secret
+
+Use `sops unset` to remove a key from an encrypted document. Do not edit the
+encrypted YAML ciphertext directly:
+
+```bash
+# plug in YubiKey
+export SOPS_AGE_KEY_FILE=<path to identity.txt>
+sops unset secrets/common.yaml '["obsolete-key"]'
+git add secrets/common.yaml
+git commit
+```
+
+Use JSON-style paths for nested keys, for example
+`'["services"]["example"]["password"]'`.
+
 ## Higher-security variant: desktop decrypts via YubiKey
 
 The default config uses each host's standalone age key at `/var/lib/sops-nix/key.txt` for unattended decryption (`sops.age.keyFile + sops.age.generateKey`). For desktop, you can instead require the YubiKey to be present at every rebuild/reboot by overriding `sops.age.keyFile` to point at the age-plugin-yubikey identity. Trade-off: YubiKey must be physically inserted + PIN typed at every decrypt, including boot-time `neededForUsers` (no YubiKey at boot = user creation fails = login impossible). Only worth it for a workstation you sit at and treat as high-security.

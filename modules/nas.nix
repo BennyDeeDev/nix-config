@@ -71,7 +71,7 @@ in
       };
     };
 
-  homeManager =
+  homeManagerExclusive =
     {
       config,
       lib,
@@ -94,13 +94,6 @@ in
       options.my.nas = nasOptions lib;
 
       config = lib.mkIf (cfg.shares != [ ]) {
-        assertions = [
-          {
-            assertion = pkgs.stdenv.hostPlatform.isLinux;
-            message = "my.nas Home Manager configuration requires Linux";
-          }
-        ];
-
         programs.rclone = {
           enable = true;
 
