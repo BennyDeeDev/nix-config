@@ -31,5 +31,7 @@ in
     ];
   };
 
-  homeManager = studioDisplay.homeManager;
+  homeManager = {
+    imports = [ studioDisplay.homeManager ];
+  };
 }

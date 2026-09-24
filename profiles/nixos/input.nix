@@ -6,5 +6,4 @@
       options = "compose:ralt";
     };
   };
-
 }

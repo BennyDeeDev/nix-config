@@ -1,27 +1,23 @@
 { jovian }:
 
 {
-  nixos =
-    { lib, ... }:
-    {
-      imports = [ jovian.nixosModules.jovian ];
+  nixos = {
+    imports = [ jovian.nixosModules.jovian ];
 
-      jovian.steam = {
-        enable = true;
-        autoStart = true;
-        user = "benjamin";
-        desktopSession = "plasma";
-      };
-
-      programs.steam = {
-        enable = true;
-        remotePlay.openFirewall = true;
-        dedicatedServer.openFirewall = true;
-        localNetworkGameTransfers.openFirewall = true;
-      };
-
-      services.displayManager.defaultSession = lib.mkForce "gamescope-wayland";
+    jovian.steam = {
+      enable = true;
+      autoStart = true;
+      user = "benjamin";
+      desktopSession = "plasma";
     };
+
+    programs.steam = {
+      enable = true;
+      remotePlay.openFirewall = true;
+      dedicatedServer.openFirewall = true;
+      localNetworkGameTransfers.openFirewall = true;
+    };
+  };
 
   homeManager = {
     xdg.desktopEntries.return-to-gaming-mode = {

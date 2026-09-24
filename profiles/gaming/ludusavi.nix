@@ -2,6 +2,8 @@
   homeManager =
     {
       config,
+      lib,
+      pkgs,
       ...
     }:
     let
@@ -57,7 +59,7 @@
             path = config.my.gaming.ludusaviBackupPath;
             synchronize = true;
           };
-          apps.rclone.path = "rclone";
+          apps.rclone.path = lib.getExe pkgs.rclone;
         };
       };
     };
