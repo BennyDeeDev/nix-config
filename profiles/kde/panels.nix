@@ -103,22 +103,6 @@ in
                 };
               };
             }
-            {
-              name = "org.kde.plasma.folder";
-              config.General = {
-                icon = "folder-downloads";
-                url = "file://${config.home.homeDirectory}/Downloads";
-                useCustomIcon = true;
-              };
-            }
-            {
-              name = "org.kde.plasma.folder";
-              config.General = {
-                icon = "applications-all";
-                url = "applications:/";
-                useCustomIcon = true;
-              };
-            }
           ];
         }
       ];
