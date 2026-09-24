@@ -44,57 +44,60 @@
       darwin,
       ...
     }:
-    {
+    let
       profiles = import ./profiles inputs;
+      desktop = import ./hosts/desktop inputs;
+      pi5Server = import ./hosts/pi5-server inputs;
+      pi5Kiosk = import ./hosts/pi5-kiosk inputs;
+      deck = import ./hosts/deck inputs;
+      mbpPersonal = import ./hosts/mbp-personal inputs;
+      pi5Bootstrap = import ./images/pi5-bootstrap.nix inputs;
+      pkgsX86Linux = import nixpkgs {
+        system = "x86_64-linux";
+        config.allowUnfree = true;
+      };
+    in
+    {
+      inherit profiles;
 
-      packages.x86_64-linux =
-        let
-          pkgs = import nixpkgs {
-            system = "x86_64-linux";
-            config.allowUnfree = true;
-          };
-        in
-        {
-          eden-rog-ally-pgo = pkgs.callPackage ./packages/eden-rog-ally-pgo.nix { };
-          lsfg-vk = pkgs.callPackage ./packages/lsfg-vk.nix { };
-          eden-steamdeck-pgo = pkgs.callPackage ./packages/eden-steamdeck-pgo.nix { };
-        };
+      packages.x86_64-linux = {
+        eden-rog-ally-pgo = pkgsX86Linux.callPackage ./packages/eden-rog-ally-pgo.nix { };
+        lsfg-vk = pkgsX86Linux.callPackage ./packages/lsfg-vk.nix { };
+        eden-steamdeck-pgo = pkgsX86Linux.callPackage ./packages/eden-steamdeck-pgo.nix { };
+      };
 
       nixosConfigurations = {
         desktop = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          modules = [ (import ./hosts/desktop inputs).nixos ];
+          modules = [ desktop.nixos ];
         };
         pi5-server = nixpkgs.lib.nixosSystem {
           system = "aarch64-linux";
-          modules = [ (import ./hosts/pi5-server inputs).nixos ];
+          modules = [ pi5Server.nixos ];
         };
         pi5-kiosk = nixpkgs.lib.nixosSystem {
           system = "aarch64-linux";
-          modules = [ (import ./hosts/pi5-kiosk inputs).nixos ];
+          modules = [ pi5Kiosk.nixos ];
         };
       };
 
       homeConfigurations.deck = home-manager.lib.homeManagerConfiguration {
-        pkgs = import nixpkgs {
-          system = "x86_64-linux";
-          config.allowUnfree = true;
-        };
+        pkgs = pkgsX86Linux;
         extraSpecialArgs = {
           nixConfig = "/home/deck/Repos/nix-config";
           flakeHost = "deck";
         };
-        modules = [ (import ./hosts/deck inputs).homeManager ];
+        modules = [ deck.homeManager ];
       };
 
       darwinConfigurations.mbp-personal = darwin.lib.darwinSystem {
-        modules = [ (import ./hosts/mbp-personal inputs).darwin ];
+        modules = [ mbpPersonal.darwin ];
       };
 
       images.pi5-bootstrap =
         (nixpkgs.lib.nixosSystem {
           system = "aarch64-linux";
-          modules = [ (import ./images/pi5-bootstrap.nix inputs).nixos ];
+          modules = [ pi5Bootstrap.nixos ];
         }).config.system.build.sdImage;
     };
 }
