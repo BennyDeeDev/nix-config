@@ -49,7 +49,15 @@ in
           enable = true;
           overrideConfig = true;
 
-          configFile.dolphinrc.General.GlobalViewProps = true;
+          configFile = {
+            dolphinrc.General.GlobalViewProps = true;
+            kcminputrc."Libinput/Defaults".PointerAccelerationProfile = 1;
+            kaccessrc = {
+              Bell.SystemBell = false;
+            };
+            kwinrc.Plugins.zoomEnabled = false;
+          };
+
           dataFile."dolphin/view_properties/global/.directory".Dolphin.ViewMode = 1;
 
           input.keyboard = {
