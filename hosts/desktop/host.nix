@@ -22,8 +22,6 @@
         shares = [
           "Homelab"
           "Benjamin"
-          "Ludusavi"
-          "Restic"
         ];
       };
     };

@@ -71,7 +71,7 @@ in
       };
     };
 
-  homeManagerExclusive =
+  homeManager =
     {
       config,
       lib,

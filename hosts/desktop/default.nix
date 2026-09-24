@@ -17,6 +17,7 @@ let
   homeManagerConfig = import ./home-manager.nix {
     inherit
       profiles
+      nasModule
       sopsModule
       windows
       ;

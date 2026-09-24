@@ -57,18 +57,14 @@ Feature files return the module-system facets they support:
 {
   nixos = { ... };
   homeManager = { ... };
-  homeManagerExclusive = { ... };
   darwin = { ... };
 }
 ```
 
 Unsupported facets are omitted. `homeManager` is the inclusive default facet
 and may be imported by NixOS-integrated Home Manager, nix-darwin-integrated Home
-Manager, or standalone Home Manager. `homeManagerExclusive` is only for
-standalone Home Manager configurations outside NixOS and nix-darwin; never
-import it into a NixOS or nix-darwin system, including their nested Home
-Manager configurations. Shared modules are platform-neutral; NixOS and
-Darwin-specific behavior belongs in their respective profiles. Host modules
+Manager, or standalone Home Manager. Shared modules are platform-neutral; NixOS
+and Darwin-specific behavior belongs in their respective profiles. Host modules
 compose profile facets and reusable modules directly. `flake.nix` only
 instantiates outputs and provides their external flake dependencies; only the
 mutable checkout path is passed to Home Manager through `extraSpecialArgs`.

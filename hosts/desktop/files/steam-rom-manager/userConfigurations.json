@@ -225,19 +225,17 @@
     },
     {
         "parserType": "Glob",
-        "configTitle": "PC - Bottles",
+        "configTitle": "PC Bottles Local",
         "group": "",
         "steamDirectory": "${steamdirglobal}",
         "romDirectory": "/mnt/games/PC",
         "steamCategories": [
-            "PC - Bottles"
+            "PC Bottles Local"
         ],
-        "executableArgs": "flatpak run --command=bottles-cli --unshare=network com.usebottles.bottles run -b \"gaming-portable-bottle\" -e \"${filePath}\"",
+        "executableArgs": "flatpak run --command=bottles-cli --unshare=network com.usebottles.bottles run -b \"gaming-bottle\" -e \"${filePath}\"",
         "executableModifier": "\"${exePath}\"",
         "startInDirectory": "",
         "titleModifier": "${/:/|${title}|}",
-        "fetchControllerTemplatesButton": null,
-        "removeControllersButton": null,
         "steamInputEnabled": "1",
         "imageProviders": [
             "sgdb",
@@ -254,7 +252,119 @@
             ]
         },
         "parserInputs": {
-            "glob": "{/mnt/games/PC,/run/media/benjamin/976d3eeb-4b99-4f9b-b67c-a708c59432e7/PC}/**/${title}/my.launcher.bat"
+            "glob": "/mnt/games/PC/**/${title}/my.launcher.bat"
+        },
+        "executable": {
+            "path": "/usr/bin/env",
+            "shortcutPassthrough": false,
+            "appendArgsToExecutable": true
+        },
+        "titleFromVariable": {
+            "limitToGroups": [],
+            "caseInsensitiveVariables": false,
+            "skipFileIfVariableWasNotFound": false
+        },
+        "sortAsFromVariable": {
+            "limitToGroups": []
+        },
+        "fuzzyMatch": {
+            "replaceDiacritics": true,
+            "removeCharacters": true,
+            "removeBrackets": false
+        },
+        "controllers": {
+            "gamecube": null,
+            "wii": null,
+            "ps3": null,
+            "ps4": null,
+            "ps5": null,
+            "ps5_edge": null,
+            "xbox360": null,
+            "xboxone": null,
+            "xboxelite": null,
+            "switch_joycon_left": null,
+            "switch_joycon_right": null,
+            "switch_joycon_pair": null,
+            "switch_pro": null,
+            "switch2_pro": null,
+            "neptune": null,
+            "triton": null,
+            "steamcontroller_gordon": null,
+            "generic": null,
+            "8bitdo": null,
+            "rog_ally": null,
+            "legion_go_s": null
+        },
+        "imageProviderAPIs": {
+            "sgdb": {
+                "nsfw": false,
+                "humor": false,
+                "styles": [],
+                "stylesHero": [],
+                "stylesLogo": [],
+                "stylesIcon": [],
+                "imageMotionTypes": [
+                    "static"
+                ],
+                "sizes": [],
+                "sizesHero": [],
+                "sizesIcon": []
+            }
+        },
+        "overlayImages": {
+            "tall": null,
+            "long": null,
+            "hero": null,
+            "logo": null,
+            "icon": null
+        },
+        "defaultImage": {
+            "tall": null,
+            "long": null,
+            "hero": null,
+            "logo": null,
+            "icon": null
+        },
+        "localImages": {
+            "tall": null,
+            "long": null,
+            "hero": null,
+            "logo": null,
+            "icon": null
+        },
+        "parserId": "pc-bottles-local",
+        "version": 29
+    },
+    {
+        "parserType": "Glob",
+        "configTitle": "PC Bottles Portable",
+        "group": "",
+        "steamDirectory": "${steamdirglobal}",
+        "romDirectory": "/run/media/benjamin/976d3eeb-4b99-4f9b-b67c-a708c59432e7/PC",
+        "steamCategories": [
+            "PC Bottles Portable"
+        ],
+        "executableArgs": "flatpak run --command=bottles-cli --unshare=network com.usebottles.bottles run -b \"gaming-portable-bottle\" -e \"${filePath}\"",
+        "executableModifier": "\"${exePath}\"",
+        "startInDirectory": "",
+        "titleModifier": "${/:/|${title}|}",
+        "steamInputEnabled": "1",
+        "imageProviders": [
+            "sgdb",
+            "steamCDN"
+        ],
+        "onlineImageQueries": [
+            "${fuzzyTitle}"
+        ],
+        "imagePool": "",
+        "drmProtect": false,
+        "userAccounts": {
+            "specifiedAccounts": [
+                "tfopgonehitgg"
+            ]
+        },
+        "parserInputs": {
+            "glob": "/run/media/benjamin/976d3eeb-4b99-4f9b-b67c-a708c59432e7/PC/**/${title}/my.launcher.bat"
         },
         "executable": {
             "path": "/usr/bin/env",
@@ -310,7 +420,6 @@
                 ],
                 "sizes": [],
                 "sizesHero": [],
-                "sizesTall": null,
                 "sizesIcon": []
             }
         },
@@ -335,7 +444,7 @@
             "logo": null,
             "icon": null
         },
-        "parserId": "pc-bottles",
+        "parserId": "pc-bottles-portable",
         "version": 29
     },
     {
