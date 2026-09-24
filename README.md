@@ -231,6 +231,35 @@ Use a `let` binding when the bound value is shared. Composition files named
 list easier to read, even if an alias is used once. Package definitions may
 also keep shared values such as a version or source.
 
+### Collection Mapping
+
+Choose collection helpers based on the input and output collection:
+
+- Use `map` for list-to-list transformations.
+- Use `lib.mapAttrs` for attrset-to-attrset transformations that preserve keys.
+- Use `lib.mapAttrs'` when mapping an attrset and changing its keys.
+- Use `lib.mapAttrsToList` for attrset-to-list transformations.
+- Use `lib.genAttrs` when a list of names becomes an attrset with the same names.
+- Use `lib.genAttrs'` when a list becomes an attrset with generated names.
+- Use `lib.listToAttrs` with `lib.nameValuePair` when constructing explicit
+  name-value pairs is clearest.
+
+For non-trivial mappings, bind the transformation to a named function in
+`let` instead of nesting anonymous functions:
+
+```nix
+let
+  mkValue = name: "value-${name}";
+in
+{
+  values = lib.genAttrs names mkValue;
+}
+```
+
+Do not use attrset mapping helpers on lists. Avoid wrapping simple same-key
+mappings in `lib.listToAttrs (map ...)` when `lib.genAttrs` expresses the
+intent directly.
+
 ### Custom Module Options
 
 Options declared by modules in this repository use the `my.*` namespace to

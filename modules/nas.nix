@@ -32,6 +32,21 @@ in
     }:
     let
       cfg = config.my.nas;
+      mountPath = share: "/mnt/nas/${lib.toLower share}";
+      mkFileSystemEntry =
+        share:
+        lib.nameValuePair (mountPath share) {
+          fsType = "cifs";
+          device = "//${cfg.server}/${share}";
+          # noauto + x-systemd.automount: don't mount at boot, lazily attach on first access
+          options = [
+            "noauto,x-systemd.automount"
+            "credentials=${config.sops.templates."smb-creds".path}"
+          ]
+          ++ lib.optional (
+            cfg.uid != null && cfg.gid != null
+          ) "uid=${toString cfg.uid},gid=${toString cfg.gid}";
+        };
     in
     {
       options.my.nas = nasOptions lib;
@@ -52,23 +67,7 @@ in
           };
         };
 
-        fileSystems = builtins.listToAttrs (
-          map (
-            share:
-            lib.nameValuePair "/mnt/nas/${lib.toLower share}" {
-              fsType = "cifs";
-              device = "//${cfg.server}/${share}";
-              # noauto + x-systemd.automount: don't mount at boot, lazily attach on first access
-              options = [
-                "noauto,x-systemd.automount"
-                "credentials=${config.sops.templates."smb-creds".path}"
-              ]
-              ++ lib.optional (
-                cfg.uid != null && cfg.gid != null
-              ) "uid=${toString cfg.uid},gid=${toString cfg.gid}";
-            }
-          ) cfg.shares
-        );
+        fileSystems = lib.genAttrs' cfg.shares mkFileSystemEntry;
       };
     };
 
@@ -82,69 +81,48 @@ in
     let
       cfg = config.my.nas;
       remote = "nas";
-      lower = share: lib.toLower share;
-      mountPath = share: "${config.home.homeDirectory}/mnt/nas/${lower share}";
+      mountPath = share: "${config.home.homeDirectory}/mnt/nas/${lib.toLower share}";
+      mkMount = share: {
+        enable = true;
+        mountPoint = mountPath share;
+        options = {
+          vfs-cache-mode = "writes";
+        };
+      };
     in
     {
       options.my.nas = nasOptions lib;
 
-      config = {
-        programs.rclone.enable = true;
+      config = lib.mkIf (cfg.shares != [ ]) {
+        assertions = [
+          {
+            assertion = pkgs.stdenv.hostPlatform.isLinux;
+            message = "my.nas Home Manager configuration requires Linux";
+          }
+        ];
 
-        sops = {
-          secrets."smb-username" = { };
-          secrets."smb-password-rclone-obscured" = { };
-          templates."rclone.conf" = {
-            content = ''
-              [${remote}]
-              type = smb
-              host = ${cfg.server}
-              port = 445
-              user = ${config.sops.placeholder."smb-username"}
-              pass = ${config.sops.placeholder."smb-password-rclone-obscured"}
-            '';
-            path = "${config.xdg.configHome}/rclone/rclone.conf";
+        programs.rclone = {
+          enable = true;
+
+          remotes.${remote} = {
+            config = {
+              type = "smb";
+              host = cfg.server;
+            };
+
+            secrets = {
+              user = config.sops.secrets."smb-username".path;
+              pass = config.sops.secrets."smb-password".path;
+            };
+
+            mounts = lib.genAttrs cfg.shares mkMount;
           };
         };
 
-        systemd.user.tmpfiles.rules = map (share: "d ${mountPath share} 0755 - - -") cfg.shares;
-
-        systemd.user.services = lib.listToAttrs (
-          map (
-            share:
-            lib.nameValuePair "rclone-nas-${lower share}" {
-              Unit = {
-                Description = "Mount NAS ${share} with rclone";
-                After = [
-                  "network-online.target"
-                  "sops-nix.service"
-                ];
-                Wants = [
-                  "network-online.target"
-                  "sops-nix.service"
-                ];
-              };
-              Service = {
-                Type = "notify";
-                ExecStartPre = "${lib.getExe' pkgs.coreutils "mkdir"} -p ${mountPath share}";
-                ExecStart = lib.concatStringsSep " " [
-                  (lib.getExe pkgs.rclone)
-                  "mount"
-                  "${remote}:${share}"
-                  (mountPath share)
-                  "--config=${config.xdg.configHome}/rclone/rclone.conf"
-                  "--cache-dir=${config.xdg.cacheHome}/rclone/${lower share}"
-                  "--vfs-cache-mode=writes"
-                  "--umask=022"
-                ];
-                ExecStop = "-${lib.getExe' pkgs.fuse3 "fusermount3"} -uz ${mountPath share}";
-                Restart = "on-failure";
-                RestartSec = "10s";
-              };
-              Install.WantedBy = [ "default.target" ];
-            }
-          ) cfg.shares
-        );
+        sops.secrets = {
+          "smb-username" = { };
+          "smb-password" = { };
+        };
       };
     };
 }
