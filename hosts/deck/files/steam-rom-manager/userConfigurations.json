@@ -337,7 +337,7 @@
     },
     {
         "parserType": "Manual",
-        "configTitle": "Desktop Media",
+        "configTitle": "Media Apps",
         "group": "",
         "steamDirectory": "${steamdirglobal}",
         "romDirectory": "",

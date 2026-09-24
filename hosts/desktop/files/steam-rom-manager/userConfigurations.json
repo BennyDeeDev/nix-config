@@ -1,237 +1,565 @@
 [
-  {
-    "parserType": "Glob",
-    "configTitle": "Nintendo Switch - Eden",
-    "group": "",
-    "steamDirectory": "${steamdirglobal}",
-    "romDirectory": "/mnt/games/Switch",
-    "steamCategories": [
-      "Switch"
-    ],
-    "executableArgs": "--fullscreen \"${filePath}\"",
-    "executableModifier": "\"${exePath}\"",
-    "startInDirectory": "",
-    "titleModifier": "",
-    "fetchControllerTemplatesButton": null,
-    "removeControllersButton": null,
-    "steamInputEnabled": "0",
-    "imageProviders": [
-      "sgdb",
-      "steamCDN"
-    ],
-    "onlineImageQueries": [
-      "${fuzzyTitle}"
-    ],
-    "imagePool": "",
-    "drmProtect": false,
-    "userAccounts": {
-      "specifiedAccounts": []
-    },
-    "parserInputs": {
-      "glob": "{/mnt/games/Switch,/run/media/benjamin/976d3eeb-4b99-4f9b-b67c-a708c59432e7/Switch}/**/${title} \\[0100*000\\]\\[v0\\]*.@(nsp|NSP|xci|XCI|nca|NCA|nro|NRO|nso|NSO)"
-    },
-    "executable": {
-      "path": "/home/benjamin/.nix-profile/bin/eden-rog-ally-pgo-lsfg",
-      "shortcutPassthrough": false,
-      "appendArgsToExecutable": true
-    },
-    "titleFromVariable": {
-      "limitToGroups": [],
-      "caseInsensitiveVariables": false,
-      "skipFileIfVariableWasNotFound": false
-    },
-    "sortAsFromVariable": {
-      "limitToGroups": []
-    },
-    "fuzzyMatch": {
-      "replaceDiacritics": true,
-      "removeCharacters": true,
-      "removeBrackets": true
-    },
-    "controllers": {
-      "gamecube": null,
-      "wii": null,
-      "ps3": null,
-      "ps4": null,
-      "ps5": null,
-      "ps5_edge": null,
-      "xbox360": null,
-      "xboxone": null,
-      "xboxelite": null,
-      "switch_joycon_left": null,
-      "switch_joycon_right": null,
-      "switch_joycon_pair": null,
-      "switch_pro": null,
-      "switch2_pro": null,
-      "neptune": null,
-      "triton": null,
-      "steamcontroller_gordon": null,
-      "generic": null,
-      "8bitdo": null,
-      "rog_ally": null,
-      "legion_go_s": null
-    },
-    "imageProviderAPIs": {
-      "sgdb": {
-        "nsfw": false,
-        "humor": false,
-        "styles": [],
-        "stylesHero": [],
-        "stylesLogo": [],
-        "stylesIcon": [],
-        "imageMotionTypes": [
-          "static"
+    {
+        "parserType": "Glob",
+        "configTitle": "Nintendo Switch - Eden (30 FPS)",
+        "group": "",
+        "steamDirectory": "${steamdirglobal}",
+        "romDirectory": "/mnt/games/Switch/30fps",
+        "steamCategories": [
+            "Switch"
         ],
-        "sizes": [],
-        "sizesHero": [],
-        "sizesIcon": [],
-        "sizesTall": null
-      }
+        "executableArgs": "LD_PRELOAD=\"\" /home/benjamin/.nix-profile/bin/lsfg-vk-4x %command% -f -g \"${filePath}\"",
+        "executableModifier": "\"${exePath}\"",
+        "startInDirectory": "",
+        "titleModifier": "",
+        "steamInputEnabled": "0",
+        "imageProviders": [
+            "sgdb",
+            "steamCDN"
+        ],
+        "onlineImageQueries": [
+            "${fuzzyTitle}"
+        ],
+        "imagePool": "",
+        "drmProtect": false,
+        "userAccounts": {
+            "specifiedAccounts": [
+                "tfopgonehitgg"
+            ]
+        },
+        "parserInputs": {
+            "glob": "{/mnt/games/Switch/30fps,/run/media/benjamin/976d3eeb-4b99-4f9b-b67c-a708c59432e7/Switch/30fps}/**/${title} \\[0100*000\\]\\[v0\\]*.@(nsp|NSP|xci|XCI|nca|NCA|nro|NRO|nso|NSO)"
+        },
+        "executable": {
+            "path": "/home/benjamin/.nix-profile/bin/eden-rog-ally-pgo",
+            "shortcutPassthrough": false,
+            "appendArgsToExecutable": false
+        },
+        "titleFromVariable": {
+            "limitToGroups": [],
+            "caseInsensitiveVariables": false,
+            "skipFileIfVariableWasNotFound": false
+        },
+        "sortAsFromVariable": {
+            "limitToGroups": []
+        },
+        "fuzzyMatch": {
+            "replaceDiacritics": true,
+            "removeCharacters": true,
+            "removeBrackets": true
+        },
+        "controllers": {
+            "gamecube": null,
+            "wii": null,
+            "ps3": null,
+            "ps4": null,
+            "ps5": null,
+            "ps5_edge": null,
+            "xbox360": null,
+            "xboxone": null,
+            "xboxelite": null,
+            "switch_joycon_left": null,
+            "switch_joycon_right": null,
+            "switch_joycon_pair": null,
+            "switch_pro": null,
+            "switch2_pro": null,
+            "neptune": null,
+            "triton": null,
+            "steamcontroller_gordon": null,
+            "generic": null,
+            "8bitdo": null,
+            "rog_ally": null,
+            "legion_go_s": null
+        },
+        "imageProviderAPIs": {
+            "sgdb": {
+                "nsfw": false,
+                "humor": false,
+                "styles": [],
+                "stylesHero": [],
+                "stylesLogo": [],
+                "stylesIcon": [],
+                "imageMotionTypes": [
+                    "static"
+                ],
+                "sizes": [],
+                "sizesHero": [],
+                "sizesIcon": []
+            }
+        },
+        "overlayImages": {
+            "tall": null,
+            "long": null,
+            "hero": null,
+            "logo": null,
+            "icon": null
+        },
+        "defaultImage": {
+            "tall": null,
+            "long": null,
+            "hero": null,
+            "logo": null,
+            "icon": null
+        },
+        "localImages": {
+            "tall": null,
+            "long": null,
+            "hero": null,
+            "logo": null,
+            "icon": null
+        },
+        "parserId": "nintendo-switch-eden-30fps",
+        "version": 29
     },
-    "overlayImages": {
-      "tall": null,
-      "long": null,
-      "hero": null,
-      "logo": null,
-      "icon": null
+    {
+        "parserType": "Glob",
+        "configTitle": "Nintendo Switch - Eden (60 FPS)",
+        "group": "",
+        "steamDirectory": "${steamdirglobal}",
+        "romDirectory": "/mnt/games/Switch/60fps",
+        "steamCategories": [
+            "Switch"
+        ],
+        "executableArgs": "LD_PRELOAD=\"\" /home/benjamin/.nix-profile/bin/lsfg-vk-2x %command% -f -g \"${filePath}\"",
+        "executableModifier": "\"${exePath}\"",
+        "startInDirectory": "",
+        "titleModifier": "",
+        "steamInputEnabled": "0",
+        "imageProviders": [
+            "sgdb",
+            "steamCDN"
+        ],
+        "onlineImageQueries": [
+            "${fuzzyTitle}"
+        ],
+        "imagePool": "",
+        "drmProtect": false,
+        "userAccounts": {
+            "specifiedAccounts": [
+                "tfopgonehitgg"
+            ]
+        },
+        "parserInputs": {
+            "glob": "{/mnt/games/Switch/60fps,/run/media/benjamin/976d3eeb-4b99-4f9b-b67c-a708c59432e7/Switch/60fps}/**/${title} \\[0100*000\\]\\[v0\\]*.@(nsp|NSP|xci|XCI|nca|NCA|nro|NRO|nso|NSO)"
+        },
+        "executable": {
+            "path": "/home/benjamin/.nix-profile/bin/eden-rog-ally-pgo",
+            "shortcutPassthrough": false,
+            "appendArgsToExecutable": false
+        },
+        "titleFromVariable": {
+            "limitToGroups": [],
+            "caseInsensitiveVariables": false,
+            "skipFileIfVariableWasNotFound": false
+        },
+        "sortAsFromVariable": {
+            "limitToGroups": []
+        },
+        "fuzzyMatch": {
+            "replaceDiacritics": true,
+            "removeCharacters": true,
+            "removeBrackets": true
+        },
+        "controllers": {
+            "gamecube": null,
+            "wii": null,
+            "ps3": null,
+            "ps4": null,
+            "ps5": null,
+            "ps5_edge": null,
+            "xbox360": null,
+            "xboxone": null,
+            "xboxelite": null,
+            "switch_joycon_left": null,
+            "switch_joycon_right": null,
+            "switch_joycon_pair": null,
+            "switch_pro": null,
+            "switch2_pro": null,
+            "neptune": null,
+            "triton": null,
+            "steamcontroller_gordon": null,
+            "generic": null,
+            "8bitdo": null,
+            "rog_ally": null,
+            "legion_go_s": null
+        },
+        "imageProviderAPIs": {
+            "sgdb": {
+                "nsfw": false,
+                "humor": false,
+                "styles": [],
+                "stylesHero": [],
+                "stylesLogo": [],
+                "stylesIcon": [],
+                "imageMotionTypes": [
+                    "static"
+                ],
+                "sizes": [],
+                "sizesHero": [],
+                "sizesIcon": []
+            }
+        },
+        "overlayImages": {
+            "tall": null,
+            "long": null,
+            "hero": null,
+            "logo": null,
+            "icon": null
+        },
+        "defaultImage": {
+            "tall": null,
+            "long": null,
+            "hero": null,
+            "logo": null,
+            "icon": null
+        },
+        "localImages": {
+            "tall": null,
+            "long": null,
+            "hero": null,
+            "logo": null,
+            "icon": null
+        },
+        "parserId": "nintendo-switch-eden-60fps",
+        "version": 29
     },
-    "defaultImage": {
-      "tall": null,
-      "long": null,
-      "hero": null,
-      "logo": null,
-      "icon": null
+    {
+        "parserType": "Glob",
+        "configTitle": "PC - Bottles",
+        "group": "",
+        "steamDirectory": "${steamdirglobal}",
+        "romDirectory": "/mnt/games/PC",
+        "steamCategories": [
+            "PC - Bottles"
+        ],
+        "executableArgs": "flatpak run --command=bottles-cli --unshare=network com.usebottles.bottles run -b \"gaming-portable-bottle\" -e \"${filePath}\"",
+        "executableModifier": "\"${exePath}\"",
+        "startInDirectory": "",
+        "titleModifier": "${/:/|${title}|}",
+        "fetchControllerTemplatesButton": null,
+        "removeControllersButton": null,
+        "steamInputEnabled": "1",
+        "imageProviders": [
+            "sgdb",
+            "steamCDN"
+        ],
+        "onlineImageQueries": [
+            "${fuzzyTitle}"
+        ],
+        "imagePool": "",
+        "drmProtect": false,
+        "userAccounts": {
+            "specifiedAccounts": [
+                "tfopgonehitgg"
+            ]
+        },
+        "parserInputs": {
+            "glob": "{/mnt/games/PC,/run/media/benjamin/976d3eeb-4b99-4f9b-b67c-a708c59432e7/PC}/**/${title}/my.launcher.bat"
+        },
+        "executable": {
+            "path": "/usr/bin/env",
+            "shortcutPassthrough": false,
+            "appendArgsToExecutable": true
+        },
+        "titleFromVariable": {
+            "limitToGroups": [],
+            "caseInsensitiveVariables": false,
+            "skipFileIfVariableWasNotFound": false
+        },
+        "sortAsFromVariable": {
+            "limitToGroups": []
+        },
+        "fuzzyMatch": {
+            "replaceDiacritics": true,
+            "removeCharacters": true,
+            "removeBrackets": true
+        },
+        "controllers": {
+            "gamecube": null,
+            "wii": null,
+            "ps3": null,
+            "ps4": null,
+            "ps5": null,
+            "ps5_edge": null,
+            "xbox360": null,
+            "xboxone": null,
+            "xboxelite": null,
+            "switch_joycon_left": null,
+            "switch_joycon_right": null,
+            "switch_joycon_pair": null,
+            "switch_pro": null,
+            "switch2_pro": null,
+            "neptune": null,
+            "triton": null,
+            "steamcontroller_gordon": null,
+            "generic": null,
+            "8bitdo": null,
+            "rog_ally": null,
+            "legion_go_s": null
+        },
+        "imageProviderAPIs": {
+            "sgdb": {
+                "nsfw": false,
+                "humor": false,
+                "styles": [],
+                "stylesHero": [],
+                "stylesLogo": [],
+                "stylesIcon": [],
+                "imageMotionTypes": [
+                    "static"
+                ],
+                "sizes": [],
+                "sizesHero": [],
+                "sizesTall": null,
+                "sizesIcon": []
+            }
+        },
+        "overlayImages": {
+            "tall": null,
+            "long": null,
+            "hero": null,
+            "logo": null,
+            "icon": null
+        },
+        "defaultImage": {
+            "tall": null,
+            "long": null,
+            "hero": null,
+            "logo": null,
+            "icon": null
+        },
+        "localImages": {
+            "tall": null,
+            "long": null,
+            "hero": null,
+            "logo": null,
+            "icon": null
+        },
+        "parserId": "pc-bottles",
+        "version": 29
     },
-    "localImages": {
-      "tall": null,
-      "long": null,
-      "hero": null,
-      "logo": null,
-      "icon": null
+    {
+        "parserType": "Manual",
+        "configTitle": "Media Apps",
+        "group": "",
+        "steamDirectory": "${steamdirglobal}",
+        "romDirectory": "",
+        "steamCategories": [
+            "Media"
+        ],
+        "executableArgs": "",
+        "executableModifier": "",
+        "startInDirectory": "",
+        "titleModifier": "",
+        "steamInputEnabled": "2",
+        "imageProviders": [
+            "sgdb",
+            "steamCDN"
+        ],
+        "onlineImageQueries": [
+            "${fuzzyTitle}"
+        ],
+        "imagePool": "",
+        "drmProtect": false,
+        "userAccounts": {
+            "specifiedAccounts": [
+                "tfopgonehitgg"
+            ]
+        },
+        "parserInputs": {
+            "manualManifests": "/home/benjamin/.config/steam-rom-manager/userData/manifests/media"
+        },
+        "executable": {
+            "path": "",
+            "shortcutPassthrough": false,
+            "appendArgsToExecutable": false
+        },
+        "titleFromVariable": {
+            "limitToGroups": [],
+            "caseInsensitiveVariables": false,
+            "skipFileIfVariableWasNotFound": false
+        },
+        "sortAsFromVariable": {
+            "limitToGroups": []
+        },
+        "fuzzyMatch": {
+            "replaceDiacritics": true,
+            "removeCharacters": true,
+            "removeBrackets": true
+        },
+        "controllers": {
+            "gamecube": null,
+            "wii": null,
+            "ps3": null,
+            "ps4": null,
+            "ps5": null,
+            "ps5_edge": null,
+            "xbox360": null,
+            "xboxone": null,
+            "xboxelite": null,
+            "switch_joycon_left": null,
+            "switch_joycon_right": null,
+            "switch_joycon_pair": null,
+            "switch_pro": null,
+            "switch2_pro": null,
+            "neptune": null,
+            "triton": null,
+            "steamcontroller_gordon": null,
+            "generic": null,
+            "8bitdo": null,
+            "rog_ally": null,
+            "legion_go_s": null
+        },
+        "imageProviderAPIs": {
+            "sgdb": {
+                "nsfw": false,
+                "humor": false,
+                "styles": [],
+                "stylesHero": [],
+                "stylesLogo": [],
+                "stylesIcon": [],
+                "imageMotionTypes": [
+                    "static"
+                ],
+                "sizes": [],
+                "sizesHero": [],
+                "sizesIcon": []
+            }
+        },
+        "overlayImages": {
+            "tall": null,
+            "long": null,
+            "hero": null,
+            "logo": null,
+            "icon": null
+        },
+        "defaultImage": {
+            "tall": null,
+            "long": null,
+            "hero": null,
+            "logo": null,
+            "icon": null
+        },
+        "localImages": {
+            "tall": null,
+            "long": null,
+            "hero": null,
+            "logo": null,
+            "icon": null
+        },
+        "parserId": "desktop-media",
+        "version": 29
     },
-    "parserId": "nintendo-switch-eden",
-    "version": 29
-  },
-  {
-    "configTitle": "PC - Bottles (Flatpak)",
-    "defaultImage": {},
-    "executable": {
-      "appendArgsToExecutable": true,
-      "path": "/usr/bin/env",
-      "shortcutPassthrough": false
-    },
-    "executableArgs": "flatpak run --command=bottles-cli --unshare=network com.usebottles.bottles run -b \"gaming-portable-bottle\" -e \"${filePath}\"",
-    "executableModifier": "\"${exePath}\"",
-    "imageProviderAPIs": {
-      "sgdb": {}
-    },
-    "localImages": {},
-    "onlineImageQueries": [
-      "${fuzzyTitle}"
-    ],
-    "overlayImages": {},
-    "parserId": "pc-bottles",
-    "parserInputs": {
-      "glob": "{/mnt/games/PC,/run/media/benjamin/976d3eeb-4b99-4f9b-b67c-a708c59432e7/PC}/**/${title}/my.launcher.bat"
-    },
-    "parserType": "Glob",
-    "romDirectory": "/mnt/games/PC",
-    "sortAsFromVariable": {
-      "limitToGroups": []
-    },
-    "steamCategories": [
-      "PC - Bottles"
-    ],
-    "steamDirectory": "${steamdirglobal}",
-    "steamInputEnabled": "1",
-    "titleFromVariable": {
-      "limitToGroups": []
-    },
-    "titleModifier": "${/:/|${title}|}",
-    "userAccounts": {
-      "specifiedAccounts": [
-        "tfopgonehitgg"
-      ]
-    },
-    "version": 29
-  },
-  {
-    "configTitle": "Desktop Media",
-    "defaultImage": {},
-    "executable": {
-      "shortcutPassthrough": false
-    },
-    "imageProviderAPIs": {
-      "sgdb": {}
-    },
-    "localImages": {},
-    "onlineImageQueries": [
-      "${fuzzyTitle}"
-    ],
-    "overlayImages": {},
-    "parserId": "desktop-media",
-    "parserInputs": {
-      "manualManifests": "/home/benjamin/.config/steam-rom-manager/userData/manifests/media"
-    },
-    "parserType": "Manual",
-    "sortAsFromVariable": {
-      "limitToGroups": []
-    },
-    "steamCategories": [
-      "Media"
-    ],
-    "steamDirectory": "${steamdirglobal}",
-    "steamInputEnabled": "2",
-    "titleFromVariable": {
-      "limitToGroups": []
-    },
-    "userAccounts": {
-      "specifiedAccounts": [
-        "tfopgonehitgg"
-      ]
-    },
-    "version": 29,
-    "executableModifier": "",
-    "disabled": true
-  },
-  {
-    "configTitle": "System Apps",
-    "defaultImage": {},
-    "disabled": true,
-    "executable": {
-      "path": "",
-      "shortcutPassthrough": false,
-      "appendArgsToExecutable": false
-    },
-    "imageProviderAPIs": {
-      "sgdb": {}
-    },
-    "localImages": {},
-    "onlineImageQueries": [
-      "${fuzzyTitle}"
-    ],
-    "overlayImages": {},
-    "parserId": "system-apps",
-    "parserInputs": {
-      "manualManifests": "/home/benjamin/.config/steam-rom-manager/userData/manifests/system"
-    },
-    "parserType": "Manual",
-    "sortAsFromVariable": {
-      "limitToGroups": []
-    },
-    "steamCategories": [
-      "System"
-    ],
-    "steamDirectory": "${steamdirglobal}",
-    "steamInputEnabled": "2",
-    "titleFromVariable": {
-      "limitToGroups": []
-    },
-    "userAccounts": {
-      "specifiedAccounts": [
-        "tfopgonehitgg"
-      ]
-    },
-    "version": 29
-  }
+    {
+        "parserType": "Manual",
+        "configTitle": "System Apps",
+        "group": "",
+        "steamDirectory": "${steamdirglobal}",
+        "romDirectory": "",
+        "steamCategories": [
+            "System"
+        ],
+        "executableArgs": "",
+        "executableModifier": "",
+        "startInDirectory": "",
+        "titleModifier": "",
+        "steamInputEnabled": "2",
+        "imageProviders": [
+            "sgdb",
+            "steamCDN"
+        ],
+        "onlineImageQueries": [
+            "${fuzzyTitle}"
+        ],
+        "imagePool": "",
+        "drmProtect": false,
+        "userAccounts": {
+            "specifiedAccounts": [
+                "tfopgonehitgg"
+            ]
+        },
+        "parserInputs": {
+            "manualManifests": "/home/benjamin/.config/steam-rom-manager/userData/manifests/system"
+        },
+        "executable": {
+            "path": "",
+            "shortcutPassthrough": false,
+            "appendArgsToExecutable": false
+        },
+        "titleFromVariable": {
+            "limitToGroups": [],
+            "caseInsensitiveVariables": false,
+            "skipFileIfVariableWasNotFound": false
+        },
+        "sortAsFromVariable": {
+            "limitToGroups": []
+        },
+        "fuzzyMatch": {
+            "replaceDiacritics": true,
+            "removeCharacters": true,
+            "removeBrackets": true
+        },
+        "controllers": {
+            "gamecube": null,
+            "wii": null,
+            "ps3": null,
+            "ps4": null,
+            "ps5": null,
+            "ps5_edge": null,
+            "xbox360": null,
+            "xboxone": null,
+            "xboxelite": null,
+            "switch_joycon_left": null,
+            "switch_joycon_right": null,
+            "switch_joycon_pair": null,
+            "switch_pro": null,
+            "switch2_pro": null,
+            "neptune": null,
+            "triton": null,
+            "steamcontroller_gordon": null,
+            "generic": null,
+            "8bitdo": null,
+            "rog_ally": null,
+            "legion_go_s": null
+        },
+        "imageProviderAPIs": {
+            "sgdb": {
+                "nsfw": false,
+                "humor": false,
+                "styles": [],
+                "stylesHero": [],
+                "stylesLogo": [],
+                "stylesIcon": [],
+                "imageMotionTypes": [
+                    "static"
+                ],
+                "sizes": [],
+                "sizesHero": [],
+                "sizesIcon": []
+            }
+        },
+        "overlayImages": {
+            "tall": null,
+            "long": null,
+            "hero": null,
+            "logo": null,
+            "icon": null
+        },
+        "defaultImage": {
+            "tall": null,
+            "long": null,
+            "hero": null,
+            "logo": null,
+            "icon": null
+        },
+        "localImages": {
+            "tall": null,
+            "long": null,
+            "hero": null,
+            "logo": null,
+            "icon": null
+        },
+        "parserId": "system-apps",
+        "version": 29
+    }
 ]

@@ -1,45 +1,45 @@
 {
-  "environmentVariables": {
-    "romsDirectory": "/mnt/games",
-    "steamDirectory": "/home/benjamin/.local/share/Steam/",
-    "userAccounts": [
-      "tfopgonehitgg"
-    ],
-    "retroarchPath": "",
-    "raCoresDirectory": "",
-    "localImagesDirectory": ""
-  },
-  "version": 11,
-  "fuzzyMatcher": {
-    "timestamps": {
-      "check": 1789334221341,
-      "download": 1789334221341
-    },
-    "verbose": false,
-    "filterProviders": true
-  },
-  "previewSettings": {
-    "retrieveCurrentSteamImages": true,
-    "disableCategories": false,
-    "deleteDisabledShortcuts": false,
-    "imageZoomPercentage": 30,
-    "imageLoadStrategy": "loadLazy",
-    "hideUserAccount": false
-  },
-  "enabledProviders": [
-    "sgdb",
-    "steamCDN"
-  ],
-  "batchDownloadSize": 50,
-  "dnsServers": [],
-  "language": "en-US",
-  "theme": "Deck",
-  "emudeckInstall": false,
-  "autoUpdate": true,
-  "offlineMode": false,
-  "navigationWidth": 425,
-  "clearLogOnTest": false,
-  "autoKillSteam": false,
-  "autoRestartSteam": false,
-  "parserGroups": []
+	"environmentVariables": {
+		"romsDirectory": "/mnt/games",
+		"steamDirectory": "/home/benjamin/.local/share/Steam/",
+		"userAccounts": [
+			"tfopgonehitgg"
+		],
+		"retroarchPath": "",
+		"raCoresDirectory": "",
+		"localImagesDirectory": ""
+	},
+	"version": 11,
+	"fuzzyMatcher": {
+		"timestamps": {
+			"check": 1790274784983,
+			"download": 1790274784983
+		},
+		"verbose": false,
+		"filterProviders": true
+	},
+	"previewSettings": {
+		"retrieveCurrentSteamImages": true,
+		"disableCategories": false,
+		"deleteDisabledShortcuts": false,
+		"imageZoomPercentage": 30,
+		"imageLoadStrategy": "loadLazy",
+		"hideUserAccount": false
+	},
+	"enabledProviders": [
+		"sgdb",
+		"steamCDN"
+	],
+	"batchDownloadSize": 50,
+	"dnsServers": [],
+	"language": "en-US",
+	"theme": "Deck",
+	"emudeckInstall": false,
+	"autoUpdate": true,
+	"offlineMode": false,
+	"navigationWidth": 425,
+	"clearLogOnTest": false,
+	"autoKillSteam": false,
+	"autoRestartSteam": false,
+	"parserGroups": []
 }
