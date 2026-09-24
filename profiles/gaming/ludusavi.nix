@@ -57,10 +57,13 @@
               username = "benjamin";
             };
             path = config.my.gaming.ludusaviBackupPath;
-            synchronize = true;
+            synchronize = false;
           };
           apps.rclone.path = lib.getExe pkgs.rclone;
         };
       };
+
+      systemd.user.services.ludusavi.Service.ExecStartPost =
+        "${lib.getExe pkgs.ludusavi} cloud upload --force";
     };
 }
