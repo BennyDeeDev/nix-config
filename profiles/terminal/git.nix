@@ -6,6 +6,14 @@
         name = "BennyDeeDev";
         email = "45900418+BennyDeeDev@users.noreply.github.com";
       };
+      mkInclude = repository: {
+        condition = "gitdir:${repository}";
+        contents = {
+          user = personalIdentity;
+          commit.gpgSign = false;
+          tag.gpgSign = false;
+        };
+      };
     in
     {
       options.my.git = {
@@ -28,14 +36,7 @@
             pull.rebase = true;
             user = config.my.git.identity;
           };
-          includes = map (repository: {
-            condition = "gitdir:${repository}";
-            contents = {
-              user = personalIdentity;
-              commit.gpgSign = false;
-              tag.gpgSign = false;
-            };
-          }) config.my.git.personalRepositories;
+          includes = map mkInclude config.my.git.personalRepositories;
         };
 
         programs.gh = {

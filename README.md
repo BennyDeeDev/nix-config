@@ -260,6 +260,10 @@ Do not use attrset mapping helpers on lists. Avoid wrapping simple same-key
 mappings in `lib.listToAttrs (map ...)` when `lib.genAttrs` expresses the
 intent directly.
 
+Use collection helpers to clarify an existing transformation. Do not convert
+small, explicit lists or attribute sets into generated structures only to
+remove repetition; keep simple configuration tables readable and explicit.
+
 ### Custom Module Options
 
 Options declared by modules in this repository use the `my.*` namespace to
