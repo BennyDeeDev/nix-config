@@ -344,7 +344,7 @@
         "steamCategories": [
             "PC Bottles Portable"
         ],
-        "executableArgs": "LD_PRELOAD=\"\" /etc/profiles/per-user/benjamin/bin/bottles-sdl-on-hidraw-off flatpak run --command=bottles-cli --unshare=network com.usebottles.bottles run -b \"gaming-portable-bottle\" -e \"${filePath}\"",
+        "executableArgs": "flatpak run --command=bottles-cli --unshare=network com.usebottles.bottles run -b \"gaming-portable-bottle\" -e \"${filePath}\"",
         "executableModifier": "\"${exePath}\"",
         "startInDirectory": "",
         "titleModifier": "${/:/|${title}|}",
