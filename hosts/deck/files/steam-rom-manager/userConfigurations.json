@@ -232,7 +232,7 @@
         "steamCategories": [
             "PC - Bottles"
         ],
-        "executableArgs": "flatpak run --command=bottles-cli --unshare=network com.usebottles.bottles run -b \"gaming-portable-bottle\" -e \"${filePath}\"",
+        "executableArgs": "LD_PRELOAD=\"\" /home/deck/.nix-profile/bin/bottles-sdl-off-hidraw-on flatpak run --command=bottles-cli --unshare=network com.usebottles.bottles run -b \"gaming-portable-bottle\" -e \"${filePath}\"",
         "executableModifier": "\"${exePath}\"",
         "startInDirectory": "",
         "titleModifier": "${/:/|${title}|}",
@@ -252,7 +252,7 @@
             ]
         },
         "parserInputs": {
-            "glob": "{/run/media/deck/976d3eeb-4b99-4f9b-b67c-a708c59432e7/PC,/home/deck/Games/PC}/**/${title}/my.launcher.bat"
+            "glob": "/run/media/deck/976d3eeb-4b99-4f9b-b67c-a708c59432e7/PC/**/${title}/my.launcher.bat"
         },
         "executable": {
             "path": "/usr/bin/env",

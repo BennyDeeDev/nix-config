@@ -34,23 +34,26 @@
 
       mkLsfgLauncher =
         profileName: profile:
-        pkgs.writeShellScriptBin "lsfg-vk-${profileName}" ''
-          set -eu
+        pkgs.writeShellApplication {
+          name = "lsfg-vk-${profileName}";
+          text = ''
+            set -eu
 
-          if [ "$#" -eq 0 ]; then
-            printf 'usage: %s <executable> [arguments...]\n' "$0" >&2
-            exit 1
-          fi
+            if [ "$#" -eq 0 ]; then
+              printf 'usage: %s <executable> [arguments...]\n' "$0" >&2
+              exit 1
+            fi
 
-          export VK_ADD_IMPLICIT_LAYER_PATH="${lsfgVk}/share/vulkan/implicit_layer.d''${VK_ADD_IMPLICIT_LAYER_PATH:+:$VK_ADD_IMPLICIT_LAYER_PATH}"
-          export LSFGVK_ENV=1
-          export LSFGVK_DLL_PATH="${losslessScalingDll}"
-          export LSFGVK_MULTIPLIER="${toString profile.multiplier}"
-          export LSFGVK_FLOW_SCALE="${profile.flowScale}"
-          export LSFGVK_PERFORMANCE_MODE="${if profile.performanceMode then "1" else "0"}"
+            export VK_ADD_IMPLICIT_LAYER_PATH="${lsfgVk}/share/vulkan/implicit_layer.d''${VK_ADD_IMPLICIT_LAYER_PATH:+:$VK_ADD_IMPLICIT_LAYER_PATH}"
+            export LSFGVK_ENV=1
+            export LSFGVK_DLL_PATH="${losslessScalingDll}"
+            export LSFGVK_MULTIPLIER="${toString profile.multiplier}"
+            export LSFGVK_FLOW_SCALE="${profile.flowScale}"
+            export LSFGVK_PERFORMANCE_MODE="${if profile.performanceMode then "1" else "0"}"
 
-          exec "$@"
-        '';
+            exec "$@"
+          '';
+        };
 
       launchers = lib.mapAttrsToList mkLsfgLauncher profiles;
     in
