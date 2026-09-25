@@ -8,7 +8,7 @@
         "steamCategories": [
             "Switch"
         ],
-        "executableArgs": "LD_PRELOAD=\"\" /home/benjamin/.nix-profile/bin/lsfg-vk-4x %command% -f -g \"${filePath}\"",
+        "executableArgs": "LD_PRELOAD=\"\" /etc/profiles/per-user/benjamin/bin/lsfg-vk-4x %command% -f -g \"${filePath}\"",
         "executableModifier": "\"${exePath}\"",
         "startInDirectory": "",
         "titleModifier": "",
@@ -31,7 +31,7 @@
             "glob": "{/mnt/games/Switch/30fps,/run/media/benjamin/976d3eeb-4b99-4f9b-b67c-a708c59432e7/Switch/30fps}/**/${title} \\[0100*000\\]\\[v0\\]*.@(nsp|NSP|xci|XCI|nca|NCA|nro|NRO|nso|NSO)"
         },
         "executable": {
-            "path": "/home/benjamin/.nix-profile/bin/eden-rog-ally-pgo",
+            "path": "/etc/profiles/per-user/benjamin/bin/eden-rog-ally-pgo",
             "shortcutPassthrough": false,
             "appendArgsToExecutable": false
         },
@@ -120,7 +120,7 @@
         "steamCategories": [
             "Switch"
         ],
-        "executableArgs": "LD_PRELOAD=\"\" /home/benjamin/.nix-profile/bin/lsfg-vk-2x %command% -f -g \"${filePath}\"",
+        "executableArgs": "LD_PRELOAD=\"\" /etc/profiles/per-user/benjamin/bin/lsfg-vk-2x %command% -f -g \"${filePath}\"",
         "executableModifier": "\"${exePath}\"",
         "startInDirectory": "",
         "titleModifier": "",
@@ -143,7 +143,7 @@
             "glob": "{/mnt/games/Switch/60fps,/run/media/benjamin/976d3eeb-4b99-4f9b-b67c-a708c59432e7/Switch/60fps}/**/${title} \\[0100*000\\]\\[v0\\]*.@(nsp|NSP|xci|XCI|nca|NCA|nro|NRO|nso|NSO)"
         },
         "executable": {
-            "path": "/home/benjamin/.nix-profile/bin/eden-rog-ally-pgo",
+            "path": "/etc/profiles/per-user/benjamin/bin/eden-rog-ally-pgo",
             "shortcutPassthrough": false,
             "appendArgsToExecutable": false
         },
@@ -344,7 +344,7 @@
         "steamCategories": [
             "PC Bottles Portable"
         ],
-        "executableArgs": "LD_PRELOAD=\"\" /home/benjamin/.nix-profile/bin/bottles-sdl-on-hidraw-off flatpak run --command=bottles-cli --unshare=network com.usebottles.bottles run -b \"gaming-portable-bottle\" -e \"${filePath}\"",
+        "executableArgs": "LD_PRELOAD=\"\" /etc/profiles/per-user/benjamin/bin/bottles-sdl-on-hidraw-off flatpak run --command=bottles-cli --unshare=network com.usebottles.bottles run -b \"gaming-portable-bottle\" -e \"${filePath}\"",
         "executableModifier": "\"${exePath}\"",
         "startInDirectory": "",
         "titleModifier": "${/:/|${title}|}",
