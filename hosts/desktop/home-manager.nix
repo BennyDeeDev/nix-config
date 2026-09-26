@@ -40,12 +40,6 @@ in
           my.gaming.gamesPath = "/mnt/games";
           my.gaming.portableGamesPath = "/run/media/benjamin/976d3eeb-4b99-4f9b-b67c-a708c59432e7";
           my.gaming.ludusaviBackupPath = "/Ludusavi-Desktop";
-          services.ludusavi.settings.roots = lib.mkAfter [
-            {
-              store = "steam";
-              path = "/mnt/games/SteamLibrary";
-            }
-          ];
           home.packages = [
             edenPackage
             pkgs.nixos-icons
