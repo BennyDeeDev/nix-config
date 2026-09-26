@@ -77,8 +77,8 @@
         overrides."com.usebottles.bottles" = {
           Context.filesystems = [
             "/nix/store:ro"
-            "${config.my.gaming.gamesPath}/PC:ro"
-            "${portableGamesPath}/PC:ro"
+            "${config.my.gaming.gamesPath}/PC:rw"
+            "${portableGamesPath}/PC:rw"
             "${portableGamesPath}/Bottles:rw"
           ];
         };
