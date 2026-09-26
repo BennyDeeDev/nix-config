@@ -28,10 +28,10 @@
           volume = 0.25;
         };
       };
-      context = ../../files/opencode/AGENTS.md;
-      agents = ../../files/opencode/agents;
     };
 
-    programs.zsh.shellAliases.o = "OPENCODE_ENABLE_EXA=1 opencode";
+    programs.zsh.shellAliases.o = "opencode";
+    programs.zsh.shellAliases.o-exa = "OPENCODE_ENABLE_EXA=1 opencode";
+    programs.zsh.shellAliases.o-parallel = "OPENCODE_ENABLE_PARALLEL=1 opencode";
   };
 }

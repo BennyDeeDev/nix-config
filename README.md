@@ -28,7 +28,6 @@ NixOS, nix-darwin, and Home Manager configuration for the machines below.
 The repository uses explicit, scope-first feature facets.
 
 ```text
-files/       Application payloads
 hosts/       Machine identity, hardware, disks, and unique policy
 images/      Image outputs
 modules/     Reusable modules selected explicitly
