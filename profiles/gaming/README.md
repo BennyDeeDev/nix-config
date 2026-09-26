@@ -29,6 +29,20 @@ LSFG-VK 2.0. The `lsfg-vk` branch must provide this file:
 ls -l "$HOME/.local/share/Steam/steamapps/common/Lossless Scaling/lsfg-vk.dll"
 ```
 
+## Steam Host Launches
+
+Steam launches non-Steam entries inside its Scout runtime. The gaming profile
+provides `steam-host` for Deck Steam ROM Manager entries that launch Flatpak or
+Nix applications. It clears Steam's overlay preload and switches back to the
+host environment before executing the command:
+
+```bash
+steam-host flatpak run --command=bottles-cli --unshare=network \
+  com.usebottles.bottles run -b gaming-portable-bottle -e <launcher>
+
+steam-host "$HOME/.nix-profile/bin/VacuumTube"
+```
+
 ## Bottles Steam Deck Controller Fix
 
 When running Windows games through Bottles Flatpak in Steam Deck Gaming Mode,

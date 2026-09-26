@@ -8,7 +8,7 @@
         "steamCategories": [
             "Switch"
         ],
-        "executableArgs": "LD_PRELOAD=\"\" /home/deck/.nix-profile/bin/lsfg-vk-2x %command% -f -g \"${filePath}\"",
+        "executableArgs": "/home/deck/.nix-profile/bin/lsfg-vk-2x %command% -f -g \"${filePath}\"",
         "executableModifier": "\"${exePath}\"",
         "startInDirectory": "",
         "titleModifier": "",
@@ -120,7 +120,7 @@
         "steamCategories": [
             "Switch"
         ],
-        "executableArgs": "LD_PRELOAD=\"\" %command% -f -g \"${filePath}\"",
+        "executableArgs": "%command% -f -g \"${filePath}\"",
         "executableModifier": "\"${exePath}\"",
         "startInDirectory": "",
         "titleModifier": "",
@@ -255,7 +255,7 @@
             "glob": "/run/media/deck/976d3eeb-4b99-4f9b-b67c-a708c59432e7/PC/**/${title}/my.launcher.bat"
         },
         "executable": {
-            "path": "/usr/bin/env",
+            "path": "/home/deck/.nix-profile/bin/steam-host",
             "shortcutPassthrough": false,
             "appendArgsToExecutable": true
         },
