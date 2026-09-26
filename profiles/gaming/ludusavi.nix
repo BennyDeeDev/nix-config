@@ -54,7 +54,7 @@
 
       services.ludusavi = {
         enable = true;
-        frequency = "*:0/60";
+        frequency = "hourly";
         settings = {
           manifest.secondary = [ { path = gamingManifest; } ];
           roots = [
