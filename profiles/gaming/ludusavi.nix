@@ -10,6 +10,42 @@
       home = config.home.homeDirectory;
       portableGamesPath = config.my.gaming.portableGamesPath;
       backupPath = "${home}/Backups/ludusavi";
+      portableBottlePath = "${portableGamesPath}/Bottles/gaming-portable-bottle";
+      hostBottlePath = "${home}/.var/app/com.usebottles.bottles/data/bottles/bottles/gaming-bottle";
+
+      mkBottleManifest = name: path: ''
+        "${name}":
+          files:
+            "${path}/drive_c":
+              tags: [save, config]
+              when: [{ os: linux }]
+            "${path}/bottle.yml":
+              tags: [config]
+              when: [{ os: linux }]
+            "${path}/system.reg":
+              tags: [config]
+              when: [{ os: linux }]
+            "${path}/user.reg":
+              tags: [config]
+              when: [{ os: linux }]
+            "${path}/userdef.reg":
+              tags: [config]
+              when: [{ os: linux }]
+      '';
+
+      mkEdenManifest = path: ''
+        "Eden":
+          files:
+            "${path}":
+              tags: [save, config]
+              when: [{ os: linux }]
+      '';
+
+      gamingManifest = builtins.toFile "ludusavi-gaming-manifest.yml" ''
+        ${mkEdenManifest "${portableGamesPath}/Eden/nand"}
+        ${mkBottleManifest "Bottles (Portable)" portableBottlePath}
+        ${mkBottleManifest "Bottles (Host)" hostBottlePath}
+      '';
     in
     {
       systemd.user.tmpfiles.rules = [
@@ -18,32 +54,18 @@
 
       services.ludusavi = {
         enable = true;
-        frequency = "*:0/15";
+        frequency = "*:0/60";
         settings = {
-          manifest.secondary = [
-            {
-              path = "${builtins.toFile "ludusavi-eden-manifest.yml" ''
-                "Eden":
-                  files:
-                    "${portableGamesPath}/Eden/nand":
-                      tags: [save]
-                      when: [{ os: linux }]
-              ''}";
-            }
-          ];
+          manifest.secondary = [ { path = gamingManifest; } ];
           roots = [
             {
               store = "steam";
               path = "${home}/.local/share/Steam";
             }
-            {
-              store = "otherWine";
-              path = "${portableGamesPath}/Bottles/gaming-portable-bottle";
-            }
           ];
           backup = {
             path = backupPath;
-            retention.full = 50;
+            retention.full = 24;
             format = {
               chosen = "zip";
             };
@@ -64,6 +86,6 @@
       };
 
       systemd.user.services.ludusavi.Service.ExecStartPost =
-        "${lib.getExe pkgs.ludusavi} cloud upload --force";
+        "-${lib.getExe pkgs.ludusavi} cloud upload --force";
     };
 }

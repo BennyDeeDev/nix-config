@@ -45,10 +45,6 @@ in
               store = "steam";
               path = "/mnt/games/SteamLibrary";
             }
-            {
-              store = "otherWine";
-              path = "/home/benjamin/.var/app/com.usebottles.bottles/data/bottles/bottles/gaming-bottle";
-            }
           ];
           home.packages = [
             edenPackage
