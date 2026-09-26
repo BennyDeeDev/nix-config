@@ -17,6 +17,7 @@
           autohide = true;
           mru-spaces = false;
           show-recents = false;
+          wvous-tl-corner = 2;
         };
 
         controlcenter = {
