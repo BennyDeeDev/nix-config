@@ -139,6 +139,33 @@ Start it with:
 flatpak run com.usebottles.bottles --bottle "gaming-portable-bottle"
 ```
 
+### Portable Game Installation
+
+Create the portable `H:` drive mapping before installing a Windows game:
+
+```bash
+cd "/run/media/<user>/976d3eeb-4b99-4f9b-b67c-a708c59432e7/Bottles/gaming-portable-bottle/dosdevices"
+ln -sfn -- ../../.. 'h:'
+```
+
+The relative target makes `H:` resolve to the SD card regardless of whether the
+current user is `deck` or `benjamin`.
+
+When an installer asks where to install the game, use a path on `H:`:
+
+```text
+H:\PC\<Game Name>
+```
+
+Some Windows installers store the installation path in the registry. Installing
+to `H:` ensures those registry entries are portable from the start. If an
+installer writes a host-specific path instead, update its registry entries to
+use the equivalent `H:\...` path before launching the game. Replace any existing
+stale `h:` link with the command above.
+
+`h:` is the Wine directory mapping. Do not confuse it with `h::`, which is a
+separate Wine device mapping.
+
 ### Portable Eden
 
 Set Eden's firmware and keys first.
