@@ -102,6 +102,7 @@
           wget
           watch
           unzip
+          unrar
           sqlite
           sshpass
         ]
