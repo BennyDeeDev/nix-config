@@ -15,6 +15,7 @@
 
         dock = {
           autohide = true;
+          tilesize = 48;
           mru-spaces = false;
           show-recents = false;
           wvous-tl-corner = 2;
