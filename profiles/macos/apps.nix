@@ -2,7 +2,12 @@
   darwin = {
     homebrew = {
       enable = true;
-      onActivation.cleanup = "uninstall";
+      onActivation = {
+        autoUpdate = true;
+        cleanup = "uninstall";
+        upgrade = true;
+      };
+      greedyCasks = true;
       taps = [
         {
           name = "TheBoredTeam/boring-notch";
