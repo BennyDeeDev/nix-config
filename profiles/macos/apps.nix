@@ -14,10 +14,7 @@
           trusted = true;
         }
       ];
-      casks = [
-        "boring-notch"
-        "stats"
-      ];
+      casks = [ "boring-notch" ];
     };
   };
 
@@ -28,6 +25,7 @@
         appcleaner
         caffeine
         podman
+        stats
         the-unarchiver
       ];
     };
