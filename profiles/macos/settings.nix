@@ -7,6 +7,7 @@
           AppleIconAppearanceTheme = "RegularAutomatic";
           AppleInterfaceStyleSwitchesAutomatically = true;
           ApplePressAndHoldEnabled = false;
+          AppleSpacesSwitchOnActivate = true;
           AppleShowAllExtensions = true;
           InitialKeyRepeat = 15;
           KeyRepeat = 2;
