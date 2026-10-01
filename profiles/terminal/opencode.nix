@@ -30,8 +30,11 @@
       };
     };
 
+    home.sessionVariables = {
+      OPENCODE_ENABLE_EXA = "1";
+    };
+
     programs.zsh.shellAliases.o = "opencode";
-    programs.zsh.shellAliases.o-exa = "OPENCODE_ENABLE_EXA=1 opencode";
-    programs.zsh.shellAliases.o-parallel = "OPENCODE_ENABLE_PARALLEL=1 opencode";
+    programs.zsh.shellAliases.o-parallel = "env -u OPENCODE_ENABLE_EXA OPENCODE_ENABLE_PARALLEL=1 opencode";
   };
 }
