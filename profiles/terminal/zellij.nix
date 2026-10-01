@@ -2,11 +2,7 @@
   homeManager = {
     programs.zsh.siteFunctions = {
       z = ''
-        zellij attach -c "$(basename "$PWD")" --force-run-commands
-      '';
-
-      zdev = ''
-        zellij --layout dev attach -c "$(basename "$PWD")-dev" --force-run-commands
+        zellij --layout dev attach -c "$(basename "$PWD")" --force-run-commands
       '';
     };
 
@@ -14,6 +10,7 @@
       enable = true;
 
       settings = {
+        default_mode = "locked";
         theme_dark = "catppuccin-mocha";
         theme_light = "catppuccin-latte";
         show_startup_tips = false;
@@ -51,14 +48,18 @@
             }
           }
 
-          tab {
+          tab name="code" focus=true {
             pane split_direction="vertical" {
-              pane size="40%" command="opencode" name="Opencode"
+              pane size="30%" command="opencode" name="Opencode"
 
-              pane size="60%" command="hx" name="Helix" focus=true {
+              pane size="70%" command="hx" name="Helix" focus=true {
                 args "."
               }
             }
+          }
+
+          tab name="git" {
+            pane command="lazygit" name="LazyGit"
           }
         }
       '';
