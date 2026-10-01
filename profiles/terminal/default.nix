@@ -6,6 +6,7 @@ let
   opencode = import ./opencode.nix;
   profile = import ./profile.nix;
   ssh = import ./ssh.nix;
+  zellij = import ./zellij.nix;
 in
 {
   homeManager = {
@@ -17,6 +18,7 @@ in
       opencode.homeManager
       profile.homeManager
       ssh.homeManager
+      zellij.homeManager
     ];
   };
 }
