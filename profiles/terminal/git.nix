@@ -48,6 +48,10 @@
         programs.lazygit = {
           enable = true;
           enableZshIntegration = true;
+
+          settings = {
+            disableStartupPopups = true;
+          };
         };
 
         programs.zsh.shellAliases = {
