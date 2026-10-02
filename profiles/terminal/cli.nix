@@ -96,6 +96,13 @@
         [
           yq-go
           xq
+          rumdl
+          prettier
+          ruff
+          taplo
+          yamlfmt
+          shellcheck
+          shfmt
           tree
           tldr
           curl

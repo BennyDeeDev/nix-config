@@ -1,7 +1,8 @@
+{ helixFlake }:
 let
   cli = import ./cli.nix;
   git = import ./git.nix;
-  helix = import ./helix.nix;
+  helix = import ./helix.nix { inherit helixFlake; };
   nixTools = import ./nix-tools.nix;
   opencode = import ./opencode.nix;
   profile = import ./profile.nix;

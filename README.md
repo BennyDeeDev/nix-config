@@ -185,9 +185,10 @@ exceptions are `flake.nix`, which defines the flake entrypoint,
 
 ### Module Bindings
 
-Name local bindings for reusable modules with the `Module` suffix. For example,
-the module imported from `modules/apps.nix` is bound as `appsModule`, and the
-module imported from `modules/sops.nix` is bound as `sopsModule`.
+Name local bindings for reusable modules from `modules/` with the `Module`
+suffix. For example, the module imported from `modules/nas.nix` is bound as
+`nasModule`. Profile feature modules use the feature name as their binding,
+such as `helix` for `profiles/terminal/helix.nix`.
 
 Home Manager uses two bindings because it has two composition layers:
 

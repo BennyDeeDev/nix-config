@@ -1,22 +1,124 @@
+{ helixFlake }:
 {
-  homeManager.programs.helix = {
-    enable = true;
+  homeManager =
+    { pkgs, ... }:
+    {
+      programs.helix = {
+        enable = true;
+        package = helixFlake.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
-    settings.theme = "catppuccin_mocha";
+        settings.theme = {
+          dark = "catppuccin_mocha";
+          light = "catppuccin_latte";
+        };
 
-    languages.language = [
-      {
-        # https://github.com/helix-editor/helix/issues/10803
-        name = "nix";
-        formatter.command = "nixfmt";
-        auto-format = true;
-      }
-    ];
+        languages.language = [
+          {
+            name = "nix";
+            formatter.command = "nixfmt";
+            auto-format = true;
+          }
+          {
+            name = "markdown";
+            formatter = {
+              command = "rumdl";
+              args = [
+                "fmt"
+                "--silent"
+                "-"
+              ];
+            };
+            auto-format = true;
+          }
+          {
+            name = "bash";
+            formatter = {
+              command = "shfmt";
+              args = [
+                "--filename"
+                "%{buffer_name}"
+              ];
+            };
+            auto-format = true;
+          }
+          {
+            name = "javascript";
+            formatter = {
+              command = "prettier";
+              args = [
+                "--stdin-filepath"
+                "%{buffer_name}"
+              ];
+            };
+            auto-format = true;
+          }
+          {
+            name = "jsx";
+            formatter = {
+              command = "prettier";
+              args = [
+                "--stdin-filepath"
+                "%{buffer_name}"
+              ];
+            };
+            auto-format = true;
+          }
+          {
+            name = "typescript";
+            formatter = {
+              command = "prettier";
+              args = [
+                "--stdin-filepath"
+                "%{buffer_name}"
+              ];
+            };
+            auto-format = true;
+          }
+          {
+            name = "tsx";
+            formatter = {
+              command = "prettier";
+              args = [
+                "--stdin-filepath"
+                "%{buffer_name}"
+              ];
+            };
+            auto-format = true;
+          }
+          {
+            name = "python";
+            formatter = {
+              command = "ruff";
+              args = [
+                "format"
+                "--stdin-filename"
+                "%{buffer_name}"
+                "-"
+              ];
+            };
+            auto-format = true;
+          }
+          {
+            name = "toml";
+            formatter = {
+              command = "taplo";
+              args = [
+                "fmt"
+                "-"
+              ];
+            };
+            auto-format = true;
+          }
+          {
+            name = "yaml";
+            formatter = {
+              command = "yamlfmt";
+              args = [ "-" ];
+            };
+            auto-format = true;
+          }
+        ];
 
-    # Use adaptive themes when the nixpkgs Helix version supports them:
-    # settings.theme = {
-    #   light = "catppuccin_latte";
-    #   dark = "catppuccin_mocha";
-    # };
-  };
+      };
+    };
 }
