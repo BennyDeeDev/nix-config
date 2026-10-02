@@ -117,6 +117,14 @@
             };
             auto-format = true;
           }
+          {
+            name = "github-action";
+            formatter = {
+              command = "yamlfmt";
+              args = [ "-" ];
+            };
+            auto-format = true;
+          }
         ];
 
       };
