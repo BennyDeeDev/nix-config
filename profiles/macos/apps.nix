@@ -25,6 +25,7 @@
         appcleaner
         caffeine
         podman
+        stats
         the-unarchiver
       ];
     };

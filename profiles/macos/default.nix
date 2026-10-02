@@ -8,7 +8,6 @@ let
   nixModule = import ../../modules/nix.nix;
   profile = import ./profile.nix;
   settings = import ./settings.nix;
-  stats = import ./stats.nix;
   users = import ./users.nix;
 in
 {
@@ -16,7 +15,6 @@ in
     imports = [
       apps.homeManager
       homeManagerModule.homeManager
-      stats.homeManager
     ];
   };
 
