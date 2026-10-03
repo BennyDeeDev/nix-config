@@ -10,6 +10,12 @@
       url = "github:helix-editor/helix/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Remove this input once the nixpkgs Lazygit package supports diff renderer colorScheme.
+    lazygitFlake = {
+      url = "github:jesseduffield/lazygit";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
+    };
     plasma-manager = {
       url = "github:nix-community/plasma-manager";
       inputs.nixpkgs.follows = "nixpkgs";

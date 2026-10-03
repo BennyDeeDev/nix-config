@@ -1,6 +1,7 @@
 {
   home-manager,
   helixFlake,
+  lazygitFlake,
   jovian,
   lanzaboote,
   nix-flatpak,
@@ -18,7 +19,7 @@ let
   kde = import ./kde { inherit plasma-manager; };
   macos = import ./macos { inherit home-manager; };
   pi5 = import ./pi5;
-  terminal = import ./terminal { inherit helixFlake; };
+  terminal = import ./terminal { inherit helixFlake lazygitFlake; };
 in
 {
   inherit

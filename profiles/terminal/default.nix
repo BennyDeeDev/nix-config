@@ -1,7 +1,10 @@
-{ helixFlake }:
+{
+  helixFlake,
+  lazygitFlake,
+}:
 let
   cli = import ./cli.nix;
-  git = import ./git.nix;
+  git = import ./git.nix { inherit lazygitFlake; };
   helix = import ./helix.nix { inherit helixFlake; };
   nixTools = import ./nix-tools.nix;
   opencode = import ./opencode.nix;

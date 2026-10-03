@@ -1,6 +1,12 @@
+{ lazygitFlake }:
 {
   homeManager =
-    { config, lib, ... }:
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
     let
       personalIdentity = {
         name = "BennyDeeDev";
@@ -29,6 +35,8 @@
       };
 
       config = {
+        home.packages = [ pkgs.delta ];
+
         programs.git = {
           enable = true;
           settings = {
@@ -48,9 +56,15 @@
         programs.lazygit = {
           enable = true;
           enableZshIntegration = true;
+          package = lazygitFlake.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
           settings = {
             disableStartupPopups = true;
+            git.diffRenderers = [
+              {
+                command = "delta --paging=never --line-numbers --syntax-theme=ansi --{{colorScheme}}";
+              }
+            ];
           };
         };
 
