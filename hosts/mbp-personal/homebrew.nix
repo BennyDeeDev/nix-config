@@ -13,6 +13,7 @@
         "raspberry-pi-imager"
         "teamviewer"
         "vlc"
+        "steam"
       ];
     };
   };
