@@ -15,6 +15,7 @@
         theme_light = "catppuccin-latte";
         show_startup_tips = false;
         show_release_notes = false;
+        support_kitty_keyboard_protocol = false;
       };
 
       extraConfig = ''
