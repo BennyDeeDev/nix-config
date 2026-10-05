@@ -50,7 +50,7 @@
 
           tab name="code" focus=true {
             pane split_direction="vertical" {
-              pane size="30%" command="opencode" name="Opencode"
+              pane size="30%" name="Shell"
 
               pane size="70%" command="hx" name="Helix" focus=true {
                 args "."
@@ -60,6 +60,10 @@
 
           tab name="git" {
             pane command="lazygit" name="LazyGit"
+          }
+
+          tab name="ai" {
+            pane command="opencode" name="Opencode"
           }
         }
       '';

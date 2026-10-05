@@ -112,7 +112,7 @@
           unrar
           sqlite
           sshpass
-			    du-dust
+          du-dust
         ]
       );
     };
