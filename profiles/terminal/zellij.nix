@@ -15,6 +15,7 @@
         theme_light = "catppuccin-latte";
         show_startup_tips = false;
         show_release_notes = false;
+        # Avoid Ghostty's Cmd+C being interpreted as a literal "c" by Zellij.
         support_kitty_keyboard_protocol = false;
       };
 
@@ -64,7 +65,11 @@
           }
 
           tab name="ai" {
-            pane command="opencode" name="Opencode"
+            pane split_direction="vertical" {
+              pane size="30%" name="Shell"
+
+              pane size="70%" command="opencode" name="Opencode" focus=true
+            }
           }
         }
       '';
