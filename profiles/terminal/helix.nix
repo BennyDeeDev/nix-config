@@ -13,8 +13,10 @@
             light = "catppuccin_latte";
           };
 
-          gutters.line-numbers.min-width = 60;
-          scrolloff = 20;
+          editor = {
+            gutters.line-numbers.min-width = 60;
+            scrolloff = 20;
+          };
         };
 
         languages.language = [
