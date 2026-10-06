@@ -7,9 +7,14 @@
         enable = true;
         package = helixFlake.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
-        settings.theme = {
-          dark = "catppuccin_mocha";
-          light = "catppuccin_latte";
+        settings = {
+          theme = {
+            dark = "catppuccin_mocha";
+            light = "catppuccin_latte";
+          };
+
+          gutters.line-numbers.min-width = 60;
+          scrolloff = 20;
         };
 
         languages.language = [

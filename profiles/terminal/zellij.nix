@@ -56,25 +56,21 @@
           }
 
           tab name="code" focus=true {
-            pane split_direction="vertical" {
-              pane size="30%" name="Shell"
-
-              pane size="70%" command="hx" name="Helix" focus=true {
-                args "."
-              }
+            pane command="hx" name="Helix" focus=true {
+              args "."
             }
+          }
+
+          tab name="shell" {
+            pane name="Shell"
+          }
+
+          tab name="ai" {
+            pane command="opencode" name="Opencode" focus=true
           }
 
           tab name="git" {
             pane command="lazygit" name="LazyGit"
-          }
-
-          tab name="ai" {
-            pane split_direction="vertical" {
-              pane size="30%" name="Shell"
-
-              pane size="70%" command="opencode" name="Opencode" focus=true
-            }
           }
         }
       '';
