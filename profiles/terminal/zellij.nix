@@ -55,18 +55,18 @@
             }
           }
 
-          tab name="code" focus=true {
-            pane command="hx" name="Helix" focus=true {
-              args "."
-            }
-          }
-
           tab name="shell" {
             pane name="Shell"
           }
 
+          tab name="code" {
+            pane command="hx" name="Helix" {
+              args "."
+            }
+          }
+
           tab name="ai" {
-            pane command="opencode" name="Opencode" focus=true
+            pane command="opencode" name="Opencode"
           }
 
           tab name="git" {
