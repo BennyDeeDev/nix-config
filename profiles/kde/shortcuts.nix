@@ -100,21 +100,17 @@
 
     "services/org.kde.krunner.desktop" = {
       RunClipboard = [ ];
-      _launch = [ ];
+      _launch = "Alt+Space";
     };
 
     "services/org.kde.plasma-systemmonitor.desktop"._launch = [ ];
     "services/org.kde.plasma.emojier.desktop"._launch = [ ];
 
     "services/org.kde.spectacle.desktop" = {
-      ActiveWindowScreenShot = [ ];
-      FullScreenScreenShot = [ ];
       RecordRegion = [ ];
       RecordScreen = [ ];
       RecordWindow = [ ];
-      RectangularRegionScreenShot = [ ];
-      WindowUnderCursorScreenShot = [ ];
-      _launch = [ ];
+      _launch = "Print";
     };
 
     "services/systemsettings.desktop"._launch = [ ];
