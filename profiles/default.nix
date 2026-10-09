@@ -2,6 +2,7 @@
   home-manager,
   helixFlake,
   lazygitFlake,
+  cosmic-manager,
   jovian,
   lanzaboote,
   nix-flatpak,
@@ -13,7 +14,7 @@
 
 let
   apps = import ./apps;
-  cosmic = import ./cosmic;
+  cosmic = import ./cosmic { inherit cosmic-manager; };
   gaming = import ./gaming { inherit jovian nix-flatpak self; };
   nixos = import ./nixos { inherit sops-nix; };
   nixosDesktop = import ./nixos-desktop { inherit home-manager lanzaboote; };

@@ -5,6 +5,11 @@
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    cosmic-manager = {
+      url = "github:HeitorAugustoLN/cosmic-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
     # Remove this input and use the nixpkgs Helix package once mode 2031 support is in nixpkgs.
     helixFlake = {
       url = "github:helix-editor/helix/master";

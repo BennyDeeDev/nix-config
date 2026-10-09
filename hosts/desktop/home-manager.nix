@@ -22,6 +22,7 @@ in
           imports = [
             profiles.apps.homeManager
             profiles.nixosDesktop.homeManager
+            profiles.cosmic.homeManager
             nasModule.homeManager
             profiles.terminal.homeManager
             sopsModule.homeManager
