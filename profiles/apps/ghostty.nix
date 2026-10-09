@@ -29,7 +29,7 @@
           if isLinux then
             {
               "font-size" = 14;
-              "gtk-titlebar-style" = "tabs";
+              "window-show-tab-bar" = "never";
             }
           else
             {
