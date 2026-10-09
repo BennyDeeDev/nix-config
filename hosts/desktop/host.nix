@@ -8,6 +8,7 @@
       system.stateVersion = "25.11";
 
       jovian.steam.desktopSession = lib.mkForce "cosmic";
+      services.displayManager.cosmic-greeter.enable = lib.mkForce false;
 
       boot = {
         extraModulePackages = [ config.boot.kernelPackages.r8125 ];
