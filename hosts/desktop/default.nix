@@ -30,7 +30,7 @@ in
       profiles.nixos.nixos
       profiles.nixosDesktop.nixos
       nasModule.nixos
-      profiles.kde.nixos
+      profiles.cosmic.nixos
       profiles.gaming.nixos
       windows.nixos
       disko.nixosModules.disko

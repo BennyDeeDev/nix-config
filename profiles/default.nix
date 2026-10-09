@@ -13,6 +13,7 @@
 
 let
   apps = import ./apps;
+  cosmic = import ./cosmic;
   gaming = import ./gaming { inherit jovian nix-flatpak self; };
   nixos = import ./nixos { inherit sops-nix; };
   nixosDesktop = import ./nixos-desktop { inherit home-manager lanzaboote; };
@@ -24,6 +25,7 @@ in
 {
   inherit
     apps
+    cosmic
     gaming
     nixos
     nixosDesktop

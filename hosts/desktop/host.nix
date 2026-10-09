@@ -1,11 +1,13 @@
 {
   nixos =
-    { config, ... }:
+    { config, lib, ... }:
     {
       nixpkgs.hostPlatform = "x86_64-linux";
       networking.hostName = "nixos";
       networking.interfaces.enp14s0.wakeOnLan.enable = true;
       system.stateVersion = "25.11";
+
+      jovian.steam.desktopSession = lib.mkForce "cosmic";
 
       boot = {
         extraModulePackages = [ config.boot.kernelPackages.r8125 ];

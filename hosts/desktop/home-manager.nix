@@ -23,7 +23,6 @@ in
             profiles.apps.homeManager
             profiles.nixosDesktop.homeManager
             nasModule.homeManager
-            profiles.kde.homeManager
             profiles.terminal.homeManager
             sopsModule.homeManager
             profiles.gaming.homeManager
@@ -33,7 +32,6 @@ in
 
           sops.defaultSopsFile = ../../secrets/desktop.yaml;
           my.sops.yubikeyIdentity = "AGE-PLUGIN-YUBIKEY-17Z2J5Q5Z709P64S7VFQZT";
-          my.kde.kickoffIcon = "nix-snowflake";
           my.nas.shares = [
             "Ludusavi-Desktop"
           ];
