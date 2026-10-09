@@ -94,8 +94,8 @@
       "show dashboard" = [ ];
     };
 
-    "services/com.mitchellh.ghostty.desktop"._launch = [ ];
-    "services/org.kde.dolphin.desktop"._launch = [ ];
+    "services/com.mitchellh.ghostty.desktop"._launch = "Meta+Ctrl+Alt+1";
+    "services/org.kde.dolphin.desktop"._launch = "Meta+Ctrl+Alt+2";
     "services/org.kde.konsole.desktop"._launch = [ ];
 
     "services/org.kde.krunner.desktop" = {
@@ -103,7 +103,7 @@
       _launch = "Alt+Space";
     };
 
-    "services/org.kde.plasma-systemmonitor.desktop"._launch = [ ];
+    "services/org.kde.plasma-systemmonitor.desktop"._launch = "Meta+Ctrl+Alt+5";
     "services/org.kde.plasma.emojier.desktop"._launch = [ ];
 
     "services/org.kde.spectacle.desktop" = {
@@ -113,6 +113,7 @@
       _launch = "Print";
     };
 
-    "services/systemsettings.desktop"._launch = [ ];
+    "services/org.keepassxc.KeePassXC.desktop"._launch = "Meta+Ctrl+Alt+3";
+    "services/systemsettings.desktop"._launch = "Meta+Ctrl+Alt+4";
   };
 }
