@@ -3,7 +3,6 @@ let
     pkgs: with pkgs; [
       wayland-utils
       wl-clipboard
-      haruna
     ];
   nixosPackages = pkgs: extraPackages pkgs ++ [ pkgs.kdePackages.filelight ];
 in
