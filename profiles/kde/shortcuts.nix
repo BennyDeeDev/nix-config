@@ -1,32 +1,106 @@
 {
-  homeManager = {
-    programs.plasma.shortcuts = {
-      kwin = {
-        "Switch to Desktop 1" = "Meta+F1";
-        "Switch to Desktop 2" = "Meta+F2";
-        "Switch to Desktop 3" = "Meta+F3";
-        "Switch to Desktop 4" = "Meta+F4";
-        "Switch to Desktop 5" = "Meta+F5";
-        "Switch to Desktop 6" = "Meta+F6";
-        "Switch to Desktop 7" = "Meta+F7";
-        "Switch to Desktop 8" = "Meta+F8";
-        "Switch to Desktop 9" = "Meta+F9";
-        "Switch to Desktop 10" = "Meta+F10";
-
-        "Window to Desktop 1" = "Meta+Shift+F1";
-        "Window to Desktop 2" = "Meta+Shift+F2";
-        "Window to Desktop 3" = "Meta+Shift+F3";
-        "Window to Desktop 4" = "Meta+Shift+F4";
-        "Window to Desktop 5" = "Meta+Shift+F5";
-        "Window to Desktop 6" = "Meta+Shift+F6";
-        "Window to Desktop 7" = "Meta+Shift+F7";
-        "Window to Desktop 8" = "Meta+Shift+F8";
-        "Window to Desktop 9" = "Meta+Shift+F9";
-        "Window to Desktop 10" = "Meta+Shift+F10";
-
-        "MoveMouseToFocus" = [ ];
-        "MoveMouseToCenter" = [ ];
-      };
+  homeManager.programs.plasma.shortcuts = {
+    "KDE Keyboard Layout Switcher" = {
+      "Switch to Last-Used Keyboard Layout" = [ ];
+      "Switch to Next Keyboard Layout" = [ ];
     };
+
+    kaccess."Toggle Screen Reader On and Off" = [ ];
+
+    kmix.mic_mute = "Microphone Mute";
+
+    ksmserver = {
+      "Lock Session" = "Screensaver";
+      "Log Out" = [ ];
+    };
+
+    kwin = {
+      "Activate Window Demanding Attention" = [ ];
+      "Edit Tiles" = [ ];
+      Expose = [ ];
+      ExposeAll = "Launch (C)";
+      ExposeClass = [ ];
+      "Grid View" = [ ];
+      "Kill Window" = [ ];
+      MoveMouseToCenter = [ ];
+      MoveMouseToFocus = [ ];
+      Overview = [ ];
+      "Show Desktop" = [ ];
+      "Switch One Desktop Down" = [ ];
+      "Switch One Desktop Up" = [ ];
+      "Switch One Desktop to the Left" = [ ];
+      "Switch One Desktop to the Right" = [ ];
+      "Switch Window Down" = [ ];
+      "Switch Window Left" = [ ];
+      "Switch Window Right" = [ ];
+      "Switch Window Up" = [ ];
+      "Switch to Desktop 1" = [ ];
+      "Switch to Desktop 2" = [ ];
+      "Switch to Desktop 3" = [ ];
+      "Switch to Desktop 4" = [ ];
+      "Walk Through Windows" = "Alt+Tab";
+      "Walk Through Windows (Reverse)" = "Alt+Shift+Tab";
+      "Walk Through Windows of Current Application" = [ ];
+      "Walk Through Windows of Current Application (Reverse)" = [ ];
+      "Window Close" = [ ];
+      "Window Maximize" = [ ];
+      "Window Minimize" = [ ];
+      "Window One Desktop Down" = [ ];
+      "Window One Desktop Up" = [ ];
+      "Window One Desktop to the Left" = [ ];
+      "Window One Desktop to the Right" = [ ];
+      "Window Operations Menu" = [ ];
+      "Window Quick Tile Bottom" = [ ];
+      "Window Quick Tile Left" = [ ];
+      "Window Quick Tile Right" = [ ];
+      "Window Quick Tile Top" = [ ];
+      "Window Restore" = [ ];
+      "Window to Next Screen" = [ ];
+      "Window to Previous Screen" = [ ];
+      disableInputCapture = [ ];
+    };
+
+    org_kde_powerdevil.powerProfile = "Battery";
+
+    plasmashell = {
+      "activate application launcher" = [ ];
+      "activate task manager entry 1" = [ ];
+      "activate task manager entry 2" = [ ];
+      "activate task manager entry 3" = [ ];
+      "activate task manager entry 4" = [ ];
+      "activate task manager entry 5" = [ ];
+      "activate task manager entry 6" = [ ];
+      "activate task manager entry 7" = [ ];
+      "activate task manager entry 8" = [ ];
+      "activate task manager entry 9" = [ ];
+      "cycle-panels" = [ ];
+      "manage activities" = [ ];
+      "show dashboard" = [ ];
+    };
+
+    "services/com.mitchellh.ghostty.desktop"._launch = [ ];
+    "services/org.kde.dolphin.desktop"._launch = [ ];
+    "services/org.kde.konsole.desktop"._launch = [ ];
+
+    "services/org.kde.krunner.desktop" = {
+      RunClipboard = [ ];
+      _launch = [ ];
+    };
+
+    "services/org.kde.plasma-systemmonitor.desktop"._launch = [ ];
+    "services/org.kde.plasma.emojier.desktop"._launch = [ ];
+
+    "services/org.kde.spectacle.desktop" = {
+      ActiveWindowScreenShot = [ ];
+      FullScreenScreenShot = [ ];
+      RecordRegion = [ ];
+      RecordScreen = [ ];
+      RecordWindow = [ ];
+      RectangularRegionScreenShot = [ ];
+      WindowUnderCursorScreenShot = [ ];
+      _launch = [ ];
+    };
+
+    "services/systemsettings.desktop"._launch = [ ];
   };
 }
