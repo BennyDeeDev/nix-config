@@ -7,6 +7,23 @@
     {
       programs.ghostty.settings = lib.mkIf isLinux {
         keybind = [
+          "alt+digit_1=unbind"
+          "alt+1=unbind"
+          "alt+digit_2=unbind"
+          "alt+2=unbind"
+          "alt+digit_3=unbind"
+          "alt+3=unbind"
+          "alt+digit_4=unbind"
+          "alt+4=unbind"
+          "alt+digit_5=unbind"
+          "alt+5=unbind"
+          "alt+digit_6=unbind"
+          "alt+6=unbind"
+          "alt+digit_7=unbind"
+          "alt+7=unbind"
+          "alt+digit_8=unbind"
+          "alt+8=unbind"
+          "alt+9=unbind"
           "ctrl+c=copy_to_clipboard"
           "ctrl+v=paste_from_clipboard"
           "ctrl+t=new_tab"
