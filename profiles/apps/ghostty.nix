@@ -17,8 +17,6 @@
           "font-style" = "Regular";
           "shell-integration" = "zsh";
           "shell-integration-features" = "ssh-env,ssh-terminfo";
-          "window-padding-x" = 8;
-          "window-padding-y" = 8;
           "quit-after-last-window-closed" = true;
           "confirm-close-surface" = false;
           "adjust-cursor-thickness" = 2;

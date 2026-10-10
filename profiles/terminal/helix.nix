@@ -14,8 +14,7 @@
           };
 
           editor = {
-            gutters.line-numbers.min-width = 60;
-            scrolloff = 20;
+            scrolloff = 8;
           };
         };
 

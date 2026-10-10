@@ -67,7 +67,10 @@ in
           session.sessionRestore.restoreOpenApplicationsOnLogin = "onLastLogout";
 
           kwin = {
-            effects.desktopSwitching.animation = "off";
+            effects = {
+              desktopSwitching.animation = "off";
+              hideCursor.hideOnTyping = false;
+            };
             virtualDesktops = {
               number = 10;
               rows = 1;

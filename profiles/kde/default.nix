@@ -6,6 +6,7 @@ let
   profile = import ./profile.nix;
   regional = import ./regional.nix;
   shortcuts = import ./shortcuts.nix;
+  tiling = import ./tiling.nix;
 in
 {
   nixos = {
@@ -20,6 +21,7 @@ in
       profile.homeManager
       regional.homeManager
       shortcuts.homeManager
+      tiling.homeManager
     ];
   };
 }
