@@ -20,24 +20,20 @@
       };
 
       extraConfig = ''
-        keybinds {
-            unbind "Alt f"
+         keybinds {
+             unbind "Alt f"
 
-            locked {
-                bind "Alt h" { MoveFocusOrTab "Left"; }
-                bind "Alt l" { MoveFocusOrTab "Right"; }
-                bind "Alt j" { MoveFocus "Down"; }
-                bind "Alt k" { MoveFocus "Up"; }
-                bind "Alt 1" { GoToTab 1; }
-                bind "Alt 2" { GoToTab 2; }
-                bind "Alt 3" { GoToTab 3; }
-                bind "Alt 4" { GoToTab 4; }
-                bind "Alt 5" { GoToTab 5; }
-            }
-
-            shared {
-                bind "Alt t" { ToggleFloatingPanes; }
-            }
+             locked {
+                 bind "Alt h" { MoveFocusOrTab "Left"; }
+                 bind "Alt l" { MoveFocusOrTab "Right"; }
+                 bind "Alt j" { MoveFocus "Down"; }
+                 bind "Alt k" { MoveFocus "Up"; }
+                 bind "Alt 1" { GoToTab 1; }
+                 bind "Alt 2" { GoToTab 2; }
+                 bind "Alt 3" { GoToTab 3; }
+                 bind "Alt 4" { GoToTab 4; }
+                 bind "Alt 5" { GoToTab 5; }
+             }
         }
       '';
 
