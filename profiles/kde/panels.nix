@@ -84,15 +84,15 @@ in
               iconTasks = {
                 iconsOnly = true;
                 launchers = [
+                  "preferred://filemanager"
                   "applications:brave-browser.desktop"
                   "applications:com.mitchellh.ghostty.desktop"
                   "applications:code.desktop"
                   "applications:steam.desktop"
                   "applications:spotify.desktop"
                   "applications:org.keepassxc.KeePassXC.desktop"
-                  "preferred://filemanager"
-                  "applications:org.kde.plasma-systemmonitor.desktop"
                   "applications:systemsettings.desktop"
+                  "applications:org.kde.plasma-systemmonitor.desktop"
                 ];
                 behavior = {
                   minimizeActiveTaskOnClick = false;
