@@ -21,8 +21,6 @@
 
       extraConfig = ''
          keybinds {
-             unbind "Alt f"
-
              locked {
                  bind "Alt h" { MoveFocusOrTab "Left"; }
                  bind "Alt l" { MoveFocusOrTab "Right"; }
