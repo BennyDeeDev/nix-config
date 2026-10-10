@@ -16,7 +16,7 @@
 
     kwin = {
       "Activate Window Demanding Attention" = [ ];
-      "Edit Tiles" = "Ctrl+Alt+Meta+T";
+      "Edit Tiles" = "Ctrl+Alt+Meta+Shift+T";
       Expose = [ ];
       ExposeAll = "Launch (C)";
       ExposeClass = [ ];
@@ -100,8 +100,8 @@
       "show-on-mouse-pos" = [ ];
     };
 
-    "services/com.mitchellh.ghostty.desktop"._launch = "Meta+Ctrl+Alt+1";
-    "services/org.kde.dolphin.desktop"._launch = "Meta+Ctrl+Alt+2";
+    "services/com.mitchellh.ghostty.desktop"._launch = "Meta+Ctrl+Alt+T";
+    "services/org.kde.dolphin.desktop"._launch = "Meta+Ctrl+Alt+F";
     "services/org.kde.konsole.desktop"._launch = [ ];
 
     "services/org.kde.krunner.desktop" = {
@@ -110,7 +110,7 @@
     };
 
     "services/org.kde.kscreen.desktop".ShowOSD = "Display";
-    "services/org.kde.plasma-systemmonitor.desktop"._launch = "Meta+Ctrl+Alt+5";
+    "services/org.kde.plasma-systemmonitor.desktop"._launch = "Meta+Ctrl+Alt+M";
     "services/org.kde.plasma.emojier.desktop"._launch = [ ];
 
     "services/org.kde.spectacle.desktop" = {
@@ -120,7 +120,7 @@
       _launch = "Print";
     };
 
-    "services/org.keepassxc.KeePassXC.desktop"._launch = "Meta+Ctrl+Alt+3";
-    "services/systemsettings.desktop"._launch = "Meta+Ctrl+Alt+4";
+    "services/org.keepassxc.KeePassXC.desktop"._launch = "Meta+Ctrl+Alt+P";
+    "services/systemsettings.desktop"._launch = "Meta+Ctrl+Alt+S";
   };
 }
