@@ -17,6 +17,13 @@
       end
     end
 
+    local function focus(direction)
+      local window = hs.window.focusedWindow()
+      if window then
+        window[direction](window)
+      end
+    end
+
     local function launchOrFocus(app)
       return function()
         hs.application.launchOrFocus(app)
@@ -42,10 +49,10 @@
       ]])
     end
 
-    bind("h", hs.window.filter.focusWest)
-    bind("j", hs.window.filter.focusSouth)
-    bind("k", hs.window.filter.focusNorth)
-    bind("l", hs.window.filter.focusEast)
+    bind("h", function() focus("focusWindowWest") end)
+    bind("j", function() focus("focusWindowSouth") end)
+    bind("k", function() focus("focusWindowNorth") end)
+    bind("l", function() focus("focusWindowEast") end)
 
     bind("t", function()
       moveFocusedWindow(hs.geometry.rect(0.1, 0, 0.8, 1))
