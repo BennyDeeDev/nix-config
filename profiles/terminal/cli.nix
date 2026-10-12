@@ -92,6 +92,12 @@
         ripgrep.enable = true;
       };
 
+      xdg.configFile."rumdl/rumdl.toml".text = ''
+        [MD013]
+        line-length = 80
+        reflow = true
+      '';
+
       home.packages = (
         with pkgs;
         [
