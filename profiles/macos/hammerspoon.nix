@@ -47,11 +47,11 @@
     bind("k", hs.window.filter.focusNorth)
     bind("l", hs.window.filter.focusEast)
 
-    hs.hotkey.bind({"ctrl", "alt", "cmd", "shift"}, "t", function()
+    bind("t", function()
       moveFocusedWindow(hs.geometry.rect(0.1, 0, 0.8, 1))
     end)
 
-    bind("t", newGhosttyWindow)
+    bind("g", newGhosttyWindow)
     bind("f", newFinderWindow)
     bind("p", launchOrFocus("KeePassXC"))
     bind(",", launchOrFocus("System Settings"))

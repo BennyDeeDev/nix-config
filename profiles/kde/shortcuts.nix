@@ -16,7 +16,7 @@
 
     kwin = {
       "Activate Window Demanding Attention" = [ ];
-      "Edit Tiles" = "Ctrl+Alt+Meta+Shift+T";
+      "Edit Tiles" = "Ctrl+Alt+Meta+T";
       Expose = [ ];
       ExposeAll = "Launch (C)";
       ExposeClass = [ ];
@@ -100,7 +100,7 @@
       "show-on-mouse-pos" = [ ];
     };
 
-    "services/com.mitchellh.ghostty.desktop"._launch = "Meta+Ctrl+Alt+T";
+    "services/com.mitchellh.ghostty.desktop"._launch = "Meta+Ctrl+Alt+G";
     "services/org.kde.dolphin.desktop"._launch = "Meta+Ctrl+Alt+F";
     "services/org.kde.konsole.desktop"._launch = [ ];
 
