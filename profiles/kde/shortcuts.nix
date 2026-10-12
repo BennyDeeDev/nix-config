@@ -16,7 +16,7 @@
 
     kwin = {
       "Activate Window Demanding Attention" = [ ];
-      "Edit Tiles" = "Ctrl+Alt+Meta+T";
+      "Edit Tiles" = "Ctrl+Alt+Meta+G";
       Expose = [ ];
       ExposeAll = "Launch (C)";
       ExposeClass = [ ];
@@ -100,9 +100,9 @@
       "show-on-mouse-pos" = [ ];
     };
 
-    "services/com.mitchellh.ghostty.desktop"._launch = "Meta+Ctrl+Alt+G";
+    "services/com.mitchellh.ghostty.desktop"._launch = [ ];
     "services/org.kde.dolphin.desktop"._launch = "Meta+Ctrl+Alt+F";
-    "services/org.kde.konsole.desktop"._launch = [ ];
+    "services/org.kde.konsole.desktop"._launch = "Meta+Ctrl+Alt+T";
 
     "services/org.kde.krunner.desktop" = {
       RunClipboard = [ ];

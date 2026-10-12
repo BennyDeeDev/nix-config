@@ -39,12 +39,10 @@
       ]])
     end
 
-    local function newGhosttyWindow()
+    local function newTerminalWindow()
       hs.osascript.applescript([[
-        tell application "Ghostty"
-          activate
-          set cfg to new surface configuration
-          new window with configuration cfg
+        tell application "Terminal"
+          do script ""
         end tell
       ]])
     end
@@ -54,11 +52,12 @@
     bind("k", function() focus("focusWindowNorth") end)
     bind("l", function() focus("focusWindowEast") end)
 
-    bind("t", function()
+    bind("t", newTerminalWindow)
+
+    bind("g", function()
       moveFocusedWindow(hs.geometry.rect(0.1, 0, 0.8, 1))
     end)
 
-    bind("g", newGhosttyWindow)
     bind("f", newFinderWindow)
     bind("p", launchOrFocus("KeePassXC"))
     bind(",", launchOrFocus("System Settings"))

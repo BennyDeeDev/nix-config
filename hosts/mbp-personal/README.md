@@ -54,8 +54,8 @@ and application launchers. macOS handles the native tiling and desktop actions.
 | Hyper + R | — | Native Return to Previous Size |
 | Hyper + W | Overview | Mission Control |
 | Hyper + D | Show Desktop | Show Desktop |
-| Hyper + T | Edit Tiles | Center active window at 80% width, full height (Hammerspoon) |
-| Hyper + G | Launch Ghostty | Open a new Ghostty window |
+| Hyper + G | Edit Tiles | Center active window at 80% width, full height (Hammerspoon) |
+| Hyper + T | Launch Konsole | Open a new Terminal.app window |
 | Hyper + F | Launch Dolphin | Open a new Finder window |
 | Hyper + P | Launch KeePassXC | Launch KeePassXC |
 | Hyper + , | Launch System Settings | Launch System Settings |
