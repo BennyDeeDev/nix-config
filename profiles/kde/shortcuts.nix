@@ -110,7 +110,7 @@
     };
 
     "services/org.kde.kscreen.desktop".ShowOSD = "Display";
-    "services/org.kde.plasma-systemmonitor.desktop"._launch = "Meta+Ctrl+Alt+M";
+    "services/org.kde.plasma-systemmonitor.desktop"._launch = "Meta+Ctrl+Alt+S";
     "services/org.kde.plasma.emojier.desktop"._launch = [ ];
 
     "services/org.kde.spectacle.desktop" = {
@@ -121,6 +121,6 @@
     };
 
     "services/org.keepassxc.KeePassXC.desktop"._launch = "Meta+Ctrl+Alt+P";
-    "services/systemsettings.desktop"._launch = "Meta+Ctrl+Alt+S";
+    "services/systemsettings.desktop"._launch = "Meta+Ctrl+Alt+Comma";
   };
 }

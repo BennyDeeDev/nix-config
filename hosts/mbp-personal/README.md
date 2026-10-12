@@ -34,6 +34,37 @@ Terminal.app in **System Settings → Privacy & Security**:
 
 Quit and reopen Terminal.app after changing permissions.
 
+## Hammerspoon
+
+The macOS profile installs Hammerspoon and manages `~/.hammerspoon/init.lua`.
+After rebuilding, open Hammerspoon and grant it **Accessibility** permission in
+**System Settings → Privacy & Security → Accessibility**. Enable **Launch at
+Login** in Hammerspoon's preferences.
+
+The global shortcuts use **Hyper** (`Control + Option + Command`). Hammerspoon
+requires **Accessibility** permission for directional focus, the custom layout,
+and application launchers. macOS handles the native tiling and desktop actions.
+
+| Shortcut | KDE | macOS |
+| --- | --- | --- |
+| Hyper + H/J/K/L | Focus window west/south/north/east | Focus nearest window west/south/north/east (Hammerspoon) |
+| Hyper + Shift + H/J/K/L | Tile left/bottom/top/right | Native tile left/bottom/top/right |
+| Hyper + M | Maximize | Native Fill |
+| Hyper + W | Overview | Mission Control |
+| Hyper + D | Show Desktop | Show Desktop |
+| Hyper + Shift + T | Edit Tiles | Center active window at 80% width, full height (Hammerspoon) |
+| Hyper + T | Launch Ghostty | Launch Ghostty |
+| Hyper + F | Launch Dolphin | Launch Finder |
+| Hyper + P | Launch KeePassXC | Launch KeePassXC |
+| Hyper + , | Launch System Settings | Launch System Settings |
+| Hyper + S | Launch System Monitor | Launch Activity Monitor |
+| Hyper + C | — | Native Center |
+| Hyper + R | — | Native Return to Previous Size |
+
+The tile, Fill, Center, and Restore actions use macOS's native Window menu
+shortcuts. Mission Control and Show Desktop use macOS system shortcuts. Apple's
+Fn + Control shortcuts remain available as well.
+
 If `rsync` hangs or reports `Permission denied` while removing files under
 `~/Applications/Home Manager Apps`, stop the copied app before retrying. A
 failed App Management probe can leave bundle files owned by `root`. Quit the
