@@ -50,20 +50,24 @@ and application launchers. macOS handles the native tiling and desktop actions.
 | Hyper + H/J/K/L | Focus window west/south/north/east | Focus nearest window west/south/north/east (Hammerspoon) |
 | Hyper + Shift + H/J/K/L | Tile left/bottom/top/right | Native tile left/bottom/top/right |
 | Hyper + M | Maximize | Native Fill |
+| Hyper + C | — | Native Center |
+| Hyper + R | — | Native Return to Previous Size |
 | Hyper + W | Overview | Mission Control |
 | Hyper + D | Show Desktop | Show Desktop |
 | Hyper + Shift + T | Edit Tiles | Center active window at 80% width, full height (Hammerspoon) |
-| Hyper + T | Launch Ghostty | Launch Ghostty |
-| Hyper + F | Launch Dolphin | Launch Finder |
+| Hyper + T | Launch Ghostty | Open a new Ghostty window |
+| Hyper + F | Launch Dolphin | Open a new Finder window |
 | Hyper + P | Launch KeePassXC | Launch KeePassXC |
 | Hyper + , | Launch System Settings | Launch System Settings |
 | Hyper + S | Launch System Monitor | Launch Activity Monitor |
 | Hyper + C | — | Native Center |
 | Hyper + R | — | Native Return to Previous Size |
 
-The tile, Fill, Center, and Restore actions use macOS's native Window menu
-shortcuts. Mission Control and Show Desktop use macOS system shortcuts. Apple's
-Fn + Control shortcuts remain available as well.
+The tile, Fill, Center, and Restore actions use macOS's native symbolic hotkeys.
+Mission Control and Show Desktop also use macOS symbolic hotkeys. Apple's Fn +
+Control window shortcuts remain available as well. Hammerspoon requires
+**Accessibility** permission for directional focus, the custom layout, and
+application window creation.
 
 If `rsync` hangs or reports `Permission denied` while removing files under
 `~/Applications/Home Manager Apps`, stop the copied app before retrying. A

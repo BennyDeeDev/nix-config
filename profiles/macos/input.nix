@@ -1,6 +1,3 @@
-let
-  esc = builtins.fromJSON ''"\u001b"'';
-in
 {
   darwin = {
     system.defaults = {
@@ -29,16 +26,6 @@ in
           TextInputGlobalPropertyPerContextInput = false;
         };
 
-        NSGlobalDomain.NSUserKeyEquivalents = {
-          "${esc}Window${esc}Move & Resize${esc}Left" = "@^~$h";
-          "${esc}Window${esc}Move & Resize${esc}Bottom" = "@^~$j";
-          "${esc}Window${esc}Move & Resize${esc}Top" = "@^~$k";
-          "${esc}Window${esc}Move & Resize${esc}Right" = "@^~$l";
-          "${esc}Window${esc}Fill" = "@^~m";
-          "${esc}Window${esc}Center" = "@^~c";
-          "${esc}Window${esc}Move & Resize${esc}Return to Previous Size" = "@^~r";
-        };
-
         "com.apple.symbolichotkeys".AppleSymbolicHotKeys = {
           # Symbolic hotkey IDs map to macOS system actions. `parameters` stores
           # the key code and modifier mask; Control + Option + Command is 1835008.
@@ -63,6 +50,90 @@ in
                 100
                 2
                 1835008
+              ];
+            };
+          };
+          # 237: Fill — Hyper + M.
+          "237" = {
+            enabled = true;
+            value = {
+              type = "standard";
+              parameters = [
+                109
+                46
+                1835008
+              ];
+            };
+          };
+          # 238: Center — Hyper + C.
+          "238" = {
+            enabled = true;
+            value = {
+              type = "standard";
+              parameters = [
+                99
+                8
+                1835008
+              ];
+            };
+          };
+          # 239: Return to Previous Size — Hyper + R.
+          "239" = {
+            enabled = true;
+            value = {
+              type = "standard";
+              parameters = [
+                114
+                15
+                1835008
+              ];
+            };
+          };
+          # 240: Tile Left — Hyper + Shift + H.
+          "240" = {
+            enabled = true;
+            value = {
+              type = "standard";
+              parameters = [
+                104
+                4
+                1966080
+              ];
+            };
+          };
+          # 241: Tile Right — Hyper + Shift + L.
+          "241" = {
+            enabled = true;
+            value = {
+              type = "standard";
+              parameters = [
+                108
+                37
+                1966080
+              ];
+            };
+          };
+          # 242: Tile Top — Hyper + Shift + K.
+          "242" = {
+            enabled = true;
+            value = {
+              type = "standard";
+              parameters = [
+                107
+                40
+                1966080
+              ];
+            };
+          };
+          # 243: Tile Bottom — Hyper + Shift + J.
+          "243" = {
+            enabled = true;
+            value = {
+              type = "standard";
+              parameters = [
+                106
+                38
+                1966080
               ];
             };
           };

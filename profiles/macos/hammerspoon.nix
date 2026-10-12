@@ -23,6 +23,25 @@
       end
     end
 
+    local function newFinderWindow()
+      hs.osascript.applescript([[
+        tell application "Finder"
+          make new Finder window
+          activate
+        end tell
+      ]])
+    end
+
+    local function newGhosttyWindow()
+      hs.osascript.applescript([[
+        tell application "Ghostty"
+          activate
+          set cfg to new surface configuration
+          new window with configuration cfg
+        end tell
+      ]])
+    end
+
     bind("h", hs.window.filter.focusWest)
     bind("j", hs.window.filter.focusSouth)
     bind("k", hs.window.filter.focusNorth)
@@ -32,8 +51,8 @@
       moveFocusedWindow(hs.geometry.rect(0.1, 0, 0.8, 1))
     end)
 
-    bind("t", launchOrFocus("Ghostty"))
-    bind("f", launchOrFocus("Finder"))
+    bind("t", newGhosttyWindow)
+    bind("f", newFinderWindow)
     bind("p", launchOrFocus("KeePassXC"))
     bind(",", launchOrFocus("System Settings"))
     bind("s", launchOrFocus("Activity Monitor"))
