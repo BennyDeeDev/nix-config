@@ -3,7 +3,9 @@
     homebrew = {
       enable = true;
       onActivation = {
-        autoUpdate = true;
+        # Avoid nix-homebrew losing the mas PATH during auto-update re-exec.
+        # https://github.com/zhaofengli/nix-homebrew/issues/131
+        autoUpdate = false;
         cleanup = "uninstall";
         upgrade = true;
       };

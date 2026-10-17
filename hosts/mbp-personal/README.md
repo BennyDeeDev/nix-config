@@ -27,16 +27,10 @@ cd ~/Repos/nix-config
 
 The configured rebuild aliases use this checkout path.
 
-### 3. Install Homebrew
+### 3. Sign in to the App Store
 
-If Homebrew is not installed, run its installer:
-
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-
-Follow the installer's shell setup instructions. Sign in to the App Store
-with the account that owns the configured apps, Xcode and Final Cut Pro.
+Sign in to the App Store with the account that owns the configured apps,
+Xcode and Final Cut Pro.
 
 ### 4. Grant Terminal permissions
 
@@ -50,6 +44,12 @@ Security**, enable these permissions for Terminal.app:
 Quit and reopen Terminal.app after changing permissions.
 
 ### 5. Apply the configuration
+
+The first switch installs Homebrew before installing the configured
+applications.
+An existing standard Homebrew installation is migrated automatically, retaining
+installed packages. The existing `homebrew.onActivation` settings still control
+package updates and cleanup.
 
 The flake tracks nix-darwin's `master` branch. Use the matching bootstrap
 launcher:

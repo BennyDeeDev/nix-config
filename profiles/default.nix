@@ -5,6 +5,7 @@
   jovian,
   lanzaboote,
   nix-flatpak,
+  nix-homebrew,
   plasma-manager,
   sops-nix,
   self,
@@ -17,7 +18,7 @@ let
   nixos = import ./nixos { inherit sops-nix; };
   nixosDesktop = import ./nixos-desktop { inherit home-manager lanzaboote; };
   kde = import ./kde { inherit plasma-manager; };
-  macos = import ./macos { inherit home-manager; };
+  macos = import ./macos { inherit home-manager nix-homebrew; };
   pi5 = import ./pi5;
   terminal = import ./terminal { inherit helixFlake lazygitFlake; };
 in
