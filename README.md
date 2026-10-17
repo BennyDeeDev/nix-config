@@ -1,102 +1,78 @@
-## Nix Config
+# Nix Config
 
-This Nix config is a black hole for wasted time, water, and money: personal costs are probably over 500 EUR because I am lazy and couldn't be bothered with handwriting fancy JSON, while the unsubsidized AI bill is over 9000.
+Personal NixOS, nix-darwin, and Home Manager configurations, with reusable
+profiles for other flakes.
 
-The Dendritic pattern is already an overengineered piece of software for people who don't know how to import things, but apparently it was not extravagant enough for me. I looked at it and thought, "I can waste even more time than this," so I created my own version.
-
-My wife keeps wondering where all the money goes and why I am not walking the dog, because I am eternally tied to maintaining this Nix config: it has to be "pure". Have you heard of Nix Impermanence?
-
-Right as I am writing this, I am dropping into the next Nix rabbit hole. It is in my blood to fight the everlasting impurity of applications, so we write yet another wrapper in Nix.
-
-![vegeta-over-9000-gif](https://media1.tenor.com/m/VXpt02jFlIIAAAAd/it%27s-over-9000-it%27s.gif)
-
-## Boring Documentation for Lunatics and Robots
-
-NixOS, nix-darwin, and Home Manager configuration for the machines below.
-
-| Output                         | Role                              |
-| ------------------------------ | --------------------------------- |
-| `desktop`                      | NixOS workstation and gaming host |
-| `mbp-personal`                 | Personal macOS workstation        |
-| `pi5-server`                   | Home automation server            |
-| `pi5-kiosk`                    | Planned kiosk                     |
-| `homeConfigurations.deck`      | SteamOS Home Manager profile      |
-| `images.pi5-bootstrap`         | Raspberry Pi 5 bootstrap image    |
-
-## Architecture
-
-The repository uses explicit, scope-first feature facets.
+## Repository layout
 
 ```text
-hosts/       Machine identity, hardware, disks, and unique policy
-images/      Image outputs
-modules/     Reusable modules selected explicitly
-profiles/    Explicit NixOS, NixOS desktop, KDE, macOS, Pi, and terminal bundles
-secrets/     Encrypted SOPS documents
+hosts/       Machine identity, hardware, disks, users, and host-specific settings
+images/      Bootable image configurations
+modules/     Reusable modules selected by hosts and profiles
+packages/    Package definitions and update script
+profiles/    Reusable configuration bundles
+secrets/     SOPS-encrypted YAML documents
 ```
 
-Profile composition is explicit. `nixos` provides the generic NixOS foundation;
-`nixosDesktop`, `kde`, `macos`, `terminal`, and `pi5` are complete opinionated bundles.
-`profiles/default.nix` is their explicit catalog; the root `flake.nix` exports
-that catalog for other flakes as `.#profiles`. Each host selects whole
-profiles and reusable host modules:
+Hosts select profiles and reusable modules, then add machine-specific settings.
+Shared modules are platform-neutral; NixOS and Darwin policy belongs in the
+respective profiles. `profiles/default.nix` lists the exported profiles.
 
-```text
-profiles/nixos/default.nix
-profiles/nixos-desktop/default.nix
-profiles/kde/default.nix
-profiles/macos/default.nix
-profiles/terminal/default.nix
-profiles/pi5/default.nix
-```
+## Profiles
 
-Feature files return the module-system facets they support:
+The flake exports these bundles through `profiles`. Each supported module
+system has its own facet: `nixos`, `homeManager`, or `darwin`.
+
+| Profile | Facets | Purpose |
+| --- | --- | --- |
+| [`apps`](profiles/apps/) | `homeManager` | Desktop applications, Ghostty, VS Code, and application keybindings |
+| [`gaming`](profiles/gaming/) | `nixos`, `homeManager` | Steam, Flatpak applications, Bottles, LSFG, and save backups |
+| [`nixos`](profiles/nixos/) | `nixos` | Base NixOS settings and secret management |
+| [`nixosDesktop`](profiles/nixos-desktop/) | `nixos`, `homeManager` | Workstation services, boot, hardware integration, and virtualisation |
+| [`kde`](profiles/kde/) | `nixos`, `homeManager` | Plasma desktop, panels, shortcuts, and tiling |
+| [`macos`](profiles/macos/) | `homeManager`, `darwin` | macOS settings, applications, and Hammerspoon |
+| [`pi5`](profiles/pi5/) | `nixos` | Raspberry Pi users, SSH, and filesystems |
+| [`terminal`](profiles/terminal/) | `homeManager` | Shell, CLI tools, editors, Git, and SSH |
+
+Select each profile and facet explicitly. For example, a NixOS workstation
+can combine `nixos`, `nixosDesktop`, `apps`, `kde`, and `terminal`.
+
+## Hosts and images
+
+| Output | Role | Setup |
+| --- | --- | --- |
+| `nixosConfigurations.desktop` | Workstation and gaming host | [Installation and Secure Boot](hosts/desktop/README.md) |
+| `darwinConfigurations.mbp-personal` | Personal macOS workstation | [Bootstrap](hosts/mbp-personal/README.md) |
+| `nixosConfigurations.pi5-server` | Home automation server | [Deployment](hosts/pi5-server/README.md) |
+| `nixosConfigurations.pi5-kiosk` | Planned kiosk | — |
+| `homeConfigurations.deck` | SteamOS Home Manager configuration | [Bootstrap and SteamOS notes](hosts/deck/README.md) |
+| `images.pi5-bootstrap` | Raspberry Pi 5 bootstrap SD image | [Build and flash](hosts/pi5-server/README.md#1-build-the-bootstrap-sd-image) |
+
+## Documentation
+
+- [Desktop installation and Secure Boot](hosts/desktop/README.md)
+- [MacBook bootstrap](hosts/mbp-personal/README.md)
+- [Raspberry Pi deployment and Home Assistant](hosts/pi5-server/README.md)
+- [Steam Deck bootstrap and SteamOS notes](hosts/deck/README.md)
+- [Gaming setup and troubleshooting](profiles/gaming/README.md)
+- [Package definitions and updates](packages/README.md)
+- [Secret management](secrets/README.md)
+
+## Use from another flake
+
+Add this repository as an input and import the facets into their matching
+module systems. This example adds base NixOS settings, desktop applications,
+and terminal tools to an existing host:
 
 ```nix
 {
-  nixos = { ... };
-  homeManager = { ... };
-  darwin = { ... };
-}
-```
+  inputs = {
+    nixConfig.url = "github:BennyDeeDev/nix-config";
+    nixpkgs.follows = "nixConfig/nixpkgs";
+    home-manager.follows = "nixConfig/home-manager";
+  };
 
-Unsupported facets are omitted. `homeManager` is the inclusive default facet
-and may be imported by NixOS-integrated Home Manager, nix-darwin-integrated Home
-Manager, or standalone Home Manager. Shared modules are platform-neutral; NixOS
-and Darwin-specific behavior belongs in their respective profiles. Host modules
-compose profile facets and reusable modules directly. `flake.nix` only
-instantiates outputs and provides their external flake dependencies; only the
-mutable checkout path is passed to Home Manager through `extraSpecialArgs`.
-
-## Ownership
-
-`profiles/nixos/` contains the generic NixOS foundation shared by
-workstations, servers, and images.
-
-`profiles/nixos-desktop/` is the complete NixOS workstation policy. It combines
-the system foundation with GUI applications and desktop integration. The
-desktop environment is selected separately; `profiles/kde/` provides the shared
-KDE Plasma configuration for the NixOS desktop and Steam Deck.
-
-`profiles/terminal/` contains the shell, command-line tools, and terminal
-editors. `profiles/macos/` contains shared macOS system policy and applications.
-`profiles/pi5/` contains
-the shared Pi user, SSH, filesystem, and lifecycle policy.
-
-`hosts/<name>/` selects whole profiles and contains machine facts: hostnames,
-hardware, disks, users, state versions, secret files, and unique mounts or
-applications.
-
-### External Profile Consumers
-
-The repository is also a profile library. Add it as a flake input and select
-the profile facet needed by the consuming system:
-
-```nix
-{
-  inputs.nixConfig.url = "github:BennyDeeDev/nix-config";
-
-  outputs = { nixpkgs, nixConfig, ... }:
+  outputs = { nixpkgs, home-manager, nixConfig, ... }:
     let
       profiles = nixConfig.profiles;
     in
@@ -104,339 +80,187 @@ the profile facet needed by the consuming system:
       nixosConfigurations.example = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
+          ./configuration.nix
           profiles.nixos.nixos
-          profiles.nixosDesktop.homeManager
+          home-manager.nixosModules.home-manager
+          {
+            nixpkgs.config.allowUnfree = true;
+            home-manager = {
+              useGlobalPkgs = true;
+              extraSpecialArgs = {
+                nixConfig = "/home/benjamin/Repos/my-config";
+                flakeHost = "example";
+              };
+              users.benjamin = {
+                imports = [
+                  profiles.apps.homeManager
+                  profiles.terminal.homeManager
+                ];
+                home.stateVersion = "26.05";
+              };
+            };
+          }
         ];
       };
     };
 }
 ```
 
-Available profile entries are `nixos`, `nixosDesktop`, `kde`, `macos`, `pi5`, and
-`terminal`. Each profile exposes only the facets it supports, such as
-`.nixos`, `.darwin`, or `.homeManager`. The profile files and their referenced
-configuration assets are kept inside the flake source, so relative paths keep
-working when the repository is consumed as an input.
+## Making changes
 
-## Feature Granularity
+### Adding a feature
 
-A configured feature owns a dedicated file. Features may be combined only
-when they are trivial package installations or simple upstream module enables
-within one clear usage domain.
+1. Put the feature in the relevant profile, or in the host if it is
+   machine-specific. Use `modules/` for reusable modules shared across profiles
+   or hosts.
+2. Declare its supported facets. For example:
 
-Dedicated files are appropriate when a feature owns settings, payloads,
-plugins, services, timers, permissions, firewall policy, coordinated
-dependencies, activation behavior, or an independent lifecycle.
+   ```nix
+   # profiles/terminal/example.nix
+   {
+     homeManager = {
+       programs.example.enable = true;
+     };
+   }
+   ```
 
-A single one-line setting does not deserve its own file. Fold it into the
-relevant `profile.nix` or `host.nix`; keep a separate file when the feature
-contains multiple related settings or has one of the ownership boundaries
-listed above.
+3. Bind the import in the profile's `default.nix` and add its facet to the
+   existing imports:
 
-Prefer upstream `programs.*`, `services.*`, and `virtualisation.*` modules
-when they represent the intended behavior. When a direct package is retained
-despite a related module, leave a short comment explaining the decision.
+   ```nix
+   let
+     example = import ./example.nix;
+   in
+   {
+     homeManager.imports = [ example.homeManager ];
+   }
+   ```
 
-## Adding A Feature
+4. Format the files and evaluate the affected outputs as described under
+   [Validation](#validation).
 
-A terminal Home Manager feature uses the same facet shape:
+### Module structure
 
-```nix
-# profiles/terminal/example.nix
-{
-  homeManager = {
-    programs.example.enable = true;
-  };
-}
-```
+- Hand-written modules in `profiles/`, `hosts/`, `images/`, and `modules/`
+  expose only the facets they implement, ordered `nixos`, `homeManager`, then
+  `darwin`. Home Manager facets may serve integrated or standalone setups.
+- `default.nix` files compose facets through `imports`; feature settings belong
+  in feature files.
+- Keep configured features in dedicated files when they own settings, payloads,
+  plugins, services, timers, permissions, firewall rules, dependencies,
+  activation behavior, or an independent lifecycle. Trivial package installs
+  and simple upstream enables may share a file within one usage domain.
+- Every profile has a `profile.nix` for small miscellaneous settings; hosts use
+  `host.nix`. A one-line setting may go there. Keep multiple related settings
+  together in a feature file, and avoid using these buckets to hide named
+  feature configuration.
+- Prefer upstream `programs.*`, `services.*`, and `virtualisation.*` modules.
+  If a direct package is a better fit, briefly explain why in a comment.
+- Structural exceptions to the facet rule are `flake.nix`,
+  `profiles/default.nix`, `hosts/desktop/disko.nix`, and the generated
+  `hosts/desktop/hardware-configuration.nix`.
 
-Add the facet explicitly to `profiles/terminal/default.nix`. Machine-specific
-behavior remains explicit in the relevant host.
+### Nix style
 
-### Module Facets
+#### Names and bindings
 
-Every hand-written Nix module must declare the module systems it supports using
-one or more top-level facets: `nixos`, `homeManager`, or `darwin`. This rule
-applies throughout `profiles/`, `hosts/`, `images/`, and `modules/`. Omit
-facets that do not apply; add more than one only when the feature has an
-intentional implementation for multiple systems.
+- Bind every `import` in the nearest enclosing `let` before using it.
+- Use the `Module` suffix for imports from `modules/`, such as `nasModule`.
+  Use the feature name for profile imports, such as `helix`.
+- Use `homeManagerModule` for the module registering Home Manager with NixOS or
+  nix-darwin, and `homeManagerConfig` for host-specific `home-manager.users`
+  configuration.
+- Declare repository-owned options under `my.*`, such as `my.sops` or
+  `my.containerBackups`.
+- Define related aliases together and in the same style, even if an individual
+  alias is used only once.
+- Otherwise, introduce a binding only when its name adds meaning and the value
+  is reused. Keep simple configuration data inline; bind a repeated fragment
+  only when the name expresses a useful concept.
 
-When a file exposes more than one facet, list them in this order: `nixos`,
-`homeManager`, then `darwin`. Omit unsupported facets without changing the
-relative order of the remaining ones.
+#### Attribute sets and collections
 
-`default.nix` files are composition-only. They combine facets through
-`imports`, but do not define feature settings themselves. This keeps the
-responsibility and supported module systems of each feature visible in its own
-file.
-
-Every profile directory has a `profile.nix` for small, miscellaneous profile
-settings. Use `host.nix` for the equivalent machine-specific settings. A
-single-option setting may be folded into one of these policy buckets. If a
-file configures more than one related thing, keep those settings together in a
-dedicated feature file instead. Do not use either bucket to hide named feature
-configuration.
-
-Some Nix files are structural rather than reusable feature modules. The
-exceptions are `flake.nix`, which defines the flake entrypoint,
-`profiles/default.nix`, which catalogs the profiles,
-`hosts/desktop/disko.nix`, which Disko consumes directly, and the generated
-`hosts/desktop/hardware-configuration.nix`.
-
-### Module Bindings
-
-Name local bindings for reusable modules from `modules/` with the `Module`
-suffix. For example, the module imported from `modules/nas.nix` is bound as
-`nasModule`. Profile feature modules use the feature name as their binding,
-such as `helix` for `profiles/terminal/helix.nix`.
-
-Home Manager uses two bindings because it has two composition layers:
-
-- `homeManagerModule` is the reusable module that registers Home Manager with
-  NixOS or nix-darwin.
-- `homeManagerConfig` is the host-specific module that configures users through
-  `home-manager.users`.
-
-These are local binding names only. Repository-owned module options use the
-separate `config.my.*` and `options.my.*` namespaces.
-
-### Attrset Style
-
-Collapse a dotted path only when that path has multiple child keys in the same
-attrset. For example:
-
-```nix
-programs.vim.enable = true;
-programs.vim.defaultEditor = true;
-```
-
-becomes:
+Group a dotted path when it has multiple child keys; keep singleton paths
+dotted:
 
 ```nix
 programs.vim = {
   enable = true;
   defaultEditor = true;
 };
-```
-
-Keep singleton paths dotted:
-
-```nix
 programs.helix.enable = true;
 ```
 
-### Let Bindings
+Keep small, explicit collections readable rather than generating them to remove
+repetition. For transformations, bind the mapping function in `let` and use:
 
-#### Import Bindings
+| Transformation | Function |
+| --- | --- |
+| List to list | `map` |
+| Attribute set, preserving keys | `lib.mapAttrs` |
+| Attribute set, changing keys | `lib.mapAttrs'` |
+| Attribute set to list | `lib.mapAttrsToList` |
+| Names to attributes with the same keys | `lib.genAttrs` |
+| Names to attributes with different keys | `lib.genAttrs'` |
+| Explicit name-value pairs | `lib.listToAttrs` with `lib.nameValuePair` |
 
-Bind every `import` expression in the nearest enclosing `let` before using it.
-Do not inline imports in `imports` lists, output definitions, or function
-arguments.
+#### Configuration and paths
 
-```nix
-let
-  importedValue = import ./value.nix;
-in
-{
-  value = importedValue;
-}
-```
+- Use the application's native configuration format for substantial
+  configuration, such as Lua for Neovim.
+- Check platforms with `pkgs.stdenv.hostPlatform.isLinux`; treat the `else`
+  branch as Darwin rather than checking `isDarwin` separately.
+- For runtime-editable files, prefer `config.lib.file.mkOutOfStoreSymlink`
+  pointing into the mutable checkout, especially for live theme changes.
+- In Nix-generated files, use `lib.getExe` for a package's main program and
+  `lib.getExe'` for a specific executable. Prefer configured package options
+  where available. Use stable profile paths for mutable external configuration
+  that may outlive a Nix store reference.
 
-#### Related Bindings
+### Documentation style
 
-Define related aliases together and use the same style, even when an individual
-alias is used only once.
-
-```nix
-let
-  firstBuilder = library.firstBuilder;
-  secondBuilder = library.secondBuilder;
-  thirdBuilder = library.thirdBuilder;
-in
-{
-  first = firstBuilder { value = 1; };
-  second = secondBuilder { value = 2; };
-  third = thirdBuilder { value = 3; };
-}
-```
-
-#### Meaningful Reuse
-
-For values outside the structural rules, create a binding only when the name
-adds meaning and the value is used more than once. Keep a clear expression
-inline when the binding would only shorten it.
-
-```nix
-let
-  outputDirectory = value.path;
-in
-{
-  first = "${outputDirectory}/first";
-  second = "${outputDirectory}/second";
-}
-```
-
-#### Declarative Configuration
-
-Keep simple values and explicit configuration data inline. Bind a repeated
-configuration fragment only when the binding gives it a meaningful concept.
-
-```nix
-{
-  first = {
-    option = true;
-  };
-
-  second = {
-    option = true;
-  };
-}
-```
-
-### Collection Mapping
-
-#### List Mapping
-
-Use `map` for list-to-list transformations. Bind the transformation in `let` so
-the mapping logic is separate from the collection operation.
-
-```nix
-let
-  transform = item: item.value;
-in
-map transform items
-```
-
-#### Attribute Mapping
-
-Use `lib.mapAttrs` for attrset-to-attrset transformations that preserve keys.
-Use `lib.mapAttrs'` when the transformation changes keys.
-
-```nix
-let
-  mkValue = name: value: {
-    inherit name value;
-  };
-in
-{
-  result = lib.mapAttrs mkValue source;
-}
-```
-
-#### Attribute Lists
-
-Use `lib.mapAttrsToList` when transforming an attrset into a list.
-
-```nix
-let
-  toValue = name: value: "${name}=${value}";
-in
-lib.mapAttrsToList toValue source
-```
-
-#### Generated Attributes
-
-Use `lib.genAttrs` when names become an attrset with the same keys. Use
-`lib.genAttrs'` when the generated keys differ.
-
-```nix
-let
-  mkValue = name: "value-${name}";
-in
-lib.genAttrs names mkValue
-```
-
-#### Explicit Pairs
-
-Use `lib.listToAttrs` with `lib.nameValuePair` when constructing explicit
-name-value pairs is clearest.
-
-```nix
-let
-  toPair = name: lib.nameValuePair name (valueFor name);
-in
-lib.listToAttrs (map toPair names)
-```
-
-#### Explicit Collections
-
-Keep small, explicit lists and attrsets readable. Do not generate them only to
-remove repetition.
-
-```nix
-{
-  first = true;
-  second = true;
-}
-```
-
-### Custom Module Options
-
-Options declared by modules in this repository use the `my.*` namespace to
-separate them from built-in NixOS, nix-darwin, Home Manager, and upstream
-module options. Current examples include `my.sops`, `my.nas`, and
-`my.containerBackups`.
-
-### Configuration Style
-
-Prefer the application's native configuration format when configuration is
-substantial or likely to grow. For example, use a real Lua file for Neovim
-instead of encoding the configuration through Nix attrset hacks.
-
-Use `pkgs.stdenv.hostPlatform.isLinux` for platform checks; treat the `else`
-branch as Darwin instead of checking `isDarwin` directly.
-
-Prefer `config.lib.file.mkOutOfStoreSymlink` for configuration files that need
-to remain editable at runtime, especially when theme switches or other live
-changes are expected. Link those files from the mutable nix-config checkout
-instead of copying them into the Nix store.
-
-### File Size
-
-Keep files glanceable. Around 100 lines is a useful signal to reconsider the
-structure and split a file into sensible, cohesive files, but it is not a
-hard limit. Do not fragment tightly coupled configuration merely to reduce
-the line count.
-
-### Executable Paths
-
-In Nix-generated files, use `lib.getExe` for a package's main program and
-`lib.getExe'` for a specific executable instead of constructing `/bin` paths.
-Prefer configured package options when available. Use stable profile paths only
-for mutable external configuration that may outlive its Nix store reference.
+- In runnable guides, use `nix run` for tools the reader may not have installed.
+- For development and validation, use installed tools directly; fall back to
+  Nix when needed.
+- Keep tool names short in prose.
+- Keep commands on one line when they fit comfortably. Use backslash
+  continuations for long commands or commands with many options. When splitting,
+  keep subcommands and option/value pairs together.
+- Keep shell builtins, native OS commands, and Nix commands in their normal
+  form. Select the correct executable when a package contains multiple binaries.
+- Check all Markdown changes with `rumdl`.
 
 ## Validation
 
-Use `nixfmt` to format Nix files.
+Format Nix files with `nixfmt`.
 
 Evaluate the active outputs without activating them:
 
-```sh
+```bash
 nix eval --raw .#darwinConfigurations.mbp-personal.system.drvPath
 nix eval --raw .#nixosConfigurations.desktop.config.system.build.toplevel.drvPath
 nix eval --raw .#nixosConfigurations.pi5-server.config.system.build.toplevel.drvPath
 nix eval --raw .#nixosConfigurations.pi5-kiosk.config.system.build.toplevel.drvPath
+nix eval --raw .#homeConfigurations.deck.activationPackage.drvPath
 nix eval --raw .#images.pi5-bootstrap.drvPath
 ```
 
 Build an output with `nix build --no-link <installable>`.
 
-### Compare Hosts Without Building
+### Compare configurations
 
-Nix can evaluate a system to its `.drv` path without realizing the system
-closure. A derivation is the build recipe: it records the builder, inputs, and
-environment, so `nix-diff` can compare two configurations before either one is
-built.
+`nix-diff` compares derivations without building either system, including when
+the target architecture differs from the machine running the comparison.
 
-Fetch the branch you want to compare first:
+Fetch the comparison branch:
 
-```sh
+```bash
 git fetch origin master
 ```
 
-Then compare the current checkout with `origin/master`. For NixOS hosts:
+Compare a NixOS host with `origin/master`:
 
-```sh
+```bash
 host=desktop
 
 master_drv=$(nix eval --raw \
@@ -449,9 +273,10 @@ nix run nixpkgs#nix-diff -- \
   --skip-already-compared --color auto --context 1
 ```
 
-Use `host=pi5-server` for the Pi. For nix-darwin, use its `system` output:
+Use `host=pi5-server` or `host=pi5-kiosk` for the Pi configurations. For
+nix-darwin, compare the `system` output:
 
-```sh
+```bash
 host=mbp-personal
 
 master_drv=$(nix eval --raw \
@@ -464,17 +289,5 @@ nix run nixpkgs#nix-diff -- \
   --skip-already-compared --color auto --context 1
 ```
 
-This compares the dependency graph and generated configuration, not the final
-store closures. It works from a different architecture because evaluation is
-not execution: an `aarch64-darwin` machine can inspect an `x86_64-linux` or
-`aarch64-linux` derivation, but it cannot build that closure without a suitable
-builder. Use `nix store diff-closures` only after both system outputs have been
-realized; it compares resulting closures and therefore does require builds.
-
-## Installation
-
-- [Desktop installation and Secure Boot](hosts/desktop/README.md)
-- [MacBook bootstrap](hosts/mbp-personal/README.md)
-- [Raspberry Pi deployment](hosts/pi5-server/README.md)
-- [Steam Deck Home Manager](hosts/deck/README.md)
-- [Secret management](secrets/README.md)
+Use `nix store diff-closures` to compare realized outputs after both have been
+built. It compares the resulting closures rather than the build recipes.

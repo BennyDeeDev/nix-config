@@ -1,181 +1,243 @@
 # NixOS on Raspberry Pi 5
 
-Build the bootstrap SD image, flash it, boot the Pi, then deploy a role
-(`pi5-server` or `pi5-kiosk`) remotely with `nixos-rebuild`.
+Build and flash the bootstrap SD image, enroll the Pi's age key, then deploy
+`pi5-server`.
 
-## Prerequisites (build box)
+## Prerequisites
 
-The build machine must register binfmt for aarch64 so it can cross-compile.
-On the desktop host in this repo this is already set via
-`boot.binfmt.emulatedSystems = [ "aarch64-linux" ]` in
-`profiles/nixos/boot.nix`.
+- A Linux build machine that can build `aarch64-linux` outputs, either natively
+  or through a remote builder or emulation. The desktop enables emulation in
+  [`profiles/nixos-desktop/boot.nix`](../../profiles/nixos-desktop/boot.nix).
+  This runs ARM binaries under emulation; it is not cross-compilation.
+- The private SSH key matching the public key in
+  [`profiles/pi5/users.nix`](../../profiles/pi5/users.nix).
+- An enrolled YubiKey for rekeying the secrets.
 
-## Build the bootstrap SD image
+Run build and deployment commands from the checkout root on the build machine.
 
-From the cross-compile build box (your desktop):
+```bash
+export NIX_CONFIG='extra-experimental-features = nix-command flakes'
+```
+
+## Bootstrap and deploy
+
+### 1. Build the bootstrap SD image
 
 ```bash
 nix build .#images.pi5-bootstrap
-zstd -d result/sd-image/*.img.zst -o pi5-bootstrap.img
-sudo dd if=pi5-bootstrap.img of=/dev/sdX bs=4M status=progress conv=fsync
+nix run nixpkgs#zstd -- -d result/sd-image/*.img.zst -o pi5-bootstrap.img
 ```
 
-Replace `/dev/sdX` with the SD card device — verify with `lsblk` first.
+### 2. Flash and boot
 
-## First boot
-
-The bootstrap image sets `hostName = "pi5"`, runs sshd with password
-authentication disabled, and provisions the SSH public key from
-`profiles/pi5/default.nix` into the `benjamin` user's `authorized_keys`. SSH in
-from any host holding the matching private key:
+Use `lsblk` to identify the SD card. Replace `/dev/sdX` with its device path:
 
 ```bash
-ssh ssh benjamin@pi5.fritz.box
+sudo dd \
+  if=pi5-bootstrap.img \
+  of=/dev/sdX \
+  bs=4M \
+  status=progress \
+  conv=fsync
+sync
 ```
 
-`benjamin` is in `wheel`; sudo prompts for the user password (set via
-`/etc/nixos/password-hash` on the host).
-
-## Sops age key enrollment
-
-On first boot, `sops.age.generateKey = true` writes
-`/var/lib/sops-nix/key.txt` on the SD card, but decryption of
-`benjamin-password` fails because the Pi's age pubkey isn't listed in
-`.sops.yaml` yet. The bootstrap image sets
-`security.sudo.wheelNeedsPassword = false` so you can still run `sudo` to
-extract the pubkey even though the real password isn't usable yet
-(`hashedPasswordFile` can't decrypt, so the password login path is broken
-until enrollment completes).
-
-After SSH'ing in via your authorized key, print the Pi's age pubkey:
-
-```sh
-sudo nix shell nixpkgs#age -c age-keygen -y /var/lib/sops-nix/key.txt
-```
-
-Back on your desktop, add the printed `age1...` string to `.sops.yaml` as
-a new anchor (e.g. `- &pi5 age1...`) and append `*pi5` to the `age:`
-recipients under `secrets/common.yaml`'s `creation_rules`. Then
-re-encrypt the file to the expanded recipient set and commit:
-
-```sh
-sops updatekeys secrets/common.yaml
-git add .sops.yaml secrets/common.yaml
-git commit
-```
-
-## Deploy a role configuration
-
-First-time role switch (bootstrap still running):
+Insert the card, connect Ethernet, and boot the Pi. The bootstrap hostname is
+`pi5`. Connect using the authorized SSH key:
 
 ```bash
-nixos-rebuild switch --flake .#pi5-server \
+ssh benjamin@pi5.fritz.box
+```
+
+Password authentication is disabled. The bootstrap image allows passwordless
+sudo; the deployed server requires the user's password for sudo.
+
+### 3. Enroll the age key
+
+The first boot generates `/var/lib/sops-nix/key.txt`. Secret decryption may
+fail until this key is enrolled, but bootstrap sudo does not need the password
+stored in those secrets.
+
+On the Pi, print its public key:
+
+```bash
+sudo nix --extra-experimental-features 'nix-command flakes' \
+  shell nixpkgs#age --command age-keygen -y /var/lib/sops-nix/key.txt
+```
+
+On the editing machine, replace the `&pi5-server` public key in `.sops.yaml`
+with the printed `age1...` value. Its alias is already listed in the rules for
+`common.yaml` and `pi5-server.yaml`. Rekey both files with an enrolled YubiKey:
+
+```bash
+export SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/identity.txt"
+nix run nixpkgs#sops -- updatekeys secrets/common.yaml
+nix run nixpkgs#sops -- updatekeys secrets/pi5-server.yaml
+```
+
+Commit `.sops.yaml` and both encrypted files together. For editing before
+Home Manager has created `identity.txt`, use the
+[bootstrap identity instructions](../../secrets/README.md#before-first-activation).
+
+### 4. Deploy the server
+
+From the updated checkout on the build machine:
+
+```bash
+nix run nixpkgs#nixos-rebuild -- switch \
+  --flake .#pi5-server \
   --target-host benjamin@pi5.fritz.box \
   --build-host benjamin@pi5.fritz.box \
   --sudo
 ```
 
-Subsequent rebuilds (role config now running):
+The Pi builds the configuration and activates it using bootstrap sudo. Its
+hostname changes to `pi5-server`; subsequent connections use that name.
+
+The same bootstrap image can deploy `pi5-kiosk` by changing the flake output.
+That host is still a placeholder; the Home Assistant instructions below apply
+to `pi5-server`.
+
+## Rebuild the server
+
+From the checkout on the build machine:
 
 ```bash
-nixos-rebuild switch --flake .#pi5-server \
-  --target-host benjamin@pi5.fritz.box \
-  --build-host benjamin@pi5.fritz.box \
-  --sudo --ask-sudo-password
+nix run nixpkgs#nixos-rebuild -- switch \
+  --flake .#pi5-server \
+  --target-host benjamin@pi5-server.fritz.box \
+  --build-host benjamin@pi5-server.fritz.box \
+  --sudo \
+  --ask-sudo-password
 ```
 
-## Flash ZBT-2 to OpenThread firmware (one-time, host-agnostic)
+## Flash the ZBT-2 for Thread
 
-The ZBT-2 ships with EmberZNet (Zigbee) firmware. To use it as a Thread radio
-in HA's OpenThread Border Router, flash OpenThreadRCP firmware. The firmware
-persists in the chip — flash once on any machine, then move the stick to the Pi.
+Flash OpenThread RCP firmware before using the ZBT-2 with OTBR. Firmware stays
+on the radio, so this can be done on another machine before connecting it to
+the Pi.
 
-### Procedure (macOS)
+### Browser flasher
 
-1. Plug ZBT-2 into the macOS host via the USB extension cable.
-2. Open Chromium/Chrome (not Firefox — WebSerial unsupported) and navigate to
-   https://toolbox.openhomefoundation.org/home-assistant-connect-zbt-2/install/
-3. Click **Connect** and select the ZBT-2 in the browser's serial port picker.
-4. Choose **Thread** as the target firmware.
-5. Click install and wait for completion.
-6. Unplug and re-plug the stick.
+1. Connect the ZBT-2 with its USB extension cable.
+2. Open the [ZBT-2 flasher][zbt2-flasher] in Chrome or Chromium. Firefox does
+   not support the required Web Serial API.
+3. Click **Connect** and select the ZBT-2.
+4. Select **Thread**, install the firmware, then unplug and reconnect the radio.
+5. Connect it to the Pi. If using a different stick, update the serial device
+   path in [`home-assistant.nix`](home-assistant.nix).
 
-### Note on Linux desktops
+### Linux serial permissions
 
-The web flasher fails on NixOS (and most Linux distros) because serial device
-nodes are owned by `root:dialout` (or `root:uucp`) at mode `0660`, and Chrome
-running as a regular user hits `EACCES` on the `open()` syscall. Observed
-behaviour: log truncates after `Opening a serial connection at 115200 baud`
-and never advances to probing. macOS has no equivalent gating, hence the Mac
-being the working path here.
+If flashing stops at `Opening a serial connection at 115200 baud`, check that
+the browser user can open the serial device. This can be a permissions issue,
+not a failure of the flasher on Linux.
 
-Workarounds if a Mac is not available:
+For a temporary fix, replace `/dev/ttyACM0` with the radio's device:
 
-- `sudo chmod 666 /dev/ttyACM0` (temporary; reverts on replug)
-- OR `sudo usermod -aG dialout $USER` then fully log out and back in
-- OR bypass the browser entirely:
-  ```
-  nix-shell -p python311Packages.universal-silabs-flasher
-  universal-silabs-flasher --device /dev/serial/by-id/usb-Nabu_Casa...ZBT-2...-if00 probe
-  universal-silabs-flasher --device /dev/serial/by-id/usb-Nabu_Casa...ZBT-2...-if00 \
-    flash --firmware <otbr-rcp.gbl> --allow-cross-flashing
-  ```
-  (Firmware .gbl from https://github.com/NabuCasa/silabs-firmware-builder/releases
-  under "OpenThreadRCP" — pick the EFR32MG24 build for ZBT-2.)
+```bash
+sudo chmod 666 /dev/ttyACM0
+```
 
-## Home Assistant + Thread + Matter
+Reconnect in the browser and retry. The permission change is lost when the
+device is unplugged. For persistent access, add the user to the device's owning
+group (`dialout` or `uucp`, depending on the system). On NixOS, declare the
+group in the user's configuration, rebuild, then log out and back in.
 
-1. Browse to `http://pi5-server.fritz.box:8123` and complete the HA
-   onboarding wizard (admin user, location). State persists in HA's
-   `.storage/`.
+### Command-line flasher
 
-2. Add the Matter integration in HA: Settings → Devices & Services →
-   Add Integration → search "Matter". HA auto-discovers the matter-server
-   WebSocket at `ws://localhost:5580/ws` (both containers share the host
-   netns). If prompted for a URL, enter it manually.
+Download the OpenThread RCP `.gbl` built for ZBT-2 from the
+[firmware releases][silabs-firmware]. Replace the device path and
+`zbt2-openthread.gbl` with the radio and downloaded file:
 
-3. Import Apple HomeKit Thread credentials so the OTBR joins your existing
-   Apple Thread network (HomePod minis are the existing border routers)
-   instead of staying on its own partition:
-   - Install the HA Companion app on your iPhone.
-   - Connect it to `http://pi5-server.fritz.box:8123`.
-   - In the app: Settings → Devices & Services → Thread → Configure →
-     **Send credentials to Home Assistant**.
-   - Back in HA (browser): Settings → Devices & Services → Thread →
-     Configure → mark the Apple network (`MyHome...`) as
-     **Make preferred network**.
+```bash
+nix run nixpkgs#python3Packages.universal-silabs-flasher -- \
+  --device /dev/ttyACM0 \
+  probe
 
-4. Make the OTBR actually join Apple's Thread mesh. HA now has the Apple
-   dataset, but the OTBR container is still `leader` of its own partition.
-   Pull the dataset from HA's storage and inject it into OTBR:
+nix run nixpkgs#python3Packages.universal-silabs-flasher -- \
+  --device /dev/ttyACM0 \
+  flash \
+  --profile zbt2 \
+  --firmware zbt2-openthread.gbl
+```
 
-   ```bash
-   # Read the Apple dataset TLV from HA's storage
-   sudo cat /var/lib/homeassistant/.storage/thread.datasets | grep -A2 iOS-app
-   # (the "tlv" field is the hex blob)
+The command-line flasher also needs access to the serial device.
 
-   # Stop OTBR's own partition, set the Apple dataset, restart Thread
-   sudo podman exec otbr ot-ctl thread stop
-   sudo podman exec otbr ot-ctl dataset set active <apple-dataset-tlv-hex>
-   sudo podman exec otbr ot-ctl thread start
-   ```
+## Home Assistant, Thread, and Matter
 
-   Wait ~60 seconds, then verify OTBR joined Apple's mesh:
+The containers and radio settings are defined in
+[`home-assistant.nix`](home-assistant.nix). Run the Podman commands below on
+the Pi.
 
-   ```bash
-   sudo podman exec otbr ot-ctl state
-   sudo podman exec otbr ot-ctl networkname
-   sudo podman exec otbr ot-ctl panids
-   sudo podman exec otbr ot-ctl router table
-   sudo podman exec otbr ot-ctl neighbor table
-   ```
+### 1. Set up Home Assistant
 
-   The dataset persists in `/var/lib/otbr/thread/` across container
-   restarts, so this step is one-time.
+Open `http://pi5-server.fritz.box:8123` and complete onboarding if no previous
+configuration was restored. Home Assistant stores its configuration under
+`/var/lib/homeassistant`.
 
-5. Commission a Matter-over-Thread device into HA (multi-admin — the
-   device stays paired to Apple Home, HA joins as a second controller):
-   - In Apple Home: select the device → open its commissioning window
-     (Pairing Mode).
-   - Enter the device's setup code.
-   - HA discovers the device via mDNS and commissions it into HA's fabric.
+Under **Settings → Devices & Services → Add Integration**, add:
+
+- **OpenThread Border Router**, using `http://localhost:8081` if it is not
+  discovered automatically.
+- **Matter**, using `ws://localhost:5580/ws` if prompted for a server URL.
+
+All three containers use host networking, so Home Assistant can reach the
+other two through `localhost`.
+
+### 2. Import the Apple Thread network
+
+To join the existing network managed by the HomePod minis:
+
+1. Install the Home Assistant Companion app on the iPhone and connect it to
+   `http://pi5-server.fritz.box:8123`.
+2. In the app, open **Settings → Devices & Services → Thread → Configure**
+   and select **Send credentials to Home Assistant**.
+3. In the browser, open the Thread integration's configuration, select the
+   imported Apple network, and choose **Make preferred network**.
+
+### 3. Apply the dataset to OTBR
+
+If OTBR remains on its own network after importing the credentials, read the
+Apple dataset from Home Assistant's storage:
+
+```bash
+sudo cat /var/lib/homeassistant/.storage/thread.datasets | grep -A2 iOS-app
+```
+
+Copy the `tlv` field for the Apple network. Replace `APPLE_DATASET_TLV` below
+with that hex string:
+
+```bash
+dataset='APPLE_DATASET_TLV'
+sudo podman exec otbr ot-ctl thread stop
+sudo podman exec otbr ot-ctl dataset set active "$dataset"
+sudo podman exec otbr ot-ctl thread start
+```
+
+Wait about a minute, then check the network name, PAN ID, and router and
+neighbor tables against the expected Apple network:
+
+```bash
+sudo podman exec otbr ot-ctl state
+sudo podman exec otbr ot-ctl networkname
+sudo podman exec otbr ot-ctl panid
+sudo podman exec otbr ot-ctl router table
+sudo podman exec otbr ot-ctl neighbor table
+```
+
+OTBR state persists under `/var/lib/otbr`, mounted as `/data` in the container.
+
+### 4. Add a Matter device
+
+For a device already paired with Apple Home:
+
+1. Open the device in Apple Home and enable its pairing mode to obtain a
+   sharing code.
+2. In the Home Assistant Companion app, add a Matter device that is already
+   in use and enter that code.
+3. Complete commissioning. The device stays paired with Apple Home and also
+   becomes available in Home Assistant.
+
+[zbt2-flasher]: https://toolbox.openhomefoundation.org/home-assistant-connect-zbt-2/install/
+[silabs-firmware]: https://github.com/NabuCasa/silabs-firmware-builder/releases

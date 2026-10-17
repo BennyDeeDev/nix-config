@@ -18,30 +18,21 @@ curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install | sh -s -- --da
 
 Open a new shell after the installer finishes.
 
-### 3. Enter the bootstrap shell
+### 3. Enable flakes
 
-Set the experimental features once and load the tools needed for bootstrap:
+Enable the Nix command and flakes for the bootstrap commands:
 
 ```bash
-export NIX_CONFIG='experimental-features = nix-command flakes'
-nix shell nixpkgs#gh nixpkgs#git nixpkgs#age nixpkgs#sops nixpkgs#age-plugin-yubikey
+export NIX_CONFIG='extra-experimental-features = nix-command flakes'
 ```
 
 Keep this shell open through the following steps.
 
 ### 4. Clone the repository
 
-Authenticate GitHub:
-
-```bash
-gh auth login
-```
-
-Then clone the repository:
-
 ```bash
 mkdir -p ~/Repos
-gh repo clone BennyDeeDev/nix-config ~/Repos/nix-config
+nix run nixpkgs#git -- clone https://github.com/BennyDeeDev/nix-config ~/Repos/nix-config
 cd ~/Repos/nix-config
 ```
 
@@ -54,7 +45,7 @@ Generate the key and print its public key:
 
 ```bash
 mkdir -p ~/.config/sops/age
-age-keygen -o ~/.config/sops/age/keys.txt
+nix shell nixpkgs#age --command age-keygen -o ~/.config/sops/age/keys.txt
 ```
 
 Add the printed `age1...` key as the `&deck` recipient in `.sops.yaml`.
@@ -76,7 +67,7 @@ sudo systemctl restart pcscd.service
 Verify that the reader is available:
 
 ```bash
-age-plugin-yubikey --list-all
+nix run nixpkgs#age-plugin-yubikey -- --list-all
 ```
 
 ### 7. Enroll the host key in SOPS
@@ -91,15 +82,11 @@ export SOPS_AGE_KEY='AGE-PLUGIN-YUBIKEY-17Z2J5Q5Z709P64S7VFQZT'
 Update the encrypted files separately:
 
 ```bash
-sops updatekeys secrets/common.yaml
+nix run nixpkgs#sops -- updatekeys secrets/common.yaml
+nix run nixpkgs#sops -- updatekeys secrets/desktop.yaml
 ```
 
-```bash
-sops updatekeys secrets/desktop.yaml
-```
-
-Do not activate Home Manager from the rekey shell. Start a new shell, or
-clear the YubiKey identity first:
+Clear the YubiKey identity before activating Home Manager:
 
 ```bash
 unset SOPS_AGE_KEY
@@ -115,12 +102,13 @@ cd ~/Repos/nix-config
 nix run github:nix-community/home-manager -- switch -b hm-backup --flake '.#deck'
 ```
 
-After activation, use the generated `hms` alias.
+Open a new terminal after activation to load the Home Manager environment.
+Subsequent rebuilds use the generated `hms` alias.
 
 ### 9. Set up the Nix GPU libraries
 
 ```bash
-sudo /nix/store/<store-hash>-non-nixos-gpu/bin/non-nixos-gpu-setup
+sudo "$(readlink -f "$(command -v non-nixos-gpu-setup)")"
 ```
 
 ### 10. Set Zsh as the login shell
@@ -129,7 +117,7 @@ sudo /nix/store/<store-hash>-non-nixos-gpu/bin/non-nixos-gpu-setup
 chsh -s /bin/zsh
 ```
 
-# Technical Considerations
+Log out and back in afterward.
 
 ## Nix shell profile
 
@@ -149,20 +137,15 @@ a SteamOS image update.
 
 KDE session restore is enabled. On Wayland, applications may restore without
 their previous virtual desktop, size, or position because support depends on
-KWin and each application. See KDE's [Wayland session restore notes](https://blogs.kde.org/2025/04/12/this-week-in-plasma-the-beginnings-of-wayland-session-restore/),
+KWin and each application. See KDE's
+[Wayland session restore notes][session-restore],
 [known issues](https://community.kde.org/Plasma/Wayland_Known_Significant_Issues),
-and [bug 421870](https://bugs.kde.org/show_bug.cgi?id=421870)
+and [bug 421870](https://bugs.kde.org/show_bug.cgi?id=421870).
 
 ## Default shell
 
-Home Manager installs and configures Zsh, but standalone Home Manager does not
-change SteamOS's login shell. Set Zsh as the `deck` user's login shell once:
-
-```bash
-chsh -s /bin/zsh
-```
-
-Log out and back in afterward. Verify the result with:
+Home Manager configures Zsh but does not change SteamOS's login shell. After
+setting it during bootstrap, verify the result in a new session:
 
 ```bash
 getent passwd deck
@@ -178,7 +161,8 @@ SteamOS already grants the active desktop user access to USB and `hidraw`
 devices through its generic `uaccess` udev rules. This is sufficient for Oryx
 web flashing and live training with ZSA keyboards.
 
-The relevant default rule is `/usr/lib/udev/rules.d/70-steam-jupiter-input.rules`:
+The relevant default rule is
+`/usr/lib/udev/rules.d/70-steam-jupiter-input.rules`:
 
 ```udev
 # USB devices and topological children
@@ -198,15 +182,8 @@ The Deck keeps SteamOS and its native kernel/GPU drivers. Nix graphical
 applications such as Ghostty still need Nix-compatible OpenGL and Vulkan
 libraries, because Nixpkgs expects them at `/run/opengl-driver`.
 
-After Home Manager reports that the non-NixOS GPU setup is missing, run the
-setup script once as root:
-
-```bash
-sudo "$(readlink -f "$(command -v non-nixos-gpu-setup)")"
-```
-
-This does not replace the SteamOS drivers. It adds a Nix userspace GPU library
-environment and creates:
+The bootstrap setup command adds a Nix userspace GPU library environment
+without replacing the SteamOS drivers. It creates:
 
 - `/etc/tmpfiles.d/non-nixos-gpu.conf`, which recreates the link at boot
 - `/run/opengl-driver`, pointing at the Nix GPU libraries
@@ -224,8 +201,9 @@ sudo rm /nix/var/nix/gcroots/non-nixos-gpu.conf
 
 ## Apple Studio Display
 
-The 2022 Apple Studio Display works with the Steam Deck, but native
-`5120x2880@60` currently black-screens on SteamOS.
+The 2022 Apple Studio Display works with the Steam Deck. For SteamOS versions
+where native `5120x2880@60` black-screens, use the 1440p workarounds below.
+See [Native 5K](#native-5k) for the tested kernel versions.
 
 ### Desktop Mode
 
@@ -254,7 +232,8 @@ Apple Computer Inc StudioDisplay:2560x1440@60 0
 For example:
 
 ```bash
-sed -i 's/Apple Computer Inc StudioDisplay:.*/Apple Computer Inc StudioDisplay:2560x1440@60 0/' \
+mode='Apple Computer Inc StudioDisplay:2560x1440@60 0'
+sed -i "s/Apple Computer Inc StudioDisplay:.*/$mode/" \
   ~/.config/gamescope/modes.cfg
 ```
 
@@ -307,3 +286,5 @@ Verify the shell and daemon before running Nix operations:
 nix --version
 nix store ping --store daemon
 ```
+
+[session-restore]: https://blogs.kde.org/2025/04/12/this-week-in-plasma-the-beginnings-of-wayland-session-restore/
