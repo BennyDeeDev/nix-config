@@ -24,12 +24,17 @@ lsblk -o NAME,SIZE,SERIAL
 
 ## Install
 
+Enable the Nix command and flakes for this shell:
+
+```bash
+export NIX_CONFIG='extra-experimental-features = nix-command flakes'
+```
+
 ### 1. Clone the repository
 
 From a terminal in the live system:
 
 ```bash
-export NIX_CONFIG='experimental-features = nix-command flakes'
 nix run nixpkgs#git -- clone https://github.com/BennyDeeDev/nix-config /tmp/nix-config
 ```
 

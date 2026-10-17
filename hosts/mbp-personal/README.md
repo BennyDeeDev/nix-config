@@ -13,10 +13,13 @@ curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install | sh
 
 Open a new terminal after installation.
 
+```bash
+export NIX_CONFIG='extra-experimental-features = nix-command flakes'
+```
+
 ### 2. Clone the repository
 
 ```bash
-export NIX_CONFIG='experimental-features = nix-command flakes'
 mkdir -p ~/Repos
 nix run nixpkgs#git -- clone https://github.com/BennyDeeDev/nix-config ~/Repos/nix-config
 cd ~/Repos/nix-config

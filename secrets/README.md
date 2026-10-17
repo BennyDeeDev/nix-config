@@ -17,6 +17,12 @@ directory with age. YubiKeys are used for editing; host keys let
 Both YubiKeys, `yk-5-nfc` and `yk-5c-nano`, are recipients of all three secret
 files. Hosts receive access through the matching rules in `.sops.yaml`.
 
+Enable the Nix command and flakes for this shell:
+
+```bash
+export NIX_CONFIG='extra-experimental-features = nix-command flakes'
+```
+
 ## Edit a secret
 
 Plug in the YubiKey selected by your Home Manager configuration:
@@ -64,7 +70,8 @@ Remove the corresponding Nix declaration and consumers, then commit the changes.
 For an existing NixOS system key:
 
 ```bash
-sudo nix shell nixpkgs#age --command age-keygen -y /var/lib/sops-nix/key.txt
+sudo nix --extra-experimental-features 'nix-command flakes' \
+  shell nixpkgs#age --command age-keygen -y /var/lib/sops-nix/key.txt
 ```
 
 For an existing Home Manager key:
@@ -84,7 +91,8 @@ For NixOS:
 ```bash
 sudo mkdir -p /var/lib/sops-nix
 
-sudo nix shell nixpkgs#age --command age-keygen -o /var/lib/sops-nix/key.txt
+sudo nix --extra-experimental-features 'nix-command flakes' \
+  shell nixpkgs#age --command age-keygen -o /var/lib/sops-nix/key.txt
 ```
 
 From an installer, use the target's mounted path, such as

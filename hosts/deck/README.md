@@ -23,7 +23,7 @@ Open a new shell after the installer finishes.
 Enable the Nix command and flakes for the bootstrap commands:
 
 ```bash
-export NIX_CONFIG='experimental-features = nix-command flakes'
+export NIX_CONFIG='extra-experimental-features = nix-command flakes'
 ```
 
 Keep this shell open through the following steps.
@@ -86,8 +86,7 @@ nix run nixpkgs#sops -- updatekeys secrets/common.yaml
 nix run nixpkgs#sops -- updatekeys secrets/desktop.yaml
 ```
 
-Do not activate Home Manager from the rekey shell. Start a new shell, or
-clear the YubiKey identity first:
+Clear the YubiKey identity before activating Home Manager:
 
 ```bash
 unset SOPS_AGE_KEY

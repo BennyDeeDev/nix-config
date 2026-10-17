@@ -15,6 +15,10 @@ Build and flash the bootstrap SD image, enroll the Pi's age key, then deploy
 
 Run build and deployment commands from the checkout root on the build machine.
 
+```bash
+export NIX_CONFIG='extra-experimental-features = nix-command flakes'
+```
+
 ## Bootstrap and deploy
 
 ### 1. Build the bootstrap SD image
@@ -57,7 +61,8 @@ stored in those secrets.
 On the Pi, print its public key:
 
 ```bash
-sudo nix shell nixpkgs#age --command age-keygen -y /var/lib/sops-nix/key.txt
+sudo nix --extra-experimental-features 'nix-command flakes' \
+  shell nixpkgs#age --command age-keygen -y /var/lib/sops-nix/key.txt
 ```
 
 On the editing machine, replace the `&pi5-server` public key in `.sops.yaml`
