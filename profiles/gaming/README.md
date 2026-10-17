@@ -1,10 +1,27 @@
-# Gaming Profile
+# Gaming
+
+The gaming profile configures Steam, Flatpak applications, portable Bottles,
+LSFG launchers, and save backups. These instructions assume the profile has
+been activated. The `lsfg-vk-*` and `steam-host` commands are supplied by Home
+Manager, rather than exported as standalone flake packages.
 
 ## LSFG-VK 2.0
 
-The gaming profile exposes generic LSFG-enabled launchers. They configure the
-Vulkan layer for one command without enabling it globally, and preserve the
-existing Vulkan implicit-layer search paths.
+### Prepare Lossless Scaling
+
+1. Open Lossless Scaling's properties in Steam.
+2. Under **Betas**, select the `lsfg-vk` branch.
+3. Wait for the download to finish and check that the DLL is present:
+
+   ```bash
+   ls -l "$HOME/.local/share/Steam/steamapps/common/Lossless Scaling/lsfg-vk.dll"
+   ```
+
+The regular branch's `LosslessScaling.dll` is incompatible with LSFG-VK 2.0.
+
+### Launch an application
+
+Choose the frame multiplier:
 
 ```bash
 lsfg-vk-2x eden-steamdeck-pgo
@@ -12,108 +29,24 @@ lsfg-vk-3x eden-steamdeck-pgo
 lsfg-vk-4x eden-steamdeck-pgo
 ```
 
-The same launchers can wrap other executables or Steam's `%command%` launch
-placeholder.
+The launchers also accept other executables or Steam's `%command%` launch
+placeholder. They enable the Vulkan layer for that command and preserve
+existing implicit-layer search paths.
 
-Before using the launcher, switch Lossless Scaling to Steam's `lsfg-vk` branch:
+## Portable gaming setup
 
-1. Open Lossless Scaling's Steam properties.
-2. Open the **Betas** tab.
-3. Select the `lsfg-vk` branch.
-4. Let Steam finish downloading the branch.
-
-The regular branch provides `LosslessScaling.dll`, which is incompatible with
-LSFG-VK 2.0. The `lsfg-vk` branch must provide this file:
+The desktop and Deck share an SD card configured through
+`my.gaming.portableGamesPath`. For the terminal examples below, set:
 
 ```bash
-ls -l "$HOME/.local/share/Steam/steamapps/common/Lossless Scaling/lsfg-vk.dll"
+portable="/run/media/$USER/976d3eeb-4b99-4f9b-b67c-a708c59432e7"
+bottle="$portable/Bottles/gaming-portable-bottle"
 ```
 
-## Steam Host Launches
+### 1. Create the bottle
 
-Steam launches non-Steam entries inside its Scout runtime. The gaming profile
-provides `steam-host` for Deck Steam ROM Manager entries that launch Flatpak or
-Nix applications. It clears Steam's overlay preload and switches back to the
-host environment before executing the command:
-
-```bash
-steam-host flatpak run --command=bottles-cli --unshare=network \
-  com.usebottles.bottles run -b gaming-portable-bottle -e <launcher>
-
-steam-host "$HOME/.nix-profile/bin/VacuumTube"
-```
-
-## Bottles Steam Deck Controller Fix
-
-When running Windows games through Bottles Flatpak in Steam Deck Gaming Mode,
-Wine may expose the Steam Deck controller as two simultaneously active XInput
-controllers.
-
-In KDE Desktop Mode, only one controller responds. In Gaming Mode, both
-controllers receive the same inputs. This can cause broken menu navigation,
-unresponsive D-pad controls, and mouse interaction issues, even when controller
-input works correctly during gameplay.
-
-The issue was reproduced with Soda 11 and occurs with Steam Input enabled or
-disabled.
-
-### Fix
-
-Disable Wine's SDL controller backend to eliminate the duplicate controller
-while keeping XInput functional.
-
-Launch Wine's Control Panel inside the existing bottle:
-
-```bash
-flatpak run --command=bottles-cli --unshare=network \
-  com.usebottles.bottles tools -b gaming-bottle control
-```
-
-Open **Game Controllers → Advanced**, uncheck **Enable SDL**, and apply the
-changes.
-
-Restart the game to ensure Wine initializes its controller backends with the
-updated configuration.
-
-## Game Launchers
-
-Each PC game has a `my.launcher.bat` in its game directory:
-
-```text
-PC/<Game Name>/my.launcher.bat
-```
-
-The batch file launches the game relative to its own directory. Generic example:
-
-```bat
-"%~dp0Gameface\Binaries\Win64\Game.exe"
-```
-
-`%~dp0` means the directory containing the batch file. Steam ROM Manager finds
-these files and launches them through the portable bottle:
-
-```bash
-flatpak run --command=bottles-cli --unshare=network \
-  com.usebottles.bottles run \
-  -b "gaming-portable-bottle" \
-  -e "<path-to-my.launcher.bat>"
-```
-
-## Portable Gaming Setup
-
-This setup keeps selected gaming data on removable storage so compatible
-systems can share games, saves, and application data. Each application has its
-own portable configuration.
-
-### Portable Bottles
-
-Create a bottle using this custom Bottles directory:
-
-```text
-/run/media/<user>/976d3eeb-4b99-4f9b-b67c-a708c59432e7/Bottles
-```
-
-Set its `bottle.yml`:
+Create `gaming-portable-bottle` using the card's `Bottles` directory as the
+custom Bottles location. Close Bottles before editing its `bottle.yml`:
 
 ```yaml
 Custom_Path: false
@@ -122,58 +55,114 @@ Environment_Variables:
 Path: gaming-portable-bottle
 ```
 
-Home Manager registers the bottle by creating a symlink:
+Home Manager registers the bottle through a symlink:
 
 ```text
 ~/.var/app/com.usebottles.bottles/data/bottles/bottles/gaming-portable-bottle
 -> /run/media/<user>/976d3eeb-4b99-4f9b-b67c-a708c59432e7/Bottles/gaming-portable-bottle
 ```
 
-This lets Bottles find the portable prefix while keeping the actual bottle on
-the SD card. Do not use `placeholder.yml`; the shared `bottle.yml` keeps its
-relative `Path`.
-
-Start it with:
+Keep the relative `Path` in the shared `bottle.yml`; do not create a
+`placeholder.yml`. Reopen the bottle with:
 
 ```bash
-flatpak run com.usebottles.bottles --bottle "gaming-portable-bottle"
+nix run nixpkgs#flatpak -- run com.usebottles.bottles --bottle gaming-portable-bottle
 ```
 
-### Portable Game Installation
+### 2. Map the portable drive
 
-Create the portable `P:` drive mapping before installing a Windows game:
+After the bottle has initialized, map `P:` to the card before installing games:
 
 ```bash
-ln -sfn -- ../../.. "/run/media/$USER/976d3eeb-4b99-4f9b-b67c-a708c59432e7/Bottles/gaming-portable-bottle/dosdevices/p:"
+ln -sfn -- ../../.. "$bottle/dosdevices/p:"
 ```
 
-The relative target makes `P:` resolve to the SD card regardless of whether the
-current user is `deck` or `benjamin`.
+The relative target resolves to the card for both `deck` and `benjamin`.
+This replaces any stale `p:` link. `p::` is a separate Wine device mapping.
 
-When an installer asks where to install the game, use a path on `P:`:
+### 3. Install and launch games
+
+When a Windows installer asks for the destination, use:
 
 ```text
 P:\PC\<Game Name>
 ```
 
-Some Windows installers store the installation path in the registry. Installing
-to `P:` ensures those registry entries are portable from the start. If an
-installer writes a host-specific path instead, update its registry entries to
-use the equivalent `P:\...` path before launching the game. Replace any existing
-stale `p:` link with the command above.
+This keeps registry paths portable. For an existing installation with
+host-specific paths, update the relevant registry entries to their `P:\...`
+equivalents.
 
-`p:` is the Wine directory mapping. Do not confuse it with `p::`, which is a
-separate Wine device mapping.
+Create `PC/<Game Name>/my.launcher.bat` to launch the game relative to its own
+directory. For example:
 
-### Portable Eden
+```bat
+"%~dp0Gameface\Binaries\Win64\Game.exe"
+```
 
-Set Eden's firmware and keys first.
+`%~dp0` is the batch file's directory. Steam ROM Manager finds these launchers
+and runs them through the portable bottle. To test one manually, replace
+`Game Name` with the actual directory:
 
-Open **Eden -> Emulation -> Configure -> System**, then set both the **NAND**
-and **Save Data** paths to:
+```bash
+launcher="$portable/PC/Game Name/my.launcher.bat"
+nix run nixpkgs#flatpak -- run \
+  --command=bottles-cli \
+  --unshare=network \
+  com.usebottles.bottles run \
+  -b gaming-portable-bottle \
+  -e "$launcher"
+```
+
+### 4. Configure portable Eden data
+
+Set up Eden's firmware and keys first. Under **Emulation → Configure →
+System**, set both **NAND** and **Save Data** to:
 
 ```text
 /run/media/<user>/976d3eeb-4b99-4f9b-b67c-a708c59432e7/Eden/nand
 ```
 
 Replace `<user>` with `deck` or `benjamin`, then restart Eden.
+
+## Steam host launches
+
+Steam runs non-Steam entries inside its Scout runtime. `steam-host` clears the
+overlay preload and switches to the host environment before launching Flatpak
+or Nix applications. Use it in Deck Steam ROM Manager entries, for example:
+
+```bash
+steam-host flatpak run \
+  --command=bottles-cli \
+  --unshare=network \
+  com.usebottles.bottles run \
+  -b gaming-portable-bottle \
+  -e "/path/to/my.launcher.bat"
+
+steam-host "$HOME/.nix-profile/bin/VacuumTube"
+```
+
+Replace the launcher path with the game's batch file. The Flatpak executable
+is available on the configured gaming hosts.
+
+## Duplicate Deck controllers in Bottles
+
+Wine can expose two active XInput controllers in Steam Deck Gaming Mode,
+causing duplicate menu inputs, broken D-pad navigation, or mouse interaction
+issues. This was reproduced with Soda 11, with Steam Input both enabled and
+disabled; Desktop Mode exposed only one responding controller.
+
+To disable Wine's SDL controller backend while retaining XInput:
+
+1. Open Wine's Control Panel in the affected bottle. For the portable bottle:
+
+   ```bash
+   nix run nixpkgs#flatpak -- run \
+     --command=bottles-cli \
+     --unshare=network \
+     com.usebottles.bottles tools \
+     -b gaming-portable-bottle \
+     control
+   ```
+
+2. Open **Game Controllers → Advanced**, uncheck **Enable SDL**, and apply.
+3. Restart the game so Wine reloads its controller configuration.

@@ -1,68 +1,90 @@
 # Packages
 
-Each `.nix` file in this directory is exposed as a package with the same name
-without the `.nix` suffix.
+Package definitions live here; [`flake.nix`](../flake.nix) explicitly exports
+them under `packages.x86_64-linux`. Adding a file alone does not export it.
+Run the commands below from the checkout root on an `x86_64-linux` machine.
 
-Package expressions should stay minimal:
+## Add a package
+
+### 1. Write the definition
+
+Create `packages/package-name.nix`. For a Type 2 AppImage using SquashFS:
 
 ```nix
-{ appimageTools, fetchurl }:
+{ appimageTools, fetchurl, lib }:
 
+let
+  version = "1.0.0";
+in
 appimageTools.wrapType2 {
   pname = "package-name";
-  version = "1.0.0";
+  inherit version;
   src = fetchurl {
     url = "https://example.org/package-${version}.AppImage";
-    hash = "sha256-...";
+    hash = lib.fakeHash;
   };
 }
 ```
 
-## Initial Hash
+### 2. Export it from the flake
 
-Use a temporary fake hash:
+Add the package alongside the existing definitions in `flake.nix`:
 
 ```nix
-hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+packages.x86_64-linux.package-name =
+  pkgsX86Linux.callPackage ./packages/package-name.nix { };
 ```
 
-Then update only the source hash:
+The update script expects each package export to match its filename without
+the `.nix` suffix. Track the new file so the Git-backed flake includes it:
 
-```sh
-nix run github:Mic92/nix-update -- \
-  --flake \
-  --version=skip \
-  package-name
+```bash
+git add packages/package-name.nix
 ```
 
-Build the package and commit the real hash:
+### 3. Obtain the source hash
 
-```sh
-nix build .#package-name
+Replace the temporary hash without changing the version:
+
+```bash
+nix run github:Mic92/nix-update -- --flake --version=skip package-name
 ```
 
-## Updates
+Build the package and commit the definition and export after reviewing them:
 
-Update every package:
+```bash
+nix build --no-link .#package-name
+```
 
-```sh
+## Update packages
+
+Update every exported package corresponding to `packages/*.nix`:
+
+```bash
 ./packages/update.sh
 ```
 
-Update one package:
+The script accepts release tags matching `vMAJOR.MINOR.PATCH`. To update a
+single package with the same tag filter:
 
-```sh
+```bash
 nix run github:Mic92/nix-update -- \
   --flake \
+  --version-regex '^v([0-9]+\.[0-9]+\.[0-9]+)$' \
   package-name
 ```
 
-## AppImage Payloads
+For a package with a different release scheme, adjust the filter or omit it.
+Review the changed version, URL, and hash, then build the affected packages.
 
-`appimageTools.wrapType2` extracts Type 2 AppImages with `unsquashfs`.
-Some AppImages use DwarFS instead, so `wrapType2` cannot extract them.
+## AppImage formats
 
-There are two approaches:
+`appimageTools.wrapType2` extracts SquashFS-based Type 2 AppImages. It cannot
+extract DwarFS payloads. The Eden definitions use `dwarfsextract` followed by
+`appimageTools.wrapAppImage`; see
+[`eden-steamdeck-pgo.nix`](eden-steamdeck-pgo.nix) for the extraction and
+desktop integration.
 
-- Keep the verified AppImage intact in `$out/bin`. This is simplest and preserves the vendor runtime.
-- Extract with `dwarfsextract`, then use `appimageTools.wrapAppImage`. This gives Nix more control but creates many files and consumes more inodes.
+Keeping an AppImage intact preserves its vendor runtime, but that runtime must
+work on the target host. Extracting and wrapping it gives Nix control over
+the runtime environment, at the cost of additional files and inodes.
