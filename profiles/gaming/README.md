@@ -66,7 +66,7 @@ Keep the relative `Path` in the shared `bottle.yml`; do not create a
 `placeholder.yml`. Reopen the bottle with:
 
 ```bash
-nix run nixpkgs#flatpak -- run com.usebottles.bottles --bottle gaming-portable-bottle
+flatpak run com.usebottles.bottles --bottle gaming-portable-bottle
 ```
 
 ### 2. Map the portable drive
@@ -105,7 +105,7 @@ and runs them through the portable bottle. To test one manually, replace
 
 ```bash
 launcher="$portable/PC/Game Name/my.launcher.bat"
-nix run nixpkgs#flatpak -- run \
+flatpak run \
   --command=bottles-cli \
   --unshare=network \
   com.usebottles.bottles run \
@@ -156,7 +156,7 @@ To disable Wine's SDL controller backend while retaining XInput:
 1. Open Wine's Control Panel in the affected bottle. For the portable bottle:
 
    ```bash
-   nix run nixpkgs#flatpak -- run \
+   flatpak run \
      --command=bottles-cli \
      --unshare=network \
      com.usebottles.bottles tools \
