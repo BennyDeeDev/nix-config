@@ -1,11 +1,16 @@
 { helixFlake }:
+let
+  helixPerlOverlay = import ../../overlays/helix-perl.nix;
+in
 {
   homeManager =
     { pkgs, ... }:
     {
       programs.helix = {
         enable = true;
-        package = helixFlake.packages.${pkgs.stdenv.hostPlatform.system}.default;
+        package = helixFlake.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
+          grammarOverlays = [ helixPerlOverlay ];
+        };
 
         settings = {
           theme = {
