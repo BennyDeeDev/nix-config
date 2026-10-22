@@ -20,7 +20,7 @@
             globs = switchGlobs;
             steam_shortcut = {
               executable = "/home/deck/.nix-profile/bin/eden-steamdeck-pgo";
-              launch_options = ''/home/deck/.nix-profile/bin/lsfg-vk-2x %command% -f -g "''${file_path}"'';
+              launch_options = ''LD_PRELOAD="" /home/deck/.nix-profile/bin/lsfg-vk-2x %command% -f -g "''${file_path}"'';
               categories = [ "Switch" ];
             };
           }
@@ -36,7 +36,7 @@
             globs = switchGlobs;
             steam_shortcut = {
               executable = "/home/deck/.nix-profile/bin/eden-steamdeck-pgo";
-              launch_options = ''%command% -f -g "''${file_path}"'';
+              launch_options = ''LD_PRELOAD="" %command% -f -g "''${file_path}"'';
               categories = [ "Switch" ];
             };
           }
