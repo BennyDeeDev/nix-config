@@ -47,6 +47,10 @@
       url = "github:Jovian-Experiments/Jovian-NixOS";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    steamdex = {
+      url = "github:BennyDeeDev/steamdex";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

@@ -7,7 +7,7 @@
 }:
 
 let
-  steamRomManager = import ./steam-rom-manager.nix;
+  steamdex = import ./steamdex.nix;
 in
 {
   nixos = {
@@ -27,7 +27,7 @@ in
             profiles.terminal.homeManager
             sopsModule.homeManager
             profiles.gaming.homeManager
-            steamRomManager.homeManager
+            steamdex.homeManager
             windows.homeManager
           ];
 

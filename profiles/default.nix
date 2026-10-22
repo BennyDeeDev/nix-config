@@ -8,13 +8,17 @@
   nix-homebrew,
   plasma-manager,
   sops-nix,
+  steamdex,
   self,
   ...
 }:
 
 let
   apps = import ./apps;
-  gaming = import ./gaming { inherit jovian nix-flatpak self; };
+  gaming = import ./gaming {
+    inherit jovian nix-flatpak self;
+    steamdexFlake = steamdex;
+  };
   nixos = import ./nixos { inherit sops-nix; };
   nixosDesktop = import ./nixos-desktop { inherit home-manager lanzaboote; };
   kde = import ./kde { inherit plasma-manager; };
