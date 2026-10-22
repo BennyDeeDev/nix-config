@@ -8,10 +8,11 @@ Home Manager, rather than exported as standalone flake packages.
 ## Steamdex
 
 The gaming profile enables `my.steamdex` and sets the shared Steam directory
-and account ID. Each host defines its complete parser and app lists through
-`my.steamdex.settings`. The Home Manager module writes the merged settings to
-`~/.config/steamdex/config.json` on the desktop and Steam Deck. Steamdex loads
-this file automatically, respecting `XDG_CONFIG_HOME` when set.
+and account ID. Each host defines its parsers and apps through
+`my.steamdex.settings`. Home Manager writes the configuration to
+`~/.config/steamdex/config.json`; Steamdex loads it automatically, respecting
+`XDG_CONFIG_HOME` when set. SOPS renders the SteamGridDB API key from
+`secrets/common.yaml` to `~/.config/steamdex/secrets.json` for Steamdex.
 
 Preview the configured shortcuts, then write them to Steam:
 

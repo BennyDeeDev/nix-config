@@ -16,9 +16,12 @@ in
       my.steamdex = {
         enable = true;
         package = steamdexFlake.packages.${pkgs.stdenv.hostPlatform.system}.default;
-        settings.steam = {
-          directory = "${config.home.homeDirectory}/.local/share/Steam";
-          user_data_id = "127725003";
+        settings = {
+          steam = {
+            directory = "${config.home.homeDirectory}/.local/share/Steam";
+            user_data_id = "127725003";
+          };
+          secrets_file = "${config.xdg.configHome}/steamdex/secrets.json";
         };
       };
     };

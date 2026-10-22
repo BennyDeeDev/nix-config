@@ -28,8 +28,18 @@
 
       config = lib.mkIf cfg.enable {
         home.packages = [ cfg.package ];
+
         xdg.configFile."steamdex/config.json".source =
           settingsFormat.generate "steamdex-config.json" cfg.settings;
+
+        sops.secrets."steamgriddb-api-key".sopsFile = ../secrets/common.yaml;
+
+        sops.templates."steamdex-secrets.json" = {
+          path = "${config.xdg.configHome}/steamdex/secrets.json";
+          content = builtins.toJSON {
+            steamgriddb_api_key = config.sops.placeholder."steamgriddb-api-key";
+          };
+        };
       };
     };
 }
