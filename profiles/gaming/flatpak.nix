@@ -13,7 +13,7 @@
       ...
     }:
     let
-      steamRuntimeSwitcher = "${config.home.homeDirectory}/.local/share/Steam/ubuntu12_32/steam-runtime/scripts/switch-runtime.sh";
+      steamRuntimeSwitcher = "${config.home.homeDirectory}/.local/share/Steam/steamapps/common/SteamLinuxRuntime/steam-runtime/scripts/switch-runtime.sh";
 
       steamHost = pkgs.writeTextFile {
         name = "steam-host";
