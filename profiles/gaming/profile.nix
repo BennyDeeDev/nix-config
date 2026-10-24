@@ -11,7 +11,6 @@
     in
     {
       config.home.packages = with pkgs; [
-        steam-rom-manager
         vacuum-tube
       ];
 
