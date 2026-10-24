@@ -7,14 +7,16 @@
       networking.interfaces.enp14s0.wakeOnLan.enable = true;
       system.stateVersion = "25.11";
 
-      boot = {
-        extraModulePackages = [ config.boot.kernelPackages.r8125 ];
-        blacklistedKernelModules = [ "r8169" ];
-        kernelModules = [ "r8125" ];
-        extraModprobeConfig = ''
-          options r8125 s5wol=1 aspm=0
-        '';
-      };
+      # Temporarily disable the out-of-tree driver until this fix reaches the
+      # locked nixpkgs input: https://github.com/NixOS/nixpkgs/pull/576564
+      # boot = {
+      #   extraModulePackages = [ config.boot.kernelPackages.r8125 ];
+      #   blacklistedKernelModules = [ "r8169" ];
+      #   kernelModules = [ "r8125" ];
+      #   extraModprobeConfig = ''
+      #     options r8125 s5wol=1 aspm=0
+      #   '';
+      # };
 
       my.nas = {
         uid = 1000;
