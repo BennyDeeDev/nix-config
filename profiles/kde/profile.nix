@@ -22,7 +22,6 @@ in
         kdePackages.kpat
         kdePackages.ksudoku
         kdePackages.khelpcenter
-        kdePackages.kwin-x11
       ];
 
       environment.systemPackages = nixosPackages pkgs;

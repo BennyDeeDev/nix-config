@@ -3,38 +3,58 @@
     programs.opencode = {
       enable = true;
       package = pkgs.opencode;
-      settings = {
-        default_agent = "plan";
-        autoupdate = false;
-        compaction = {
-          auto = true;
-          prune = true;
-        };
-        permission = {
-          read = "allow";
-          edit = "allow";
-          webfetch = "allow";
-          websearch = "allow";
-          external_directory = "allow";
-          bash = "allow";
-        };
-      };
-      tui = {
-        theme = "catppuccin";
+      cli = {
+        theme.name = "catppuccin";
         attention = {
-          enabled = true;
           notifications = false;
           sound = true;
           volume = 0.25;
         };
       };
-    };
-
-    home.sessionVariables = {
-      OPENCODE_ENABLE_EXA = "1";
+      settings = {
+        default_agent = "plan";
+        update = "disable";
+        compaction = {
+          auto = true;
+        };
+        permissions = [
+          {
+            action = "read";
+            resource = "*";
+            effect = "allow";
+          }
+          {
+            action = "edit";
+            resource = "*";
+            effect = "allow";
+          }
+          {
+            action = "webfetch";
+            resource = "*";
+            effect = "allow";
+          }
+          {
+            action = "websearch";
+            resource = "*";
+            effect = "allow";
+          }
+          {
+            action = "external_directory";
+            resource = "*";
+            effect = "allow";
+          }
+          {
+            action = "shell";
+            resource = "*";
+            effect = "allow";
+          }
+        ];
+        websearch = {
+          provider = "random";
+        };
+      };
     };
 
     programs.zsh.shellAliases.o = "opencode";
-    programs.zsh.shellAliases.o-parallel = "env -u OPENCODE_ENABLE_EXA OPENCODE_ENABLE_PARALLEL=1 opencode";
   };
 }

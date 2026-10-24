@@ -92,24 +92,11 @@
         ripgrep.enable = true;
       };
 
-      xdg.configFile."rumdl/rumdl.toml".text = ''
-        [MD013]
-        line-length = 80
-        reflow = true
-      '';
-
       home.packages = (
         with pkgs;
         [
           yq-go
           xq
-          rumdl
-          prettier
-          ruff
-          taplo
-          yamlfmt
-          shellcheck
-          shfmt
           tree
           tldr
           curl
