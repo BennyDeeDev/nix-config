@@ -8,7 +8,7 @@
       ...
     }:
     let
-      lsfgVk = self.packages.${pkgs.system}.lsfg-vk;
+      lsfgVk = self.packages.${pkgs.stdenv.hostPlatform.system}.lsfg-vk;
 
       losslessScalingDll = "${config.home.homeDirectory}/.local/share/Steam/steamapps/common/Lossless Scaling/lsfg-vk.dll";
 
