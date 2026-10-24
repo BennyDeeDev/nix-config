@@ -2,6 +2,7 @@
   jovian,
   nix-flatpak,
   self,
+  steamdexFlake,
 }:
 
 let
@@ -11,6 +12,7 @@ let
   ludusavi = import ./ludusavi.nix;
   profile = import ./profile.nix;
   steam = import ./steam.nix { inherit jovian; };
+  steamdex = import ./steamdex.nix { inherit steamdexFlake; };
 in
 {
   nixos = {
@@ -28,6 +30,7 @@ in
       ludusavi.homeManager
       profile.homeManager
       steam.homeManager
+      steamdex.homeManager
     ];
   };
 }

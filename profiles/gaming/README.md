@@ -1,9 +1,30 @@
 # Gaming
 
-The gaming profile configures Steam, Flatpak applications, portable Bottles,
-LSFG launchers, and save backups. These instructions assume the profile has
-been activated. The `lsfg-vk-*` and `steam-host` commands are supplied by Home
-Manager, rather than exported as standalone flake packages.
+The gaming profile configures Steam, Steamdex, Flatpak applications, portable
+Bottles, LSFG launchers, and save backups. These instructions assume the profile
+has been activated. The `lsfg-vk-*` and `steam-host` commands are supplied by
+Home Manager, rather than exported as standalone flake packages.
+
+## Steamdex
+
+The gaming profile enables `my.steamdex` and sets the shared Steam directory
+and account ID. Each host defines its parsers and apps through
+`my.steamdex.settings`. Home Manager writes the configuration to
+`~/.config/steamdex/config.json`; Steamdex loads it automatically, respecting
+`XDG_CONFIG_HOME` when set. SOPS renders the SteamGridDB API key from
+`secrets/common.yaml` to `~/.config/steamdex/secrets.json` for Steamdex.
+
+Preview the configured shortcuts, then write them to Steam:
+
+```bash
+steamdex list
+steamdex parse --preview
+steamdex parse
+```
+
+Steamdex preserves existing Steam shortcuts and updates matching entries. The
+first parse may add a second entry if a previous shortcut used a different
+executable or title.
 
 ## LSFG-VK 2.0
 
@@ -99,8 +120,8 @@ directory. For example:
 "%~dp0Gameface\Binaries\Win64\Game.exe"
 ```
 
-`%~dp0` is the batch file's directory. Steam ROM Manager finds these launchers
-and runs them through the portable bottle. To test one manually, replace
+`%~dp0` is the batch file's directory. Steamdex finds these launchers and runs
+them through the portable bottle. To test one manually, replace
 `Game Name` with the actual directory:
 
 ```bash
@@ -128,7 +149,8 @@ Replace `<user>` with `deck` or `benjamin`, then restart Eden.
 
 Steam runs non-Steam entries inside its Scout runtime. `steam-host` clears the
 overlay preload and switches to the host environment before launching Flatpak
-or Nix applications. Use it in Deck Steam ROM Manager entries, for example:
+or Nix applications. Steamdex uses it in Deck app and portable game entries,
+for example:
 
 ```bash
 steam-host flatpak run \

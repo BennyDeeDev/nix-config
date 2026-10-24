@@ -13,7 +13,7 @@ let
   sopsModule = import ../../modules/sops.nix { inherit sops-nix; };
   host = import ./host.nix { inherit inputs; };
   sdgyrodsu = import ./sdgyrodsu.nix { inherit jovian; };
-  steamRomManager = import ./steam-rom-manager.nix;
+  steamdex = import ./steamdex.nix;
 in
 {
   homeManager = {
@@ -28,7 +28,7 @@ in
       profiles.terminal.homeManager
       host.homeManager
       sdgyrodsu.homeManager
-      steamRomManager.homeManager
+      steamdex.homeManager
     ];
   };
 }
