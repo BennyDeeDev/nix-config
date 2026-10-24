@@ -59,8 +59,8 @@
           {
             title = "Minecraft";
             steam_shortcut = {
-              executable = "/home/deck/.nix-profile/bin/prismlauncher";
-              launch_options = "--launch 26.3";
+              executable = "/home/deck/.nix-profile/bin/steam-host";
+              launch_options = "/home/deck/.nix-profile/bin/prismlauncher --launch 26.3";
               categories = [ "Custom Games" ];
             };
           }

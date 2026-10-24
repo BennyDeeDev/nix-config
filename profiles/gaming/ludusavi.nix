@@ -41,10 +41,19 @@
               when: [{ os: linux }]
       '';
 
+      mkPrismManifest = instancesPath: ''
+        "Prism Launcher":
+          files:
+            "${instancesPath}":
+              tags: [save, config]
+              when: [{ os: linux }]
+      '';
+
       gamingManifest = builtins.toFile "ludusavi-gaming-manifest.yml" ''
         ${mkEdenManifest "${portableGamesPath}/Eden/nand"}
         ${mkBottleManifest "Bottles (Portable)" portableBottlePath}
         ${mkBottleManifest "Bottles (Host)" hostBottlePath}
+        ${mkPrismManifest "${portableGamesPath}/PrismLauncher/instances"}
       '';
     in
     {
