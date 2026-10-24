@@ -57,6 +57,15 @@
 
         apps = [
           {
+            title = "Minecraft";
+            steam_shortcut = {
+              executable = "/home/deck/.nix-profile/bin/prismlauncher";
+              launch_options = "--launch 26.3";
+              categories = [ "Custom Games" ];
+            };
+          }
+
+          {
             title = "Stremio";
             steam_shortcut = {
               executable = "/home/deck/.nix-profile/bin/steam-host";

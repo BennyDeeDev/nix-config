@@ -11,6 +11,7 @@
     in
     {
       config.home.packages = with pkgs; [
+        prismlauncher
         vacuum-tube
       ];
 

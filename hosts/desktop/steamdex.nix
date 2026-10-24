@@ -70,6 +70,15 @@
 
         apps = [
           {
+            title = "Minecraft";
+            steam_shortcut = {
+              executable = "/etc/profiles/per-user/benjamin/bin/prismlauncher";
+              launch_options = "--launch 26.3";
+              categories = [ "Custom Games" ];
+            };
+          }
+
+          {
             title = "Stremio";
             steam_shortcut = {
               executable = "/usr/bin/env";
