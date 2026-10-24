@@ -44,6 +44,12 @@
               exit 1
             fi
 
+            if [ ! -f "${losslessScalingDll}" ]; then
+              printf 'LSFG-VK shader DLL not found: %s\n' "${losslessScalingDll}" >&2
+              printf 'Select the lsfg-vk beta branch for Lossless Scaling in Steam and let it finish downloading.\n' >&2
+              exit 1
+            fi
+
             export VK_ADD_IMPLICIT_LAYER_PATH="${lsfgVk}/share/vulkan/implicit_layer.d''${VK_ADD_IMPLICIT_LAYER_PATH:+:$VK_ADD_IMPLICIT_LAYER_PATH}"
             export LSFGVK_ENV=1
             export LSFGVK_DLL_PATH="${losslessScalingDll}"
