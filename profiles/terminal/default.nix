@@ -4,6 +4,7 @@
 }:
 let
   cli = import ./cli.nix;
+  development = import ./development.nix;
   git = import ./git.nix { inherit lazygitFlake; };
   helix = import ./helix.nix { inherit helixFlake; };
   nixTools = import ./nix-tools.nix;
@@ -16,6 +17,7 @@ in
   homeManager = {
     imports = [
       cli.homeManager
+      development.homeManager
       git.homeManager
       helix.homeManager
       nixTools.homeManager
