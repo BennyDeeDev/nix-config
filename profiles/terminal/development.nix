@@ -26,6 +26,9 @@
         typescript
         typescript-language-server
 
+        # JSON
+        vscode-json-language-server
+
         # Python
         python3
 
