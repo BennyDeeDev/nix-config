@@ -94,7 +94,8 @@ nixos-rebuild switch --flake .#pi5-server \
 ```
 
 The Pi builds the configuration and activates it using bootstrap sudo. Its
-hostname changes to `pi5-server`; subsequent connections use that name.
+hostname changes to `pi5-server`; subsequent connections use
+`pi5-server.fritz.box`.
 
 The same bootstrap image can deploy `pi5-kiosk` by changing the flake output.
 That host is still a placeholder; the Home Assistant instructions below apply
@@ -171,6 +172,22 @@ Home Assistant, OTBR, and Matter.js are configured as native NixOS services in
 [`home-assistant.nix`](home-assistant.nix),
 [`openthread-border-router.nix`](openthread-border-router.nix), and
 [`matterjs-server.nix`](matterjs-server.nix).
+
+### Blocky and local DNS
+
+The Pi continues to receive its network configuration from the FRITZ!Box DHCP
+server. Blocky is configured in [`blocky.nix`](blocky.nix), listens on IPv4
+interfaces, and does not run a DHCP server. It forwards `*.fritz.box` queries
+to the FRITZ!Box and rewrites `home-assistant.benjaminderksen.com` to
+`pi5-server.fritz.box`. Other DNS queries use Quad9 over DNS-over-HTTPS, with
+Quad9's IPv4 addresses as bootstrap resolvers. Blocky has no web dashboard.
+
+To test DNS resolution on the Pi:
+
+```bash
+ssh benjamin@pi5-server.fritz.box
+nslookup home-assistant.benjaminderksen.com 127.0.0.1
+```
 
 ### 1. Set up Home Assistant
 

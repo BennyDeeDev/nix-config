@@ -3,6 +3,7 @@ inputs@{ ... }:
 let
   profiles = import ../../profiles inputs;
   host = import ./host.nix;
+  blocky = import ./blocky.nix;
   homeAssistant = import ./home-assistant.nix;
   openthreadBorderRouter = import ./openthread-border-router.nix;
   matterjsServer = import ./matterjs-server.nix;
@@ -16,6 +17,7 @@ in
       profiles.pi5.nixos
       nasModule.nixos
       resticModule.nixos
+      blocky.nixos
       homeAssistant.nixos
       openthreadBorderRouter.nixos
       matterjsServer.nixos
