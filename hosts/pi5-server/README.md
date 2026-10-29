@@ -288,8 +288,8 @@ server settings in the UI.
 
 Under **Settings → Devices & Services → Add Integration**, add:
 
-- **OpenThread Border Router**, using `http://localhost:8081` if it is not
-  discovered automatically.
+- **OpenThread Border Router**, using `http://pi5-server.fritz.box:8081` if it
+  is not discovered automatically.
 - **Matter**, using `ws://localhost:5580/ws` if prompted for a server URL.
 
 Home Assistant can reach OTBR and Matter.js through `localhost`.
