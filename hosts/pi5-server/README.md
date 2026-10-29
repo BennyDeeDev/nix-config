@@ -170,6 +170,7 @@ The command-line flasher also needs access to the serial device.
 
 Home Assistant, OTBR, and Matter.js are configured as native NixOS services in
 [`home-assistant.nix`](home-assistant.nix),
+[`caddy.nix`](caddy.nix),
 [`openthread-border-router.nix`](openthread-border-router.nix), and
 [`matterjs-server.nix`](matterjs-server.nix).
 
@@ -178,22 +179,65 @@ Home Assistant, OTBR, and Matter.js are configured as native NixOS services in
 The Pi continues to receive its network configuration from the FRITZ!Box DHCP
 server. Blocky is configured in [`blocky.nix`](blocky.nix), listens on IPv4
 interfaces, and does not run a DHCP server. It forwards `*.fritz.box` queries
-to the FRITZ!Box and rewrites `home-assistant.benjaminderksen.com` to
-`pi5-server.fritz.box`. Other DNS queries use Quad9 over DNS-over-HTTPS, with
-Quad9's IPv4 addresses as bootstrap resolvers. Blocky has no web dashboard.
+to the FRITZ!Box and maps `ha.benjaminderksen.com` to the Pi's LAN address,
+`192.168.178.52`. Reserve that address for the Pi in the FRITZ!Box DHCP settings
+so the local DNS record stays correct. Other DNS queries use Quad9 over
+DNS-over-HTTPS, with Quad9's IPv4 addresses as bootstrap resolvers. Blocky has
+no web dashboard.
 
 To test DNS resolution on the Pi:
 
 ```bash
 ssh benjamin@pi5-server.fritz.box
-nslookup home-assistant.benjaminderksen.com 127.0.0.1
+nslookup ha.benjaminderksen.com 127.0.0.1
 ```
 
 ### 1. Set up Home Assistant
 
-Open `http://pi5-server.fritz.box:8123` and complete onboarding if no previous
-configuration was restored. Home Assistant stores its runtime state under
-`/var/lib/hass`.
+Open `https://ha.benjaminderksen.com` and complete onboarding if no previous
+configuration was restored. Caddy proxies to Home Assistant on loopback and
+uses the wildcard certificate managed by NixOS ACME with Cloudflare DNS
+validation. DNS validation does not require exposing Home Assistant to the
+internet. Home Assistant stores its runtime state under `/var/lib/hass`.
+
+### Cloudflare API token
+
+Create a custom Cloudflare API token scoped to the `benjaminderksen.com` zone
+with **Zone → DNS → Edit** and **Zone → Zone → Read** permissions. Store it
+under the existing `cloudflare-api-token` key in `secrets/pi5-server.yaml`:
+
+```bash
+nix run nixpkgs#sops -- secrets/pi5-server.yaml
+```
+
+Follow the [SOPS setup](../../secrets/README.md#edit-a-secret) to configure the
+age identity first. Do not put the token in Nix source or use a Global API Key.
+
+### Configure Home Assistant's HTTP server
+
+Home Assistant 2026.8 and later stores HTTP server settings in its UI. After
+the HTTP settings have migrated, it ignores the legacy YAML `http` block. Open
+**Settings → System → Network → HTTP server** and set:
+
+- **Listen addresses:** `127.0.0.1`
+- **Server port:** `8123`
+- **Trust X-Forwarded-For:** enabled
+- **Trusted proxies:** `127.0.0.1`
+
+Save the settings and accept any restart prompt. The loopback listener means
+clients must use `https://ha.benjaminderksen.com`; direct LAN access to port
+8123 is intentionally unavailable. Once these UI settings are verified, remove
+the legacy `config.http` block from [`home-assistant.nix`](home-assistant.nix).
+
+If Caddy returns `400 Bad Request` and the UI is inaccessible through HTTPS,
+open a temporary SSH tunnel from a client on the LAN:
+
+```bash
+ssh -N -L 8124:127.0.0.1:8123 benjamin@pi5-server.fritz.box
+```
+
+While that command is running, open `http://localhost:8124` and correct the HTTP
+server settings in the UI.
 
 Under **Settings → Devices & Services → Add Integration**, add:
 
@@ -208,7 +252,7 @@ Home Assistant can reach OTBR and Matter.js through `localhost`.
 To join the existing network managed by the HomePod minis:
 
 1. Install the Home Assistant Companion app on the iPhone and connect it to
-   `http://pi5-server.fritz.box:8123`.
+   `https://ha.benjaminderksen.com`.
 2. In the app, open **Settings → Devices & Services → Thread → Configure**
    and select **Send credentials to Home Assistant**.
 3. In the browser, open the Thread integration's configuration, select the

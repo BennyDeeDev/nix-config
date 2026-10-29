@@ -20,8 +20,6 @@
       ];
     };
 
-    networking.firewall.allowedTCPPorts = [ 8123 ];
-
     my.restic.ha = {
       repository = "/mnt/nas/restic/ha-restic";
       path = "/var/lib/hass";

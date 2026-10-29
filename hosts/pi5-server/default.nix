@@ -4,6 +4,7 @@ let
   profiles = import ../../profiles inputs;
   host = import ./host.nix;
   blocky = import ./blocky.nix;
+  caddy = import ./caddy.nix;
   homeAssistant = import ./home-assistant.nix;
   openthreadBorderRouter = import ./openthread-border-router.nix;
   matterjsServer = import ./matterjs-server.nix;
@@ -18,6 +19,7 @@ in
       nasModule.nixos
       resticModule.nixos
       blocky.nixos
+      caddy.nixos
       homeAssistant.nixos
       openthreadBorderRouter.nixos
       matterjsServer.nixos

@@ -23,9 +23,7 @@
           "178.168.192.in-addr.arpa" = "192.168.178.1";
         };
 
-        customDNS.rewrite = {
-          "home-assistant.benjaminderksen.com" = "pi5-server.fritz.box";
-        };
+        customDNS.mapping."ha.benjaminderksen.com" = "192.168.178.52";
 
         blocking = {
           denylists.ads = [
