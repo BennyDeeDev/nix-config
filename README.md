@@ -171,7 +171,7 @@ and terminal tools to an existing host:
   nix-darwin, and `homeManagerConfig` for host-specific `home-manager.users`
   configuration.
 - Declare repository-owned options under `my.*`, such as `my.sops` or
-  `my.containerBackups`.
+  `my.restic`.
 - Define related aliases together and in the same style, even if an individual
   alias is used only once.
 - Otherwise, introduce a binding only when its name adds meaning and the value

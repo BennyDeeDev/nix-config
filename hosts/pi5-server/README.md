@@ -25,7 +25,7 @@ export NIX_CONFIG='extra-experimental-features = nix-command flakes'
 
 ```bash
 nix build .#images.pi5-bootstrap
-nix run nixpkgs#zstd -- -d result/sd-image/*.img.zst -o pi5-bootstrap.img
+zstd -d -f result/sd-image/*.img.zst -o pi5-bootstrap.img
 ```
 
 ### 2. Flash and boot
@@ -33,6 +33,8 @@ nix run nixpkgs#zstd -- -d result/sd-image/*.img.zst -o pi5-bootstrap.img
 Use `lsblk` to identify the SD card. Replace `/dev/sdX` with its device path:
 
 ```bash
+sudo umount /dev/sdX1
+sudo umount /dev/sdX2
 sudo dd \
   if=pi5-bootstrap.img \
   of=/dev/sdX \
@@ -40,6 +42,7 @@ sudo dd \
   status=progress \
   conv=fsync
 sync
+udisksctl power-off -b /dev/sdX
 ```
 
 Insert the card, connect Ethernet, and boot the Pi. The bootstrap hostname is
@@ -84,8 +87,7 @@ Home Manager has created `identity.txt`, use the
 From the updated checkout on the build machine:
 
 ```bash
-nix run nixpkgs#nixos-rebuild -- switch \
-  --flake .#pi5-server \
+nixos-rebuild switch --flake .#pi5-server \
   --target-host benjamin@pi5.fritz.box \
   --build-host benjamin@pi5.fritz.box \
   --sudo
@@ -103,8 +105,7 @@ to `pi5-server`.
 From the checkout on the build machine:
 
 ```bash
-nix run nixpkgs#nixos-rebuild -- switch \
-  --flake .#pi5-server \
+nixos-rebuild switch --flake .#pi5-server \
   --target-host benjamin@pi5-server.fritz.box \
   --build-host benjamin@pi5-server.fritz.box \
   --sudo \
@@ -166,15 +167,16 @@ The command-line flasher also needs access to the serial device.
 
 ## Home Assistant, Thread, and Matter
 
-The containers and radio settings are defined in
-[`home-assistant.nix`](home-assistant.nix). Run the Podman commands below on
-the Pi.
+Home Assistant, OTBR, and Matter.js are configured as native NixOS services in
+[`home-assistant.nix`](home-assistant.nix),
+[`openthread-border-router.nix`](openthread-border-router.nix), and
+[`matterjs-server.nix`](matterjs-server.nix).
 
 ### 1. Set up Home Assistant
 
 Open `http://pi5-server.fritz.box:8123` and complete onboarding if no previous
-configuration was restored. Home Assistant stores its configuration under
-`/var/lib/homeassistant`.
+configuration was restored. Home Assistant stores its runtime state under
+`/var/lib/hass`.
 
 Under **Settings → Devices & Services → Add Integration**, add:
 
@@ -182,8 +184,7 @@ Under **Settings → Devices & Services → Add Integration**, add:
   discovered automatically.
 - **Matter**, using `ws://localhost:5580/ws` if prompted for a server URL.
 
-All three containers use host networking, so Home Assistant can reach the
-other two through `localhost`.
+Home Assistant can reach OTBR and Matter.js through `localhost`.
 
 ### 2. Import the Apple Thread network
 
@@ -202,7 +203,7 @@ If OTBR remains on its own network after importing the credentials, read the
 Apple dataset from Home Assistant's storage:
 
 ```bash
-sudo cat /var/lib/homeassistant/.storage/thread.datasets | grep -A2 iOS-app
+sudo cat /var/lib/hass/.storage/thread.datasets | grep -A2 iOS-app
 ```
 
 Copy the `tlv` field for the Apple network. Replace `APPLE_DATASET_TLV` below
@@ -210,23 +211,23 @@ with that hex string:
 
 ```bash
 dataset='APPLE_DATASET_TLV'
-sudo podman exec otbr ot-ctl thread stop
-sudo podman exec otbr ot-ctl dataset set active "$dataset"
-sudo podman exec otbr ot-ctl thread start
+sudo ot-ctl thread stop
+sudo ot-ctl dataset set active "$dataset"
+sudo ot-ctl thread start
 ```
 
 Wait about a minute, then check the network name, PAN ID, and router and
 neighbor tables against the expected Apple network:
 
 ```bash
-sudo podman exec otbr ot-ctl state
-sudo podman exec otbr ot-ctl networkname
-sudo podman exec otbr ot-ctl panid
-sudo podman exec otbr ot-ctl router table
-sudo podman exec otbr ot-ctl neighbor table
+sudo ot-ctl state
+sudo ot-ctl networkname
+sudo ot-ctl panid
+sudo ot-ctl router table
+sudo ot-ctl neighbor table
 ```
 
-OTBR state persists under `/var/lib/otbr`, mounted as `/data` in the container.
+OTBR state persists under `/var/lib/thread`.
 
 ### 4. Add a Matter device
 

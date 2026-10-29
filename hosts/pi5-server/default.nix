@@ -1,14 +1,13 @@
-inputs@{
-  nixos-hardware,
-  ...
-}:
+inputs@{ ... }:
 
 let
   profiles = import ../../profiles inputs;
   host = import ./host.nix;
   homeAssistant = import ./home-assistant.nix;
+  openthreadBorderRouter = import ./openthread-border-router.nix;
+  matterjsServer = import ./matterjs-server.nix;
   nasModule = import ../../modules/nas.nix;
-  containerBackupModule = import ../../modules/container-backup.nix;
+  resticModule = import ../../modules/restic.nix;
 in
 {
   nixos = {
@@ -16,9 +15,10 @@ in
       profiles.nixos.nixos
       profiles.pi5.nixos
       nasModule.nixos
-      containerBackupModule.nixos
-      nixos-hardware.nixosModules.raspberry-pi-5
+      resticModule.nixos
       homeAssistant.nixos
+      openthreadBorderRouter.nixos
+      matterjsServer.nixos
       host.nixos
     ];
   };
