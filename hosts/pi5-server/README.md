@@ -166,24 +166,26 @@ nix run nixpkgs#python3Packages.universal-silabs-flasher -- \
 
 The command-line flasher also needs access to the serial device.
 
-## Home Assistant, Thread, Matter, and Vaultwarden
+## Home Assistant, Thread, Matter, Vaultwarden, and Immich
 
-Home Assistant, OTBR, Matter.js, and Vaultwarden are configured as native NixOS
-services in [`home-assistant.nix`](home-assistant.nix),
+Home Assistant, OTBR, Matter.js, Vaultwarden, and Immich are configured as
+native NixOS services in [`home-assistant.nix`](home-assistant.nix),
 [`caddy.nix`](caddy.nix),
 [`openthread-border-router.nix`](openthread-border-router.nix),
-[`matterjs-server.nix`](matterjs-server.nix), and
-[`vaultwarden.nix`](vaultwarden.nix).
+[`matterjs-server.nix`](matterjs-server.nix),
+[`vaultwarden.nix`](vaultwarden.nix), and [`immich.nix`](immich.nix). The shared
+PostgreSQL service and its cluster backup are declared in
+[`postgresql.nix`](postgresql.nix).
 
 ### Blocky and local DNS
 
 The Pi continues to receive its network configuration from the FRITZ!Box DHCP
 server. Blocky is configured in [`blocky.nix`](blocky.nix), listens on IPv4
 interfaces, and does not run a DHCP server. It forwards `*.fritz.box` queries
-to the FRITZ!Box and maps `ha.benjaminderksen.com` and
-`vault.benjaminderksen.com` to the Pi's LAN address, `192.168.178.52`. Reserve
-that address for the Pi in the FRITZ!Box DHCP settings so the local DNS records
-stay correct. Other DNS queries use Quad9 over
+to the FRITZ!Box and maps `ha.benjaminderksen.com`,
+`immich.benjaminderksen.com`, and `vault.benjaminderksen.com` to the Pi's LAN
+address, `192.168.178.52`. Reserve that address for the Pi in the FRITZ!Box DHCP
+settings so the local DNS records stay correct. Other DNS queries use Quad9 over
 DNS-over-HTTPS, with Quad9's IPv4 addresses as bootstrap resolvers. Blocky has
 no web dashboard.
 
@@ -192,6 +194,7 @@ To test DNS resolution on the Pi:
 ```bash
 ssh benjamin@pi5-server.fritz.box
 nslookup ha.benjaminderksen.com 127.0.0.1
+nslookup immich.benjaminderksen.com 127.0.0.1
 nslookup vault.benjaminderksen.com 127.0.0.1
 ```
 
@@ -202,6 +205,26 @@ configuration was restored. Caddy proxies to Home Assistant on loopback and
 uses the wildcard certificate managed by NixOS ACME with Cloudflare DNS
 validation. DNS validation does not require exposing Home Assistant to the
 internet. Home Assistant stores its runtime state under `/var/lib/hass`.
+
+### Immich
+
+Immich is served at `https://immich.benjaminderksen.com` through Caddy with the
+existing wildcard certificate. It listens on `127.0.0.1:2283`; Blocky maps the
+hostname to the Pi for LAN clients. The native NixOS module uses the shared
+PostgreSQL service, creates Immich's database and user, and enables machine
+learning. The configured 8 GB of RAM matches Immich's recommendation.
+
+Immich media is stored at the module's default `/var/lib/immich` location. The
+PostgreSQL data directory is local to the Pi; do not place it on the NAS share.
+Choose durable storage for the photo library before uploading a large
+collection.
+
+The shared PostgreSQL service dumps the full cluster, including all databases
+and roles, to `/var/backup/postgresql` daily before the Restic timer. Restic
+backs those dumps up to `/mnt/nas/restic/postgresql-restic`. A separate Restic
+job backs up `/var/lib/immich` to `/mnt/nas/restic/immich-restic`, stopping
+Immich during the snapshot. Both the database dump and media files are needed
+for a complete Immich restore.
 
 ### Vaultwarden
 

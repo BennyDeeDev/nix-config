@@ -24,6 +24,15 @@
           '';
         };
 
+        virtualHosts."immich.benjaminderksen.com" = {
+          useACMEHost = "benjaminderksen.com";
+          extraConfig = ''
+            reverse_proxy 127.0.0.1:2283 {
+              header_up X-Real-IP {remote_host}
+            }
+          '';
+        };
+
         virtualHosts."vault.benjaminderksen.com" = {
           useACMEHost = "benjaminderksen.com";
           extraConfig = ''

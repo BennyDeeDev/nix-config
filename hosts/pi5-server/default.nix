@@ -6,8 +6,10 @@ let
   blocky = import ./blocky.nix;
   caddy = import ./caddy.nix;
   homeAssistant = import ./home-assistant.nix;
+  immich = import ./immich.nix;
   openthreadBorderRouter = import ./openthread-border-router.nix;
   matterjsServer = import ./matterjs-server.nix;
+  postgresql = import ./postgresql.nix;
   vaultwarden = import ./vaultwarden.nix;
   nasModule = import ../../modules/nas.nix;
   resticModule = import ../../modules/restic.nix;
@@ -22,8 +24,10 @@ in
       blocky.nixos
       caddy.nixos
       homeAssistant.nixos
+      immich.nixos
       openthreadBorderRouter.nixos
       matterjsServer.nixos
+      postgresql.nixos
       vaultwarden.nixos
       host.nixos
     ];
