@@ -11,8 +11,13 @@
         enable = true;
         backupAll = true;
         location = "/var/backup/postgresql";
-        # Run before the existing Restic timer, which fires daily at midnight.
-        startAt = "*-*-* 23:00:00";
+        # The Restic backup starts this oneshot service before taking its snapshot.
+        startAt = [ ];
+      };
+
+      systemd.services.restic-backups-postgresql = {
+        requires = [ "postgresqlBackup.service" ];
+        after = [ "postgresqlBackup.service" ];
       };
 
       my.restic.postgresql = {

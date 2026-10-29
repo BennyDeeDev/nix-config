@@ -219,12 +219,13 @@ PostgreSQL data directory is local to the Pi; do not place it on the NAS share.
 Choose durable storage for the photo library before uploading a large
 collection.
 
-The shared PostgreSQL service dumps the full cluster, including all databases
-and roles, to `/var/backup/postgresql` daily before the Restic timer. Restic
-backs those dumps up to `/mnt/nas/restic/postgresql-restic`. A separate Restic
-job backs up `/var/lib/immich` to `/mnt/nas/restic/immich-restic`, stopping
-Immich during the snapshot. Both the database dump and media files are needed
-for a complete Immich restore.
+Each PostgreSQL Restic run starts `postgresqlBackup.service` first, which dumps
+the full cluster (all databases and roles) to `/var/backup/postgresql`. The
+separate dump timer is disabled. A failed dump prevents the Restic snapshot.
+Restic stores the dumps in `/mnt/nas/restic/postgresql-restic`. A separate
+Restic job backs up `/var/lib/immich` to `/mnt/nas/restic/immich-restic`,
+stopping Immich during the snapshot. Both the database dump and media files are
+needed for a complete Immich restore.
 
 ### Vaultwarden
 
