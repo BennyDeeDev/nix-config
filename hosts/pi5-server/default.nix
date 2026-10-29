@@ -8,6 +8,7 @@ let
   homeAssistant = import ./home-assistant.nix;
   openthreadBorderRouter = import ./openthread-border-router.nix;
   matterjsServer = import ./matterjs-server.nix;
+  vaultwarden = import ./vaultwarden.nix;
   nasModule = import ../../modules/nas.nix;
   resticModule = import ../../modules/restic.nix;
 in
@@ -23,6 +24,7 @@ in
       homeAssistant.nixos
       openthreadBorderRouter.nixos
       matterjsServer.nixos
+      vaultwarden.nixos
       host.nixos
     ];
   };

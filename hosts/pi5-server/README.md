@@ -166,22 +166,24 @@ nix run nixpkgs#python3Packages.universal-silabs-flasher -- \
 
 The command-line flasher also needs access to the serial device.
 
-## Home Assistant, Thread, and Matter
+## Home Assistant, Thread, Matter, and Vaultwarden
 
-Home Assistant, OTBR, and Matter.js are configured as native NixOS services in
-[`home-assistant.nix`](home-assistant.nix),
+Home Assistant, OTBR, Matter.js, and Vaultwarden are configured as native NixOS
+services in [`home-assistant.nix`](home-assistant.nix),
 [`caddy.nix`](caddy.nix),
-[`openthread-border-router.nix`](openthread-border-router.nix), and
-[`matterjs-server.nix`](matterjs-server.nix).
+[`openthread-border-router.nix`](openthread-border-router.nix),
+[`matterjs-server.nix`](matterjs-server.nix), and
+[`vaultwarden.nix`](vaultwarden.nix).
 
 ### Blocky and local DNS
 
 The Pi continues to receive its network configuration from the FRITZ!Box DHCP
 server. Blocky is configured in [`blocky.nix`](blocky.nix), listens on IPv4
 interfaces, and does not run a DHCP server. It forwards `*.fritz.box` queries
-to the FRITZ!Box and maps `ha.benjaminderksen.com` to the Pi's LAN address,
-`192.168.178.52`. Reserve that address for the Pi in the FRITZ!Box DHCP settings
-so the local DNS record stays correct. Other DNS queries use Quad9 over
+to the FRITZ!Box and maps `ha.benjaminderksen.com` and
+`vault.benjaminderksen.com` to the Pi's LAN address, `192.168.178.52`. Reserve
+that address for the Pi in the FRITZ!Box DHCP settings so the local DNS records
+stay correct. Other DNS queries use Quad9 over
 DNS-over-HTTPS, with Quad9's IPv4 addresses as bootstrap resolvers. Blocky has
 no web dashboard.
 
@@ -190,6 +192,7 @@ To test DNS resolution on the Pi:
 ```bash
 ssh benjamin@pi5-server.fritz.box
 nslookup ha.benjaminderksen.com 127.0.0.1
+nslookup vault.benjaminderksen.com 127.0.0.1
 ```
 
 ### 1. Set up Home Assistant
@@ -199,6 +202,26 @@ configuration was restored. Caddy proxies to Home Assistant on loopback and
 uses the wildcard certificate managed by NixOS ACME with Cloudflare DNS
 validation. DNS validation does not require exposing Home Assistant to the
 internet. Home Assistant stores its runtime state under `/var/lib/hass`.
+
+### Vaultwarden
+
+Vaultwarden is served at `https://vault.benjaminderksen.com` through Caddy and
+uses the existing wildcard certificate. The Vaultwarden service listens only
+on `127.0.0.1:8222`; Blocky maps the hostname to the Pi for LAN clients.
+Registration remains enabled so the first account can be created through the
+web vault without an admin-token or SOPS bootstrap. Anyone on the LAN who can
+reach this hostname can register, so keep the service LAN-only: do not publish
+public DNS for it or forward HTTPS from the router to the Pi.
+
+The web vault is built with an 8-character minimum master-password length. This
+patch affects only the web vault; official mobile and desktop clients still
+require 12 characters when creating or changing a password, though they can
+use an existing shorter password. The Nix build fails if a future web-vault
+update changes the source line being patched, so review the override when
+updating Nixpkgs.
+
+The Restic job backs up all of `/var/lib/vaultwarden` to
+`/mnt/nas/restic/vaultwarden-restic`, stopping Vaultwarden during the backup.
 
 ### Cloudflare API token
 

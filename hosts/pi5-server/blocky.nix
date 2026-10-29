@@ -23,7 +23,10 @@
           "178.168.192.in-addr.arpa" = "192.168.178.1";
         };
 
-        customDNS.mapping."ha.benjaminderksen.com" = "192.168.178.52";
+        customDNS.mapping = {
+          "ha.benjaminderksen.com" = "192.168.178.52";
+          "vault.benjaminderksen.com" = "192.168.178.52";
+        };
 
         blocking = {
           denylists.ads = [

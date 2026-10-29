@@ -23,6 +23,15 @@
             reverse_proxy 127.0.0.1:8123
           '';
         };
+
+        virtualHosts."vault.benjaminderksen.com" = {
+          useACMEHost = "benjaminderksen.com";
+          extraConfig = ''
+            reverse_proxy 127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT} {
+              header_up X-Real-IP {remote_host}
+            }
+          '';
+        };
       };
     };
 }
