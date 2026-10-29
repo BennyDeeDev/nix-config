@@ -11,7 +11,6 @@
         "go2rtc"
         "google_translate"
         "matter"
-        "mcp_server"
         "met"
         "otbr"
         "radio_browser"
