@@ -8,8 +8,8 @@ let
   gatus = import ./gatus.nix;
   homeAssistant = import ./home-assistant.nix;
   immich = import ./immich.nix;
-  openthreadBorderRouter = import ./openthread-border-router.nix;
-  matterjsServer = import ./matterjs-server.nix;
+  otbr = import ./otbr.nix;
+  matter = import ./matter.nix;
   postgresql = import ./postgresql.nix;
   ntfy = import ./ntfy.nix;
   vaultwarden = import ./vaultwarden.nix;
@@ -28,8 +28,8 @@ in
       gatus.nixos
       homeAssistant.nixos
       immich.nixos
-      openthreadBorderRouter.nixos
-      matterjsServer.nixos
+      otbr.nixos
+      matter.nixos
       postgresql.nixos
       ntfy.nixos
       vaultwarden.nixos

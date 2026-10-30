@@ -1,6 +1,6 @@
 {
   nixos =
-    { config, ... }:
+    { ... }:
     {
       services.immich = {
         enable = true;
@@ -10,7 +10,7 @@
 
       my.restic.immich = {
         repository = "/mnt/nas/restic/immich-restic";
-        path = toString config.services.immich.mediaLocation;
+        path = "/var/lib/immich";
         service = "immich-server.service";
         mountPoint = "/mnt/nas/restic";
       };

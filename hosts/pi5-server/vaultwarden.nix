@@ -16,7 +16,6 @@
           DOMAIN = "https://vault.benjaminderksen.com";
           ROCKET_ADDRESS = "127.0.0.1";
           ROCKET_PORT = 8222;
-          # Keep registration enabled for this trusted, LAN-only instance.
           SIGNUPS_ALLOWED = true;
         };
       };

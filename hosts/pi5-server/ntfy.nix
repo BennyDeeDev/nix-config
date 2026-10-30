@@ -13,5 +13,10 @@
           upstream-base-url = "https://ntfy.sh";
         };
       };
+
+      systemd.services.ntfy-sh.serviceConfig = {
+        Restart = "on-failure";
+        RestartSec = "5s";
+      };
     };
 }

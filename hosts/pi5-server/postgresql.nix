@@ -1,6 +1,6 @@
 {
   nixos =
-    { config, ... }:
+    { ... }:
     {
       services.postgresql = {
         enable = true;
@@ -22,7 +22,7 @@
 
       my.restic.postgresql = {
         repository = "/mnt/nas/restic/postgresql-restic";
-        path = toString config.services.postgresqlBackup.location;
+        path = "/var/backup/postgresql";
         mountPoint = "/mnt/nas/restic";
       };
     };

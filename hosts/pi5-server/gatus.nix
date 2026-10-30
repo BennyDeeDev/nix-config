@@ -50,7 +50,7 @@
               interval = "60s";
               conditions = [
                 "[STATUS] == 200"
-                "[CERTIFICATE_EXPIRATION] > 48h"
+                "[CERTIFICATE_EXPIRATION] > 168h"
               ];
               alerts = [ { type = "ntfy"; } ];
             }
@@ -62,7 +62,7 @@
               interval = "60s";
               conditions = [
                 "[STATUS] == 200"
-                "[CERTIFICATE_EXPIRATION] > 48h"
+                "[CERTIFICATE_EXPIRATION] > 168h"
               ];
               alerts = [ { type = "ntfy"; } ];
             }
@@ -74,12 +74,12 @@
               interval = "60s";
               conditions = [
                 "[STATUS] == 200"
-                "[CERTIFICATE_EXPIRATION] > 48h"
+                "[CERTIFICATE_EXPIRATION] > 168h"
               ];
               alerts = [ { type = "ntfy"; } ];
             }
             {
-              name = "OTBR REST";
+              name = "OTBR";
               group = "Internal services";
               url = "http://127.0.0.1:8081/node";
               interval = "60s";
@@ -87,7 +87,7 @@
               alerts = [ { type = "ntfy"; } ];
             }
             {
-              name = "Matter Server";
+              name = "Matter";
               group = "Internal services";
               url = "tcp://127.0.0.1:5580";
               interval = "60s";
@@ -95,7 +95,7 @@
               alerts = [ { type = "ntfy"; } ];
             }
             {
-              name = "NAS SMB";
+              name = "NAS";
               group = "Storage";
               url = "tcp://192.168.178.254:445";
               interval = "60s";
@@ -103,26 +103,14 @@
               alerts = [ { type = "ntfy"; } ];
             }
             {
-              name = "ntfy health";
+              name = "ntfy";
               group = "Applications";
               url = "https://ntfy.benjaminderksen.com/v1/health";
               client.dns-resolver = "tcp://127.0.0.1:53";
               interval = "60s";
               conditions = [
                 "[STATUS] == 200"
-                "[CERTIFICATE_EXPIRATION] > 48h"
-              ];
-              alerts = [ { type = "ntfy"; } ];
-            }
-            {
-              name = "ntfy web";
-              group = "Applications";
-              url = "https://ntfy.benjaminderksen.com";
-              client.dns-resolver = "tcp://127.0.0.1:53";
-              interval = "60s";
-              conditions = [
-                "[STATUS] == 200"
-                "[CERTIFICATE_EXPIRATION] > 48h"
+                "[CERTIFICATE_EXPIRATION] > 168h"
               ];
               alerts = [ { type = "ntfy"; } ];
             }
@@ -134,27 +122,12 @@
               interval = "60s";
               conditions = [
                 "[STATUS] == 200"
-                "[CERTIFICATE_EXPIRATION] > 48h"
+                "[CERTIFICATE_EXPIRATION] > 168h"
               ];
               alerts = [ { type = "ntfy"; } ];
             }
             {
-              name = "Blocky local DNS";
-              group = "Internal services";
-              url = "127.0.0.1";
-              interval = "60s";
-              dns = {
-                query-name = "status.benjaminderksen.com";
-                query-type = "A";
-              };
-              conditions = [
-                "[BODY] == 192.168.178.52"
-                "[DNS_RCODE] == NOERROR"
-              ];
-              alerts = [ { type = "ntfy"; } ];
-            }
-            {
-              name = "Blocky upstream DNS";
+              name = "Blocky";
               group = "Internal services";
               url = "127.0.0.1";
               interval = "60s";
