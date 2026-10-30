@@ -166,16 +166,27 @@ nix run nixpkgs#python3Packages.universal-silabs-flasher -- \
 
 The command-line flasher also needs access to the serial device.
 
-## Home Assistant, Thread, Matter, Vaultwarden, and Immich
+## Homelab services
 
-Home Assistant, OTBR, Matter.js, Vaultwarden, and Immich are configured as
-native NixOS services in [`home-assistant.nix`](home-assistant.nix),
-[`caddy.nix`](caddy.nix),
+Home Assistant, OTBR, Matter.js, Vaultwarden, Immich, Gatus, and ntfy are
+configured as native NixOS services in
+[`home-assistant.nix`](home-assistant.nix),
+[`caddy.nix`](caddy.nix), [`gatus.nix`](gatus.nix), [`ntfy.nix`](ntfy.nix),
 [`openthread-border-router.nix`](openthread-border-router.nix),
 [`matterjs-server.nix`](matterjs-server.nix),
 [`vaultwarden.nix`](vaultwarden.nix), and [`immich.nix`](immich.nix). The shared
 PostgreSQL service and its cluster backup are declared in
 [`postgresql.nix`](postgresql.nix).
+
+Gatus is available at `https://status.benjaminderksen.com`. Every minute it
+checks the Caddy routes for Home Assistant, Immich, Vaultwarden, ntfy, and
+Gatus, including TLS certificate expiry. It also checks OTBR, Matter.js, the
+NAS SMB port, and Blocky's local and upstream DNS. Alerts are sent through the
+ntfy server at `https://ntfy.benjaminderksen.com`. Subscribe to the
+`ntfy-topic` value in [`secrets/pi5-server.yaml`](../../secrets/pi5-server.yaml)
+with the ntfy app. The topic is the shared secret; no ntfy login is configured.
+PostgreSQL remains Unix-socket-only and is covered indirectly by the Immich
+check. Gatus and ntfy listen on loopback behind Caddy.
 
 ### Blocky and local DNS
 
@@ -183,7 +194,8 @@ The Pi continues to receive its network configuration from the FRITZ!Box DHCP
 server. Blocky is configured in [`blocky.nix`](blocky.nix), listens on IPv4
 interfaces, and does not run a DHCP server. It forwards `*.fritz.box` queries
 to the FRITZ!Box and maps `ha.benjaminderksen.com`,
-`immich.benjaminderksen.com`, and `vault.benjaminderksen.com` to the Pi's LAN
+`immich.benjaminderksen.com`, `ntfy.benjaminderksen.com`,
+`status.benjaminderksen.com`, and `vault.benjaminderksen.com` to the Pi's LAN
 address, `192.168.178.52`. Reserve that address for the Pi in the FRITZ!Box DHCP
 settings so the local DNS records stay correct. Other DNS queries use Quad9 over
 DNS-over-HTTPS, with Quad9's IPv4 addresses as bootstrap resolvers. Blocky has

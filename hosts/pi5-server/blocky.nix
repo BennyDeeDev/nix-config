@@ -26,6 +26,8 @@
         customDNS.mapping = {
           "ha.benjaminderksen.com" = "192.168.178.52";
           "immich.benjaminderksen.com" = "192.168.178.52";
+          "ntfy.benjaminderksen.com" = "192.168.178.52";
+          "status.benjaminderksen.com" = "192.168.178.52";
           "vault.benjaminderksen.com" = "192.168.178.52";
         };
 
