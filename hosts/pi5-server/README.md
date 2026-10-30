@@ -3,6 +3,20 @@
 Build and flash the bootstrap SD image, enroll the Pi's age key, then deploy
 `pi5-server`.
 
+## Services
+
+| Service | Port | Accessible at |
+| --- | ---: | --- |
+| Home Assistant | 8123 | <https://ha.benjaminderksen.com> |
+| Immich | 2283 | <https://immich.benjaminderksen.com> |
+| Vaultwarden | 8222 | <https://vault.benjaminderksen.com> |
+| Gatus | 8080 | <https://status.benjaminderksen.com> |
+| ntfy | 8060 | <https://ntfy.benjaminderksen.com> |
+| OTBR REST | 8081 | <http://pi5-server.fritz.box:8081> |
+| Matter.js | 5580 | `ws://localhost:5580/ws` (Home Assistant) |
+| Blocky DNS | 53 | `192.168.178.52:53` |
+| PostgreSQL | Unix socket | Pi only |
+
 ## Prerequisites
 
 - A Linux build machine that can build `aarch64-linux` outputs, either natively
@@ -166,98 +180,7 @@ nix run nixpkgs#python3Packages.universal-silabs-flasher -- \
 
 The command-line flasher also needs access to the serial device.
 
-## Homelab services
-
-Home Assistant, OTBR, Matter.js, Vaultwarden, Immich, Gatus, and ntfy are
-configured as native NixOS services in
-[`home-assistant.nix`](home-assistant.nix),
-[`caddy.nix`](caddy.nix), [`gatus.nix`](gatus.nix), [`ntfy.nix`](ntfy.nix),
-[`openthread-border-router.nix`](openthread-border-router.nix),
-[`matterjs-server.nix`](matterjs-server.nix),
-[`vaultwarden.nix`](vaultwarden.nix), and [`immich.nix`](immich.nix). The shared
-PostgreSQL service and its cluster backup are declared in
-[`postgresql.nix`](postgresql.nix).
-
-Gatus is available at `https://status.benjaminderksen.com`. Every minute it
-checks the Caddy routes for Home Assistant, Immich, Vaultwarden, ntfy, and
-Gatus, including TLS certificate expiry. It also checks OTBR, Matter.js, the
-NAS SMB port, and Blocky's local and upstream DNS. Alerts are sent through the
-ntfy server at `https://ntfy.benjaminderksen.com`. Subscribe to the
-`ntfy-topic` value in [`secrets/pi5-server.yaml`](../../secrets/pi5-server.yaml)
-with the ntfy app. The topic is the shared secret; no ntfy login is configured.
-PostgreSQL remains Unix-socket-only and is covered indirectly by the Immich
-check. Gatus and ntfy listen on loopback behind Caddy.
-
-### Blocky and local DNS
-
-The Pi continues to receive its network configuration from the FRITZ!Box DHCP
-server. Blocky is configured in [`blocky.nix`](blocky.nix), listens on IPv4
-interfaces, and does not run a DHCP server. It forwards `*.fritz.box` queries
-to the FRITZ!Box and maps `ha.benjaminderksen.com`,
-`immich.benjaminderksen.com`, `ntfy.benjaminderksen.com`,
-`status.benjaminderksen.com`, and `vault.benjaminderksen.com` to the Pi's LAN
-address, `192.168.178.52`. Reserve that address for the Pi in the FRITZ!Box DHCP
-settings so the local DNS records stay correct. Other DNS queries use Quad9 over
-DNS-over-HTTPS, with Quad9's IPv4 addresses as bootstrap resolvers. Blocky has
-no web dashboard.
-
-To test DNS resolution on the Pi:
-
-```bash
-ssh benjamin@pi5-server.fritz.box
-nslookup ha.benjaminderksen.com 127.0.0.1
-nslookup immich.benjaminderksen.com 127.0.0.1
-nslookup vault.benjaminderksen.com 127.0.0.1
-```
-
-### 1. Set up Home Assistant
-
-Open `https://ha.benjaminderksen.com` and complete onboarding if no previous
-configuration was restored. Caddy proxies to Home Assistant on loopback and
-uses the wildcard certificate managed by NixOS ACME with Cloudflare DNS
-validation. DNS validation does not require exposing Home Assistant to the
-internet. Home Assistant stores its runtime state under `/var/lib/hass`.
-
-### Immich
-
-Immich is served at `https://immich.benjaminderksen.com` through Caddy with the
-existing wildcard certificate. It listens on `127.0.0.1:2283`; Blocky maps the
-hostname to the Pi for LAN clients. The native NixOS module uses the shared
-PostgreSQL service, creates Immich's database and user, and enables machine
-learning. The configured 8 GB of RAM matches Immich's recommendation.
-
-Immich media is stored at the module's default `/var/lib/immich` location. The
-PostgreSQL data directory is local to the Pi; do not place it on the NAS share.
-Choose durable storage for the photo library before uploading a large
-collection.
-
-Each PostgreSQL Restic run starts `postgresqlBackup.service` first, which dumps
-the full cluster (all databases and roles) to `/var/backup/postgresql`. The
-separate dump timer is disabled. A failed dump prevents the Restic snapshot.
-Restic stores the dumps in `/mnt/nas/restic/postgresql-restic`. A separate
-Restic job backs up `/var/lib/immich` to `/mnt/nas/restic/immich-restic`,
-stopping Immich during the snapshot. Both the database dump and media files are
-needed for a complete Immich restore.
-
-### Vaultwarden
-
-Vaultwarden is served at `https://vault.benjaminderksen.com` through Caddy and
-uses the existing wildcard certificate. The Vaultwarden service listens only
-on `127.0.0.1:8222`; Blocky maps the hostname to the Pi for LAN clients.
-Registration remains enabled so the first account can be created through the
-web vault without an admin-token or SOPS bootstrap. Anyone on the LAN who can
-reach this hostname can register, so keep the service LAN-only: do not publish
-public DNS for it or forward HTTPS from the router to the Pi.
-
-The web vault is built with an 8-character minimum master-password length. This
-patch affects only the web vault; official mobile and desktop clients still
-require 12 characters when creating or changing a password, though they can
-use an existing shorter password. The Nix build fails if a future web-vault
-update changes the source line being patched, so review the override when
-updating Nixpkgs.
-
-The Restic job backs up all of `/var/lib/vaultwarden` to
-`/mnt/nas/restic/vaultwarden-restic`, stopping Vaultwarden during the backup.
+## Service setup
 
 ### Cloudflare API token
 
@@ -272,21 +195,21 @@ nix run nixpkgs#sops -- secrets/pi5-server.yaml
 Follow the [SOPS setup](../../secrets/README.md#edit-a-secret) to configure the
 age identity first. Do not put the token in Nix source or use a Global API Key.
 
+### 1. Set up Home Assistant
+
+Open <https://ha.benjaminderksen.com> and complete onboarding if no previous
+configuration was restored.
+
 ### Configure Home Assistant's HTTP server
 
-Home Assistant 2026.8 and later stores HTTP server settings in its UI. After
-the HTTP settings have migrated, it ignores the legacy YAML `http` block. Open
-**Settings → System → Network → HTTP server** and set:
+Open **Settings → System → Network → HTTP server** and set:
 
 - **Listen addresses:** `127.0.0.1`
 - **Server port:** `8123`
 - **Trust X-Forwarded-For:** enabled
 - **Trusted proxies:** `127.0.0.1`
 
-Save the settings and accept any restart prompt. The loopback listener means
-clients must use `https://ha.benjaminderksen.com`; direct LAN access to port
-8123 is intentionally unavailable. Once these UI settings are verified, remove
-the legacy `config.http` block from [`home-assistant.nix`](home-assistant.nix).
+Save the settings and accept any restart prompt.
 
 If Caddy returns `400 Bad Request` and the UI is inaccessible through HTTPS,
 open a temporary SSH tunnel from a client on the LAN:
@@ -303,8 +226,6 @@ Under **Settings → Devices & Services → Add Integration**, add:
 - **OpenThread Border Router**, using `http://pi5-server.fritz.box:8081` if it
   is not discovered automatically.
 - **Matter**, using `ws://localhost:5580/ws` if prompted for a server URL.
-
-Home Assistant can reach OTBR and Matter.js through `localhost`.
 
 ### 2. Import the Apple Thread network
 
@@ -346,8 +267,6 @@ sudo ot-ctl panid
 sudo ot-ctl router table
 sudo ot-ctl neighbor table
 ```
-
-OTBR state persists under `/var/lib/thread`.
 
 ### 4. Add a Matter device
 
