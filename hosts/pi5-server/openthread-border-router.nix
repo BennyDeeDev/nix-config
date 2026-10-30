@@ -2,15 +2,19 @@
   nixos = {
     services.openthread-border-router = {
       enable = true;
-      openFirewall = true;
       backboneInterfaces = [ "end0" ];
       interfaceName = "wpan0";
       radio = {
         device = "/dev/serial/by-id/usb-Nabu_Casa_ZBT-2_94A990D189AC-if00";
         baudRate = 460800;
       };
-      rest.listenAddress = "0.0.0.0";
+      rest.listenAddress = "127.0.0.1";
       rest.listenPort = 8081;
+      web = {
+        enable = true;
+        listenAddress = "127.0.0.1";
+        listenPort = 8082;
+      };
     };
 
     my.restic.otbr = {

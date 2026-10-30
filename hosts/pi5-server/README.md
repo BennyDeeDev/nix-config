@@ -12,8 +12,8 @@ Build and flash the bootstrap SD image, enroll the Pi's age key, then deploy
 | Vaultwarden | 8222 | <https://vault.benjaminderksen.com> |
 | Gatus | 8080 | <https://status.benjaminderksen.com> |
 | ntfy | 8060 | <https://ntfy.benjaminderksen.com> |
-| OTBR REST | 8081 | <http://pi5-server.fritz.box:8081> |
-| Matter.js | 5580 | `ws://localhost:5580/ws` (Home Assistant) |
+| OTBR UI and REST | 8082 / 8081 | <https://otbr.benjaminderksen.com> (Basic Auth); REST remains loopback-only |
+| Matter.js UI and WebSocket API | 5580 | <https://matter.benjaminderksen.com> (Basic Auth); Home Assistant uses `ws://localhost:5580/ws` |
 | Blocky DNS | 53 | `192.168.178.52:53` |
 | PostgreSQL | Unix socket | Pi only |
 
@@ -223,7 +223,7 @@ server settings in the UI.
 
 Under **Settings → Devices & Services → Add Integration**, add:
 
-- **OpenThread Border Router**, using `http://pi5-server.fritz.box:8081` if it
+- **OpenThread Border Router**, using `http://localhost:8081` if it
   is not discovered automatically.
 - **Matter**, using `ws://localhost:5580/ws` if prompted for a server URL.
 
