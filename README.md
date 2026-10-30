@@ -43,7 +43,7 @@ can combine `nixos`, `nixosDesktop`, `apps`, `kde`, and `terminal`.
 | --- | --- | --- |
 | `nixosConfigurations.desktop` | Workstation and gaming host | [Installation and Secure Boot](hosts/desktop/README.md) |
 | `darwinConfigurations.mbp-personal` | Personal macOS workstation | [Bootstrap](hosts/mbp-personal/README.md) |
-| `nixosConfigurations.pi5-server` | Home automation server | [Deployment](hosts/pi5-server/README.md) |
+| `nixosConfigurations.pi5-server` | Homelab server | [Deployment](hosts/pi5-server/README.md) |
 | `nixosConfigurations.pi5-kiosk` | Planned kiosk | — |
 | `homeConfigurations.deck` | SteamOS Home Manager configuration | [Bootstrap and SteamOS notes](hosts/deck/README.md) |
 | `images.pi5-bootstrap` | Raspberry Pi 5 bootstrap SD image | [Build and flash](hosts/pi5-server/README.md#1-build-the-bootstrap-sd-image) |
@@ -171,7 +171,7 @@ and terminal tools to an existing host:
   nix-darwin, and `homeManagerConfig` for host-specific `home-manager.users`
   configuration.
 - Declare repository-owned options under `my.*`, such as `my.sops` or
-  `my.containerBackups`.
+  `my.restic`.
 - Define related aliases together and in the same style, even if an individual
   alias is used only once.
 - Otherwise, introduce a binding only when its name adds meaning and the value
