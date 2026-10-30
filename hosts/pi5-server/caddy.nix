@@ -36,7 +36,7 @@
         virtualHosts."vault.benjaminderksen.com" = {
           useACMEHost = "benjaminderksen.com";
           extraConfig = ''
-            reverse_proxy 127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT} {
+            reverse_proxy 127.0.0.1:8222 {
               header_up X-Real-IP {remote_host}
             }
           '';
