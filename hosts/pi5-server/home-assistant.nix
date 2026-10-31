@@ -35,6 +35,7 @@
 
         customLovelaceModules = with pkgs.home-assistant-custom-lovelace-modules; [
           auto-entities
+          layout-card
         ];
       };
 

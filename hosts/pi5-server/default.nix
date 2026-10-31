@@ -7,6 +7,7 @@ let
   caddy = import ./caddy.nix;
   gatus = import ./gatus.nix;
   homeAssistant = import ./home-assistant.nix;
+  lovelace = import ./lovelace.nix;
   immich = import ./immich.nix;
   otbr = import ./otbr.nix;
   matter = import ./matter.nix;
@@ -27,6 +28,7 @@ in
       caddy.nixos
       gatus.nixos
       homeAssistant.nixos
+      lovelace.nixos
       immich.nixos
       otbr.nixos
       matter.nixos
