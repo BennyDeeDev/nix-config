@@ -44,7 +44,6 @@
           endpoints = [
             {
               name = "Home Assistant";
-              group = "Applications";
               url = "https://ha.benjaminderksen.com";
               client.dns-resolver = "tcp://127.0.0.1:53";
               interval = "60s";
@@ -56,7 +55,6 @@
             }
             {
               name = "Immich";
-              group = "Applications";
               url = "https://immich.benjaminderksen.com";
               client.dns-resolver = "tcp://127.0.0.1:53";
               interval = "60s";
@@ -68,7 +66,6 @@
             }
             {
               name = "Vaultwarden";
-              group = "Applications";
               url = "https://vault.benjaminderksen.com";
               client.dns-resolver = "tcp://127.0.0.1:53";
               interval = "60s";
@@ -80,7 +77,6 @@
             }
             {
               name = "OTBR";
-              group = "Internal services";
               url = "http://127.0.0.1:8081/node";
               interval = "60s";
               conditions = [ "[STATUS] == 200" ];
@@ -88,7 +84,6 @@
             }
             {
               name = "Matter";
-              group = "Internal services";
               url = "tcp://127.0.0.1:5580";
               interval = "60s";
               conditions = [ "[CONNECTED] == true" ];
@@ -96,7 +91,6 @@
             }
             {
               name = "NAS";
-              group = "Storage";
               url = "tcp://192.168.178.254:445";
               interval = "60s";
               conditions = [ "[CONNECTED] == true" ];
@@ -104,7 +98,6 @@
             }
             {
               name = "ntfy";
-              group = "Applications";
               url = "https://ntfy.benjaminderksen.com/v1/health";
               client.dns-resolver = "tcp://127.0.0.1:53";
               interval = "60s";
@@ -116,7 +109,6 @@
             }
             {
               name = "Gatus";
-              group = "Applications";
               url = "https://status.benjaminderksen.com";
               client.dns-resolver = "tcp://127.0.0.1:53";
               interval = "60s";
@@ -128,7 +120,6 @@
             }
             {
               name = "Blocky";
-              group = "Internal services";
               url = "127.0.0.1";
               interval = "60s";
               dns = {
