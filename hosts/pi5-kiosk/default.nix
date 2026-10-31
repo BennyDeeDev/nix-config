@@ -1,9 +1,7 @@
-inputs@{
-  nixos-hardware,
-  ...
-}:
+inputs@{ ... }:
 
 let
+  cage = import ./cage.nix;
   host = import ./host.nix;
   profiles = import ../../profiles inputs;
 in
@@ -12,7 +10,7 @@ in
     imports = [
       profiles.nixos.nixos
       profiles.pi5.nixos
-      nixos-hardware.nixosModules.raspberry-pi-5
+      cage.nixos
       host.nixos
     ];
   };
