@@ -29,6 +29,14 @@
           "radio_browser"
           "shopping_list"
           "thread"
+          "gatus"
+          "systemmonitor"
+        ];
+
+        customLovelaceModules = with pkgs.home-assistant-custom-lovelace-modules; [
+          auto-entities
+          button-card
+          card-mod
         ];
       };
 
