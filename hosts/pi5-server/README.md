@@ -112,8 +112,7 @@ hostname changes to `pi5-server`; subsequent connections use
 `pi5-server.fritz.box`.
 
 The same bootstrap image can deploy `pi5-kiosk` by changing the flake output.
-That host is still a placeholder; the Home Assistant instructions below apply
-to `pi5-server`.
+The Home Assistant instructions below apply to `pi5-server`.
 
 ## Rebuild the server
 
