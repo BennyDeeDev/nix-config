@@ -199,11 +199,34 @@ age identity first. Do not put the token in Nix source or use a Global API Key.
 
 ### Beszel Hub
 
-After deploying the hub, open <https://stats.benjaminderksen.com> and create the
-initial admin account. Configure ntfy under **Settings → Notifications** using
+After deploying the Hub, open <https://stats.benjaminderksen.com> and create the
+initial admin account if needed.
+
+#### Enroll an agent
+
+Repeat these steps for each NixOS host:
+
+1. In Beszel, choose **Add System → Binary**. Enter the system name and its
+   reachable host/IP; leave the port at `45876`.
+2. Store that system's unique `TOKEN` in `secrets/<host>.yaml`:
+
+   ```yaml
+   beszel-agent-token: <system TOKEN>
+   ```
+
+3. Edit the encrypted file using the
+   [SOPS workflow](../../secrets/README.md#edit-a-secret), then click **Add
+   System**.
+4. Set `my.beszel.agent.hubUrl` and `tokenSopsFile` for the host,
+   then deploy it.
+
+The Hub's public `KEY` is configured once in `modules/beszel-agent.nix`; it is
+not a secret. Use a different `TOKEN` for every system. Agents connect to the
+Hub over WebSocket with SSH disabled, so do not open port `45876`.
+
+Configure ntfy under **Settings → Notifications** using
 the existing `ntfy-topic` value from `secrets/pi5-server.yaml`, in a URL like
-`ntfy://ntfy.benjaminderksen.com/<ntfy-topic>`. The ntfy server currently allows
-anonymous read/write access, so the topic is not protected by an ntfy login.
+`ntfy://ntfy.benjaminderksen.com/<ntfy-topic>`.
 Once agents are connected, enable the **Status** alert for each system in the
 systems table.
 

@@ -15,6 +15,7 @@ let
   ntfy = import ./ntfy.nix;
   vaultwarden = import ./vaultwarden.nix;
   beszel = import ./beszel.nix;
+  beszelAgentModule = import ../../modules/beszel-agent.nix;
   nasModule = import ../../modules/nas.nix;
   resticModule = import ../../modules/restic.nix;
 in
@@ -25,6 +26,7 @@ in
       profiles.pi5.nixos
       nasModule.nixos
       resticModule.nixos
+      beszelAgentModule.nixos
       blocky.nixos
       caddy.nixos
       gatus.nixos

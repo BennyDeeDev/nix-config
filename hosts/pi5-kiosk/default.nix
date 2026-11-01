@@ -2,6 +2,8 @@ inputs@{ ... }:
 
 let
   cage = import ./cage.nix;
+  beszel = import ./beszel.nix;
+  beszelAgentModule = import ../../modules/beszel-agent.nix;
   host = import ./host.nix;
   profiles = import ../../profiles inputs;
 in
@@ -10,7 +12,9 @@ in
     imports = [
       profiles.nixos.nixos
       profiles.pi5.nixos
+      beszelAgentModule.nixos
       cage.nixos
+      beszel.nixos
       host.nixos
     ];
   };
