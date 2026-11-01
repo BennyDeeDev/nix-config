@@ -42,8 +42,23 @@
         virtualHosts."vault.benjaminderksen.com" = {
           useACMEHost = "benjaminderksen.com";
           extraConfig = ''
-            reverse_proxy 127.0.0.1:8222 {
-              header_up X-Real-IP {remote_host}
+            @webjs path_regexp ^/app/[^/]+\.js$
+
+            handle @webjs {
+              header Content-Type application/javascript
+
+              templates {
+                mime application/javascript
+                root ${config.services.vaultwarden.webVaultPackage}/share/vaultwarden/vault
+              }
+
+              respond `{{ readFile .Req.URL.Path | replace "minimumPasswordLength=12" "minimumPasswordLength=8" }}`
+            }
+
+            handle {
+              reverse_proxy 127.0.0.1:8222 {
+                header_up X-Real-IP {remote_host}
+              }
             }
           '';
         };
