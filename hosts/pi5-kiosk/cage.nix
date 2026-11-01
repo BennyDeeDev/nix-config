@@ -24,10 +24,13 @@
             --kiosk \
             --no-first-run \
             --no-default-browser-check \
-            https://ha.benjaminderksen.com
+            https://ha.benjaminderksen.com/nixos-lovelace/services
         '';
       };
 
-      systemd.services."cage-tty1".serviceConfig.SupplementaryGroups = [ "input" ];
+      systemd.services = {
+        "autovt@tty1".enable = false;
+        "cage-tty1".serviceConfig.SupplementaryGroups = [ "input" ];
+      };
     };
 }
