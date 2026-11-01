@@ -129,9 +129,9 @@ Home Manager uses a separate age key for home secrets. Print its public key:
 nix shell nixpkgs#age --command age-keygen -y ~/.config/sops/age/keys.txt
 ```
 
-Replace `&desktop_hm` in `.sops.yaml` and rekey `shared.yaml`,
-`shared-desktop.yaml`, and `desktop.yaml` as in step 4. If the key has not been
-generated yet, use the
+Replace `&desktop-hm` in `.sops.yaml` and rekey `shared.yaml`,
+`shared-desktop.yaml`, and `desktop-hm.yaml` as in step 4. If the key has not
+been generated yet, use the
 [host enrollment instructions](../../secrets/README.md#1-obtain-the-host-public-key).
 Rebuild after enrolling it:
 

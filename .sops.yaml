@@ -2,11 +2,11 @@ keys:
   - &yk-5-nfc age1yubikey1qg4gcageg0xhm0dt920qkth72mql7f2fmjv80xrguyhgzdpg8sw3zv7vaqm
   - &yk-5c-nano age1yubikey1qd3xwagpxplcjq6c5wsjzyfynx6p93n6a2c6z3jt22l7zk85ntyfuatmfq6
   - &desktop age1fhpkmpywlernhej78dvywqwu2ngtte9u7yx0lk9lxj3krqwerpuqy3mvw4
-  - &desktop_hm age14gqtkkews0ttelvsuy0dky33q67jrv3vtyluun4te2zmymzp3uxs9qu4yt
-  - &mbp_personal_hm age1x9020a4agmru59p2g4efracjtn2cu8r3xm8k8774ql5mv3ez9afsjxgap0
+  - &desktop-hm age14gqtkkews0ttelvsuy0dky33q67jrv3vtyluun4te2zmymzp3uxs9qu4yt
+  - &mbp-personal-hm age1x9020a4agmru59p2g4efracjtn2cu8r3xm8k8774ql5mv3ez9afsjxgap0
   - &pi5-server age13sgj756jngug94tf3gcnjg79dsqcqm08x3tgrzphp2wj8gcd2ppqq3vucp
   - &pi5-kiosk age13yhn89l2mp0tth8nklx4skzy53axgf48s5x3ke7pmgezwq4065sqxsespl
-  - &deck age1fm2d3zx0d5fulqg92xmmndpy5u8pk84d7klj3gahs4z726a86fwsn00whu
+  - &deck-hm age1fm2d3zx0d5fulqg92xmmndpy5u8pk84d7klj3gahs4z726a86fwsn00whu
 creation_rules:
   - path_regex: secrets/shared\.ya?ml$
     key_groups:
@@ -14,19 +14,19 @@ creation_rules:
           - *yk-5-nfc
           - *yk-5c-nano
           - *desktop
-          - *desktop_hm
-          - *mbp_personal_hm
+          - *desktop-hm
+          - *mbp-personal-hm
           - *pi5-server
           - *pi5-kiosk
-          - *deck
+          - *deck-hm
   - path_regex: secrets/shared-desktop\.ya?ml$
     key_groups:
       - age:
           - *yk-5-nfc
           - *yk-5c-nano
           - *desktop
-          - *desktop_hm
-          - *deck
+          - *desktop-hm
+          - *deck-hm
   - path_regex: secrets/shared-server\.ya?ml$
     key_groups:
       - age:
@@ -40,13 +40,24 @@ creation_rules:
           - *yk-5-nfc
           - *yk-5c-nano
           - *desktop
-          - *desktop_hm
-  - path_regex: secrets/deck\.ya?ml$
+  - path_regex: secrets/desktop-hm\.ya?ml$
     key_groups:
       - age:
           - *yk-5-nfc
           - *yk-5c-nano
-          - *deck
+          - *desktop-hm
+  - path_regex: secrets/mbp-personal-hm\.ya?ml$
+    key_groups:
+      - age:
+          - *yk-5-nfc
+          - *yk-5c-nano
+          - *mbp-personal-hm
+  - path_regex: secrets/deck-hm\.ya?ml$
+    key_groups:
+      - age:
+          - *yk-5-nfc
+          - *yk-5c-nano
+          - *deck-hm
   - path_regex: secrets/pi5-server\.ya?ml$
     key_groups:
       - age:

@@ -16,6 +16,9 @@ directory with age. YubiKeys are used for editing; host keys let
 
 Both YubiKeys, `yk-5-nfc` and `yk-5c-nano`, are recipients of every encrypted
 file. Hosts receive access through the matching rules in `.sops.yaml`.
+Host-specific files without an `-hm` suffix are for NixOS; Home Manager files
+use `-hm`, such as `desktop-hm.yaml`, `deck-hm.yaml`, and
+`mbp-personal-hm.yaml`.
 
 Enable the Nix command and flakes for this shell:
 
@@ -137,7 +140,7 @@ recipient list changed. For example, enrolling a Deck key requires:
 ```bash
 nix run nixpkgs#sops -- updatekeys secrets/shared.yaml
 nix run nixpkgs#sops -- updatekeys secrets/shared-desktop.yaml
-nix run nixpkgs#sops -- updatekeys secrets/deck.yaml
+nix run nixpkgs#sops -- updatekeys secrets/deck-hm.yaml
 ```
 
 For a Pi server key, update `shared.yaml`, `shared-server.yaml`, and

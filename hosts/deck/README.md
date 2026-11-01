@@ -84,7 +84,7 @@ Update the encrypted files separately:
 ```bash
 nix run nixpkgs#sops -- updatekeys secrets/shared.yaml
 nix run nixpkgs#sops -- updatekeys secrets/shared-desktop.yaml
-nix run nixpkgs#sops -- updatekeys secrets/deck.yaml
+nix run nixpkgs#sops -- updatekeys secrets/deck-hm.yaml
 ```
 
 Clear the YubiKey identity before activating Home Manager:
