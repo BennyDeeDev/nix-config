@@ -16,6 +16,7 @@
           DisableFirefoxAccounts = true;
 
           OverrideFirstRunPage = "";
+          SkipTermsOfUse = true;
           DontCheckDefaultBrowser = true;
           OfferToSaveLogins = false;
 
@@ -39,6 +40,7 @@
           isDefault = true;
           settings = {
             "browser.startup.page" = 3;
+            "browser.warnOnQuit" = false;
             "browser.translations.alwaysTranslateLanguages" = "ru";
             "intl.regional_prefs.use_os_locales" = true;
             "media.videocontrols.picture-in-picture.enabled" = false;
