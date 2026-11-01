@@ -24,7 +24,7 @@
             --kiosk \
             --no-first-run \
             --no-default-browser-check \
-            https://ha.benjaminderksen.com/nixos-lovelace/services
+            https://ha.benjaminderksen.com/nixos-lovelace/infrastructure
         '';
       };
 

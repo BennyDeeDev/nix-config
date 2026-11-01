@@ -5,7 +5,7 @@
         views = [
           {
             title = "Infrastructure";
-            path = "services";
+            path = "infrastructure";
             type = "sections";
             max_columns = 3;
             sections = [
