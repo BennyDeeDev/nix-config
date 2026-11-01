@@ -43,8 +43,8 @@ can combine `nixos`, `nixosDesktop`, `apps`, `kde`, and `terminal`.
 | --- | --- | --- |
 | `nixosConfigurations.desktop` | Workstation and gaming host | [Installation and Secure Boot](hosts/desktop/README.md) |
 | `darwinConfigurations.mbp-personal` | Personal macOS workstation | [Bootstrap](hosts/mbp-personal/README.md) |
-| `nixosConfigurations.pi5-server` | Homelab server | [Deployment](hosts/pi5-server/README.md) |
-| `nixosConfigurations.pi5-kiosk` | Planned kiosk | — |
+| `nixosConfigurations.pi5-server` | Server | [Deployment](hosts/pi5-server/README.md) |
+| `nixosConfigurations.pi5-kiosk` | Kiosk | — |
 | `homeConfigurations.deck` | SteamOS Home Manager configuration | [Bootstrap and SteamOS notes](hosts/deck/README.md) |
 | `images.pi5-bootstrap` | Raspberry Pi 5 bootstrap SD image | [Build and flash](hosts/pi5-server/README.md#1-build-the-bootstrap-sd-image) |
 
