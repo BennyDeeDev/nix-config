@@ -85,9 +85,8 @@ in
                 iconsOnly = true;
                 launchers = [
                   "preferred://filemanager"
-                  "applications:brave-browser.desktop"
+                  "applications:firefox.desktop"
                   "applications:com.mitchellh.ghostty.desktop"
-                  "applications:code.desktop"
                   "applications:steam.desktop"
                   "applications:spotify.desktop"
                   "applications:org.keepassxc.KeePassXC.desktop"
