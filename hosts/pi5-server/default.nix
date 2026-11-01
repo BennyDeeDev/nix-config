@@ -14,6 +14,7 @@ let
   postgresql = import ./postgresql.nix;
   ntfy = import ./ntfy.nix;
   vaultwarden = import ./vaultwarden.nix;
+  beszel = import ./beszel.nix;
   nasModule = import ../../modules/nas.nix;
   resticModule = import ../../modules/restic.nix;
 in
@@ -35,6 +36,7 @@ in
       postgresql.nixos
       ntfy.nixos
       vaultwarden.nixos
+      beszel.nixos
       host.nixos
     ];
   };

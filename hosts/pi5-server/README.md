@@ -11,6 +11,7 @@ Build and flash the bootstrap SD image, enroll the Pi's age key, then deploy
 | Immich | 2283 | <https://immich.benjaminderksen.com> |
 | Vaultwarden | 8222 | <https://vault.benjaminderksen.com> |
 | Gatus | 8080 | <https://status.benjaminderksen.com> |
+| Beszel Hub | 8090 | <https://stats.benjaminderksen.com> |
 | ntfy | 8060 | <https://ntfy.benjaminderksen.com> |
 | OTBR UI and REST | 8082 / 8081 | <https://otbr.benjaminderksen.com> (Basic Auth); REST remains loopback-only |
 | Matter.js UI and WebSocket API | 5580 | <https://matter.benjaminderksen.com> (Basic Auth); Home Assistant uses `ws://localhost:5580/ws` |
@@ -195,6 +196,16 @@ nix run nixpkgs#sops -- secrets/pi5-server.yaml
 
 Follow the [SOPS setup](../../secrets/README.md#edit-a-secret) to configure the
 age identity first. Do not put the token in Nix source or use a Global API Key.
+
+### Beszel Hub
+
+After deploying the hub, open <https://stats.benjaminderksen.com> and create the
+initial admin account. Configure ntfy under **Settings → Notifications** using
+the existing `ntfy-topic` value from `secrets/pi5-server.yaml`, in a URL like
+`ntfy://ntfy.benjaminderksen.com/<ntfy-topic>`. The ntfy server currently allows
+anonymous read/write access, so the topic is not protected by an ntfy login.
+Once agents are connected, enable the **Status** alert for each system in the
+systems table.
 
 ### 1. Set up Home Assistant
 

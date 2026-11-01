@@ -29,6 +29,7 @@
           "matter.benjaminderksen.com" = "192.168.178.52";
           "ntfy.benjaminderksen.com" = "192.168.178.52";
           "otbr.benjaminderksen.com" = "192.168.178.52";
+          "stats.benjaminderksen.com" = "192.168.178.52";
           "status.benjaminderksen.com" = "192.168.178.52";
           "vault.benjaminderksen.com" = "192.168.178.52";
         };
