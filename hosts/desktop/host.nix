@@ -7,6 +7,17 @@
       networking.interfaces.enp14s0.wakeOnLan.enable = true;
       system.stateVersion = "25.11";
 
+      my.sops.smartcard.enable = true;
+
+      sops.secrets = {
+        "benjamin-password" = {
+          sopsFile = ../../secrets/shared.yaml;
+          neededForUsers = true;
+        };
+        "smb-username".sopsFile = ../../secrets/shared-desktop.yaml;
+        "smb-password".sopsFile = ../../secrets/shared-desktop.yaml;
+      };
+
       # Temporarily disable the out-of-tree driver until this fix reaches the
       # locked nixpkgs input: https://github.com/NixOS/nixpkgs/pull/576564
       # boot = {

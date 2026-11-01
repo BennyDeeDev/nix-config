@@ -11,7 +11,6 @@ let
   host = import ./host.nix;
   nasModule = import ../../modules/nas.nix;
   sopsModule = import ../../modules/sops.nix { inherit sops-nix; };
-  secrets = import ./secrets.nix;
   users = import ./users.nix;
   windows = import ./windows.nix;
   homeManagerConfig = import ./home-manager.nix {
@@ -38,7 +37,6 @@ in
       ./hardware-configuration.nix
       hardware.nixos
       host.nixos
-      secrets.nixos
       users.nixos
       homeManagerConfig.nixos
     ];

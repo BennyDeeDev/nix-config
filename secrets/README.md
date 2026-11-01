@@ -14,8 +14,8 @@ directory with age. YubiKeys are used for editing; host keys let
 | [`.sops.yaml`](../.sops.yaml) | Recipient rules for each encrypted file |
 | `secrets/*.yaml` | Encrypted secrets, including their recipient metadata |
 
-Both YubiKeys, `yk-5-nfc` and `yk-5c-nano`, are recipients of all three secret
-files. Hosts receive access through the matching rules in `.sops.yaml`.
+Both YubiKeys, `yk-5-nfc` and `yk-5c-nano`, are recipients of every encrypted
+file. Hosts receive access through the matching rules in `.sops.yaml`.
 
 Enable the Nix command and flakes for this shell:
 
@@ -30,7 +30,7 @@ Plug in the YubiKey selected by your Home Manager configuration:
 ```bash
 export SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/identity.txt"
 
-nix run nixpkgs#sops -- secrets/common.yaml
+nix run nixpkgs#sops -- secrets/shared.yaml
 ```
 
 Enter the PIN and touch the YubiKey when prompted. Save and close the editor
@@ -57,7 +57,7 @@ unset SOPS_AGE_KEY
 With the YubiKey identity selected as above:
 
 ```bash
-nix run nixpkgs#sops -- unset secrets/common.yaml '["obsolete-key"]'
+nix run nixpkgs#sops -- unset secrets/shared.yaml '["obsolete-key"]'
 ```
 
 For nested keys, use a path such as `'["services"]["example"]["password"]'`.
@@ -115,7 +115,7 @@ On the editing machine, add the printed `age1...` public key under `keys` in
 keys:
   - &example age1...
 creation_rules:
-  - path_regex: secrets/common\.ya?ml$
+  - path_regex: secrets/shared\.ya?ml$
     key_groups:
       - age:
           - *example
@@ -135,12 +135,15 @@ Use an already enrolled YubiKey, with `SOPS_AGE_KEY_FILE` set as shown under
 recipient list changed. For example, enrolling a Deck key requires:
 
 ```bash
-nix run nixpkgs#sops -- updatekeys secrets/common.yaml
-nix run nixpkgs#sops -- updatekeys secrets/desktop.yaml
+nix run nixpkgs#sops -- updatekeys secrets/shared.yaml
+nix run nixpkgs#sops -- updatekeys secrets/shared-desktop.yaml
+nix run nixpkgs#sops -- updatekeys secrets/deck.yaml
 ```
 
-For a Pi server key, update `common.yaml` and `pi5-server.yaml` instead.
-Commit `.sops.yaml` and the affected encrypted files together.
+For a Pi server key, update `shared.yaml`, `shared-server.yaml`, and
+`pi5-server.yaml`. For a Pi kiosk key, update `shared.yaml`,
+`shared-server.yaml`, and `pi5-kiosk.yaml`. Commit `.sops.yaml` and the affected
+encrypted files together.
 
 ### 4. Activate again
 

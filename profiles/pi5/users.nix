@@ -3,7 +3,7 @@
     { pkgs, config, ... }:
     {
       sops.secrets."benjamin-password" = {
-        sopsFile = ../../secrets/common.yaml;
+        sopsFile = ../../secrets/shared.yaml;
         neededForUsers = true;
       };
 

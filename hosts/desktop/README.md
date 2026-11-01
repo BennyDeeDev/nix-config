@@ -79,11 +79,12 @@ sudo nix --extra-experimental-features 'nix-command flakes' \
 ```
 
 On an editing machine with an enrolled YubiKey, replace the `&desktop` public
-key in `.sops.yaml` and rekey both files:
+key in `.sops.yaml` and rekey the desktop-accessible files:
 
 ```bash
 export SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/identity.txt"
-nix run nixpkgs#sops -- updatekeys secrets/common.yaml
+nix run nixpkgs#sops -- updatekeys secrets/shared.yaml
+nix run nixpkgs#sops -- updatekeys secrets/shared-desktop.yaml
 nix run nixpkgs#sops -- updatekeys secrets/desktop.yaml
 ```
 
@@ -128,8 +129,9 @@ Home Manager uses a separate age key for home secrets. Print its public key:
 nix shell nixpkgs#age --command age-keygen -y ~/.config/sops/age/keys.txt
 ```
 
-Replace `&desktop_hm` in `.sops.yaml` and rekey `common.yaml` and `desktop.yaml`
-as in step 4. If the key has not been generated yet, use the
+Replace `&desktop_hm` in `.sops.yaml` and rekey `shared.yaml`,
+`shared-desktop.yaml`, and `desktop.yaml` as in step 4. If the key has not been
+generated yet, use the
 [host enrollment instructions](../../secrets/README.md#1-obtain-the-host-public-key).
 Rebuild after enrolling it:
 

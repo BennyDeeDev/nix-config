@@ -11,8 +11,8 @@ The gaming profile enables `my.steamdex` and sets the shared Steam directory
 and account ID. Each host defines its parsers and apps through
 `my.steamdex.settings`. Home Manager writes the configuration to
 `~/.config/steamdex/config.json`; Steamdex loads it automatically, respecting
-`XDG_CONFIG_HOME` when set. SOPS renders the SteamGridDB API key from
-`secrets/common.yaml` to `~/.config/steamdex/secrets.json` for Steamdex.
+`XDG_CONFIG_HOME` when set. The profile uses SOPS to render the SteamGridDB API
+key from `secrets/shared-desktop.yaml` to `~/.config/steamdex/secrets.json`.
 
 Preview the configured shortcuts, then write them to Steam:
 

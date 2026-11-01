@@ -31,7 +31,10 @@ in
             windows.homeManager
           ];
 
-          sops.defaultSopsFile = ../../secrets/desktop.yaml;
+          sops.secrets = {
+            "smb-username".sopsFile = ../../secrets/shared-desktop.yaml;
+            "smb-password".sopsFile = ../../secrets/shared-desktop.yaml;
+          };
           my.sops.yubikeyIdentity = "AGE-PLUGIN-YUBIKEY-17Z2J5Q5Z709P64S7VFQZT";
           my.kde.kickoffIcon = "nix-snowflake";
           my.nas.shares = [

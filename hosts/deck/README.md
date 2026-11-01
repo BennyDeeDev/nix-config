@@ -82,8 +82,9 @@ export SOPS_AGE_KEY='AGE-PLUGIN-YUBIKEY-17Z2J5Q5Z709P64S7VFQZT'
 Update the encrypted files separately:
 
 ```bash
-nix run nixpkgs#sops -- updatekeys secrets/common.yaml
-nix run nixpkgs#sops -- updatekeys secrets/desktop.yaml
+nix run nixpkgs#sops -- updatekeys secrets/shared.yaml
+nix run nixpkgs#sops -- updatekeys secrets/shared-desktop.yaml
+nix run nixpkgs#sops -- updatekeys secrets/deck.yaml
 ```
 
 Clear the YubiKey identity before activating Home Manager:

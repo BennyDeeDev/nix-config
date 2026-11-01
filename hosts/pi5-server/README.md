@@ -84,15 +84,17 @@ sudo nix --extra-experimental-features 'nix-command flakes' \
 
 On the editing machine, replace the `&pi5-server` public key in `.sops.yaml`
 with the printed `age1...` value. Its alias is already listed in the rules for
-`common.yaml` and `pi5-server.yaml`. Rekey both files with an enrolled YubiKey:
+`shared.yaml`, `shared-server.yaml`, and `pi5-server.yaml`. Rekey those files
+with an enrolled YubiKey:
 
 ```bash
 export SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/identity.txt"
-nix run nixpkgs#sops -- updatekeys secrets/common.yaml
+nix run nixpkgs#sops -- updatekeys secrets/shared.yaml
+nix run nixpkgs#sops -- updatekeys secrets/shared-server.yaml
 nix run nixpkgs#sops -- updatekeys secrets/pi5-server.yaml
 ```
 
-Commit `.sops.yaml` and both encrypted files together. For editing before
+Commit `.sops.yaml` and the encrypted files together. For editing before
 Home Manager has created `identity.txt`, use the
 [bootstrap identity instructions](../../secrets/README.md#before-first-activation).
 
