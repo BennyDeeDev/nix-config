@@ -1,6 +1,6 @@
 {
   nixos =
-    { ... }:
+    { config, ... }:
     {
       my.beszel.agent = {
         enable = true;
@@ -8,12 +8,21 @@
         tokenSopsFile = ../../secrets/pi5-server.yaml;
       };
 
+      sops.secrets."healthchecks_uuid".sopsFile = ../../secrets/pi5-server.yaml;
+
+      sops.templates."beszel-hub-env".content = ''
+        HEARTBEAT_URL=https://hc-ping.com/${config.sops.placeholder."healthchecks_uuid"}
+        HEARTBEAT_INTERVAL=60
+        HEARTBEAT_METHOD=GET
+      '';
+
       services.beszel.hub = {
         enable = true;
         environment = {
           APP_URL = "https://stats.benjaminderksen.com";
           DISABLE_SSH = "true";
         };
+        environmentFile = config.sops.templates."beszel-hub-env".path;
       };
 
       my.restic.beszel = {

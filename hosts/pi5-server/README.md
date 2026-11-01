@@ -224,7 +224,33 @@ The Hub's public `KEY` is configured once in `modules/beszel-agent.nix`; it is
 not a secret. Use a different `TOKEN` for every system. Agents connect to the
 Hub over WebSocket with SSH disabled, so do not open port `45876`.
 
-Configure ntfy under **Settings → Notifications** using
+#### Set up outage push notifications
+
+1. Sign up at [Healthchecks.io](https://healthchecks.io/) and create a check
+   for the service you want to monitor. Set a **Simple** schedule with a
+   **1-minute period** and **2-minute grace time**.
+2. Open the ntfy app or [ntfy.sh](https://ntfy.sh/app) and subscribe to a
+   hard-to-guess topic. The public service is free to use without an account.
+3. In Healthchecks.io, add the **ntfy** integration to the project, enter the
+   same topic, and choose the down/up notification priorities. Test the
+   integration and enable it for the check.
+4. Copy the check's UUID into `secrets/pi5-server.yaml`:
+
+   ```yaml
+   healthchecks_uuid: "YOUR-UUID"
+   ```
+
+   This setup uses the check UUID; a project Ping Key is not needed.
+5. Deploy the NixOS configuration. The Hub pings
+   `https://hc-ping.com/<uuid>` with GET every 60 seconds. Healthchecks.io
+   sends a push notification through ntfy if the Hub misses its check-in; with
+   the schedule above, it reports down about three minutes after the last ping.
+
+This uses one check on Healthchecks.io's free tier and the free public ntfy.sh
+service.
+
+Beszel's own system notifications are separate. Configure ntfy under
+**Settings → Notifications** using
 the existing `ntfy-topic` value from `secrets/pi5-server.yaml`, in a URL like
 `ntfy://ntfy.benjaminderksen.com/<ntfy-topic>`.
 Once agents are connected, enable the **Status** alert for each system in the
