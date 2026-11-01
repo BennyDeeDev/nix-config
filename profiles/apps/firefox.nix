@@ -4,6 +4,11 @@
     {
       programs.firefox = {
         enable = true;
+        configPath =
+          if pkgs.stdenv.hostPlatform.isLinux then
+            ".mozilla/firefox"
+          else
+            "Library/Application Support/org.nixos.firefox";
         policies = {
           DisableTelemetry = true;
           DisableFirefoxStudies = true;
