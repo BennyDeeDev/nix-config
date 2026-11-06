@@ -108,6 +108,17 @@
               alerts = [ { type = "ntfy"; } ];
             }
             {
+              name = "Beszel";
+              url = "https://stats.benjaminderksen.com";
+              client.dns-resolver = "tcp://127.0.0.1:53";
+              interval = "60s";
+              conditions = [
+                "[STATUS] == 200"
+                "[CERTIFICATE_EXPIRATION] > 168h"
+              ];
+              alerts = [ { type = "ntfy"; } ];
+            }
+            {
               name = "Gatus";
               url = "https://status.benjaminderksen.com";
               client.dns-resolver = "tcp://127.0.0.1:53";
