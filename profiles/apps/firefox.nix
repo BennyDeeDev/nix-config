@@ -18,7 +18,7 @@
           OverrideFirstRunPage = "";
           SkipTermsOfUse = true;
           DontCheckDefaultBrowser = true;
-          OfferToSaveLogins = false;
+          PasswordManagerEnabled = false;
 
           DNSOverHTTPS = {
             Enabled = false;
@@ -39,6 +39,8 @@
             install_url = "https://addons.mozilla.org/firefox/downloads/latest/bitwarden-password-manager/latest.xpi";
             default_area = "navbar";
           };
+          "3rdparty".Extensions."{446900e4-71c2-419f-a6a7-df9c091e268b}".environment.base =
+            "https://vault.benjaminderksen.com";
         };
 
         profiles.default = {
@@ -51,7 +53,6 @@
             "browser.translations.neverTranslateLanguages" = "de,en";
             "intl.regional_prefs.use_os_locales" = true;
             "media.videocontrols.picture-in-picture.enabled" = false;
-            "signon.generation.enabled" = false;
             "signon.firefoxRelay.feature" = "disabled";
           };
 
