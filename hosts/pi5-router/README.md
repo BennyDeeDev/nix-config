@@ -59,6 +59,12 @@ The port is not opened on the upstream or DMZ interfaces. The NixOS module's
 initial login is `admin` / `admin`; change it immediately on first login. This
 UI uses HTTP, so keep access on the trusted network or VPN.
 
+The router's Beszel agent is configured in [`beszel.nix`](beszel.nix) and
+reports to the Hub at `https://stats.benjaminderksen.com`. Enroll it in the Hub
+as a **Binary** system using the router's reachable address. Its unique token
+is stored in `secrets/pi5-router.yaml`. The agent connects outbound over
+WebSocket with SSH disabled; do not open TCP 45876 on the router.
+
 ## WireGuard management
 
 Each interface has one owner. NixOS/networkd manages declarative `wg0` through

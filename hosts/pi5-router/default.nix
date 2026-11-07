@@ -9,12 +9,15 @@ let
   wireguard = import ./wireguard.nix;
   wgAccessServer = import ./wg-access-server.nix;
   ntopng = import ./ntopng.nix;
+  beszel = import ./beszel.nix;
+  beszelAgentModule = import ../../modules/beszel-agent.nix;
 in
 {
   nixos = {
     imports = [
       profiles.nixos.nixos
       profiles.pi.nixos
+      beszelAgentModule.nixos
       host.nixos
       networking.nixos
       dnsmasq.nixos
@@ -22,6 +25,7 @@ in
       wireguard.nixos
       wgAccessServer.nixos
       ntopng.nixos
+      beszel.nixos
     ];
   };
 }
