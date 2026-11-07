@@ -5,6 +5,7 @@ let
   host = import ./host.nix;
   networking = import ./networking.nix;
   dnsmasq = import ./dnsmasq.nix;
+  firewall = import ./firewall.nix;
 in
 {
   nixos = {
@@ -14,6 +15,7 @@ in
       host.nixos
       networking.nixos
       dnsmasq.nixos
+      firewall.nixos
     ];
   };
 }

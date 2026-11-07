@@ -5,10 +5,6 @@
       useDHCP = false;
       dhcpcd.enable = false;
 
-      # Private lab only: no input or forwarding filters during bring-up.
-      firewall.enable = false;
-      nftables.enable = true;
-
       # Bring up IPv4 first; IPv6 needs its own prefix delegation and zone policy.
       enableIPv6 = false;
 

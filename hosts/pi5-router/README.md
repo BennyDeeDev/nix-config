@@ -25,13 +25,53 @@ Outbound IPv4 traffic is masqueraded through `end0`. No Fritz!Box static routes
 are needed; while the Fritz!Box remains upstream, internet access uses double
 NAT. IPv6 routing and public port forwarding are not configured.
 
-**This is a lab configuration, not an isolated DMZ.** Routing between the two
-downstream networks is deliberately allowed in both directions for testing.
-Both can also reach the upstream Fritz!Box network. The NixOS firewall is
-disabled: there are no input or forwarding filters, and SSH is reachable
-through all interfaces. nftables is used only for outbound NAT. Keep this
-behind the Fritz!Box without public port forwards. Add a firewall and zone
-isolation before connecting untrusted services or exposing anything publicly.
+The stateful nftables firewall allows both networks to reach the internet.
+New connections between trusted and DMZ are blocked in both directions; add
+service-specific port permissions when needed rather than a blanket allowance.
+New upstream connections into DMZ are also blocked. A single custom rule
+blocks DMZ forwarding to the three RFC 1918 private IPv4 ranges, including
+trusted and the Fritz!Box network. It precedes the forwarding permissions
+added by the NAT module, which would otherwise allow DMZ to reach upstream
+private devices. Established replies are allowed. Strict reverse path
+filtering validates source addresses against their return routes.
+
+Router DNS and DHCP are available on both downstream interfaces. SSH is
+temporarily open on all interfaces through `services.openssh.openFirewall`.
+The trusted interface also explicitly allows TCP 22: setting the global SSH
+toggle to `false` later leaves trusted SSH available while closing WAN and
+DMZ SSH. Do that before public exposure; until then DMZ clients can reach
+router SSH despite forwarding isolation. Diagnostic pings remain allowed.
+
+Keep this behind the Fritz!Box without Exposed Host or public port forwards.
+WireGuard and published DMZ services are not configured yet.
+
+## Fritz!Box IPv4 address range
+
+The [FRITZ!Box 7530 AX documentation][fritz-ipv4] gives these factory defaults:
+
+| Purpose | Address or range |
+| --- | --- |
+| Upstream network | `192.168.178.0/24` |
+| Fritz!Box gateway | `192.168.178.1` |
+| Automatic DHCP pool | `192.168.178.20`–`192.168.178.200` inclusive |
+| Addresses below the DHCP pool | `192.168.178.2`–`192.168.178.19` |
+| Intended Pi DHCP reservation | `192.168.178.2` |
+
+The Pi remains a WAN DHCP client. The Fritz!Box supports reservations outside
+its automatic pool, so `.2` can be assigned through DHCP without configuring
+a static address on the Pi. Confirm that `.2` is unused and check the actual
+pool before setting up the reservation:
+
+1. Open **Home Network → Network** in the Fritz!Box.
+2. Edit the Pi with built-in Ethernet MAC `2c:cf:67:1c:66:fa`.
+3. Set its IPv4 address to `192.168.178.2` and enable **Always assign this
+   network device the same IPv4 address**.
+4. Apply; the Pi receives `.2` on a subsequent DHCP lease renewal.
+
+The address, gateway and router DNS are learned through WAN DHCP. UDP 68
+remains allowed on `end0` for DHCP replies, including with a reservation.
+Another upstream DHCP server can provide its own WAN configuration without
+this Fritz!Box reservation. Downstream DHCP for trusted and DMZ is independent.
 
 ## Prerequisite: enroll the router key
 
@@ -75,17 +115,19 @@ Alternatively, the rebuild commands below build on the Pi itself.
 
 ### Build before arming rollback
 
-Changing from dhcpcd to networkd may briefly interrupt SSH and change the DHCP
-lease. Reserve the Pi's built-in Ethernet MAC (`2c:cf:67:1c:66:fa`) in the
-Fritz!Box if a fixed management IP is required. The bootstrap address observed
-during bring-up was `192.168.178.54`; verify it before using the commands below.
+Changing network management or the WAN address may briefly interrupt SSH.
+The commands below use the observed bootstrap DHCP address `192.168.178.54`;
+verify it before deployment. After the Fritz!Box reservation takes effect,
+the WAN address becomes `192.168.178.2`; use the current lease for the build
+and target host.
 
 Build on the Pi first so downloading and building do not use the rollback
 window:
 
 ```bash
 nixos-rebuild build --flake .#pi5-router \
-  --build-host benjamin@192.168.178.54
+  --build-host benjamin@192.168.178.54 \
+  --target-host benjamin@192.168.178.54
 ```
 
 ### Test activation with rollback
@@ -107,7 +149,8 @@ nixos-rebuild test --flake .#pi5-router \
   --sudo
 ```
 
-Reconnect using the lease shown in the Fritz!Box or `pi5-router.fritz.box`.
+Reconnect using `pi5-router.fritz.box` or the current lease shown in the
+Fritz!Box; a cached hostname record may briefly retain the previous address.
 The deployed profile requires the user's password for sudo. On the Pi, check:
 
 ```bash
@@ -163,10 +206,22 @@ Validate in order:
 1. One DHCP lease in each corresponding subnet, with its Pi gateway as DNS.
 2. Ping the namespace's own Pi gateway.
 3. DNS resolution and outbound IPv4 internet access from each namespace.
-4. Bidirectional traffic between namespace clients, routed through the Pi.
-5. Throughput between namespaces using iperf3, then upstream throughput.
+4. New connections to listening servers fail between trusted and DMZ in both
+   directions until a service-specific exception is configured.
+5. New upstream connections to a listening DMZ server fail.
+6. DMZ cannot reach listening services on the upstream private network.
+7. Router SSH remains available from trusted, DMZ and upstream during the lab.
+   Once the global SSH toggle is disabled, verify that only trusted SSH works.
+8. Repeat connectivity and isolation checks after a coordinated router reboot.
 
-For example, after namespace setup, run a server in the DMZ client:
+Use live listening servers and positive control connections when testing
+blocked paths, so an absent service is not mistaken for a firewall block.
+Inspect firewall counters on the router to confirm the expected drop rule.
+The old private-upstream NAT benchmark is intentionally blocked from DMZ now;
+do not weaken the policy just to repeat that benchmark.
+
+To benchmark an explicitly allowed service port later, run a server in the
+DMZ client (the default policy intentionally blocks this test):
 
 ```bash
 sudo ip netns exec router-dmz nix run nixpkgs#iperf3 -- -s -4
@@ -182,3 +237,5 @@ sudo ip netns exec router-trusted nix run nixpkgs#iperf3 -- -4 -c 10.77.20.100 -
 The ASIX AX88179B PC adapters negotiate 1Gbps Ethernet. USB 3 avoids the
 previous USB 2 bottleneck, but these adapters cannot validate 2.5Gbps speeds.
 The built-in Pi upstream interface is also limited to 1Gbps.
+
+[fritz-ipv4]: https://fritz.com/en/apps/knowledge-base/FRITZ-Box-7530-AX/201_configuring-the-fritz-box-to-always-assign-the-same-ip-address-to-a-network-device
