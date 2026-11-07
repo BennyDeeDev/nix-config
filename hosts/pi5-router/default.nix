@@ -8,6 +8,7 @@ let
   firewall = import ./firewall.nix;
   wireguard = import ./wireguard.nix;
   wgAccessServer = import ./wg-access-server.nix;
+  ntopng = import ./ntopng.nix;
 in
 {
   nixos = {
@@ -20,6 +21,7 @@ in
       firewall.nixos
       wireguard.nixos
       wgAccessServer.nixos
+      ntopng.nixos
     ];
   };
 }

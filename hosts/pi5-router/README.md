@@ -47,6 +47,18 @@ Keep this behind the Fritz!Box without Exposed Host or public port forwards.
 Both WireGuard features are enabled in this configuration. Published DMZ
 services are not configured yet.
 
+## Network monitoring
+
+[`ntopng.nix`](ntopng.nix) monitors the router's separate upstream (`end0`),
+DMZ (`enP1p3s0`), and trusted (`enP1p4s0`) interfaces; there is no `br-lan`
+bridge. The NixOS ntopng module also enables its local Redis instance.
+
+From trusted or either VPN, open `http://10.77.10.1:3000`. The firewall allows
+TCP 3000 on the trusted interface; the VPN interfaces are already trusted.
+The port is not opened on the upstream or DMZ interfaces. The NixOS module's
+initial login is `admin` / `admin`; change it immediately on first login. This
+UI uses HTTP, so keep access on the trusted network or VPN.
+
 ## WireGuard management
 
 Each interface has one owner. NixOS/networkd manages declarative `wg0` through
