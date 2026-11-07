@@ -1,6 +1,6 @@
 {
   nixos = {
-    networking.hostName = "pi5-kiosk";
+    networking.hostName = "pi3-kiosk";
     networking.firewall.enable = true;
 
     boot.loader = {

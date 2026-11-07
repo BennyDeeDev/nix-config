@@ -23,7 +23,7 @@ let
   nixosDesktop = import ./nixos-desktop { inherit home-manager lanzaboote; };
   kde = import ./kde { inherit plasma-manager; };
   macos = import ./macos { inherit home-manager nix-homebrew; };
-  pi5 = import ./pi5;
+  pi = import ./pi;
   terminal = import ./terminal { inherit helixFlake lazygitFlake; };
 in
 {
@@ -34,7 +34,7 @@ in
     nixosDesktop
     kde
     macos
-    pi5
+    pi
     terminal
     ;
 }

@@ -144,8 +144,8 @@ nix run nixpkgs#sops -- updatekeys secrets/deck-hm.yaml
 ```
 
 For a Pi server key, update `shared.yaml`, `shared-server.yaml`, and
-`pi5-server.yaml`. For a Pi kiosk key, update `shared.yaml`,
-`shared-server.yaml`, and `pi5-kiosk.yaml`. Commit `.sops.yaml` and the affected
+`pi5-server.yaml`. For the Pi kiosk key, update `shared.yaml`,
+`shared-server.yaml`, and `pi3-kiosk.yaml`. Commit `.sops.yaml` and the affected
 encrypted files together.
 
 ### 4. Activate again

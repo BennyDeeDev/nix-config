@@ -3,7 +3,7 @@
     my.beszel.agent = {
       enable = true;
       hubUrl = "https://stats.benjaminderksen.com";
-      tokenSopsFile = ../../secrets/pi5-kiosk.yaml;
+      tokenSopsFile = ../../secrets/pi3-kiosk.yaml;
     };
   };
 }

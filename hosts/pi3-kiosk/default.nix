@@ -11,7 +11,7 @@ in
   nixos = {
     imports = [
       profiles.nixos.nixos
-      profiles.pi5.nixos
+      profiles.pi.nixos
       beszelAgentModule.nixos
       cage.nixos
       beszel.nixos

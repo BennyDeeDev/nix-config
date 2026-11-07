@@ -64,10 +64,10 @@
       profiles = import ./profiles inputs;
       desktop = import ./hosts/desktop inputs;
       pi5Server = import ./hosts/pi5-server inputs;
-      pi5Kiosk = import ./hosts/pi5-kiosk inputs;
+      pi3Kiosk = import ./hosts/pi3-kiosk inputs;
       deck = import ./hosts/deck inputs;
       mbpPersonal = import ./hosts/mbp-personal inputs;
-      pi5Bootstrap = import ./images/pi5-bootstrap.nix inputs;
+      piBootstrap = import ./images/pi-bootstrap.nix inputs;
       nixosSystem = nixpkgs.lib.nixosSystem;
       darwinSystem = darwin.lib.darwinSystem;
       homeManagerConfiguration = home-manager.lib.homeManagerConfiguration;
@@ -94,9 +94,9 @@
           system = "aarch64-linux";
           modules = [ pi5Server.nixos ];
         };
-        pi5-kiosk = nixosSystem {
+        pi3-kiosk = nixosSystem {
           system = "aarch64-linux";
-          modules = [ pi5Kiosk.nixos ];
+          modules = [ pi3Kiosk.nixos ];
         };
       };
 
@@ -113,10 +113,10 @@
         modules = [ mbpPersonal.darwin ];
       };
 
-      images.pi5-bootstrap =
+      images.pi-bootstrap =
         (nixosSystem {
           system = "aarch64-linux";
-          modules = [ pi5Bootstrap.nixos ];
+          modules = [ piBootstrap.nixos ];
         }).config.system.build.sdImage;
     };
 }

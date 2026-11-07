@@ -31,7 +31,7 @@ system has its own facet: `nixos`, `homeManager`, or `darwin`.
 | [`nixosDesktop`](profiles/nixos-desktop/) | `nixos`, `homeManager` | Workstation services, boot, hardware integration, and virtualisation |
 | [`kde`](profiles/kde/) | `nixos`, `homeManager` | Plasma desktop, panels, shortcuts, and tiling |
 | [`macos`](profiles/macos/) | `homeManager`, `darwin` | macOS settings, applications, and Hammerspoon |
-| [`pi5`](profiles/pi5/) | `nixos` | Raspberry Pi users, SSH, and filesystems |
+| [`pi`](profiles/pi/) | `nixos` | Raspberry Pi users, SSH, and filesystems |
 | [`terminal`](profiles/terminal/) | `homeManager` | Shell, CLI tools, editors, Git, and SSH |
 
 Select each profile and facet explicitly. For example, a NixOS workstation
@@ -44,9 +44,9 @@ can combine `nixos`, `nixosDesktop`, `apps`, `kde`, and `terminal`.
 | `nixosConfigurations.desktop` | Workstation and gaming host | [Installation and Secure Boot](hosts/desktop/README.md) |
 | `darwinConfigurations.mbp-personal` | Personal macOS workstation | [Bootstrap](hosts/mbp-personal/README.md) |
 | `nixosConfigurations.pi5-server` | Server | [Deployment](hosts/pi5-server/README.md) |
-| `nixosConfigurations.pi5-kiosk` | Kiosk | — |
+| `nixosConfigurations.pi3-kiosk` | Temporary Pi 3 kiosk test | — |
 | `homeConfigurations.deck` | SteamOS Home Manager configuration | [Bootstrap and SteamOS notes](hosts/deck/README.md) |
-| `images.pi5-bootstrap` | Raspberry Pi 5 bootstrap SD image | [Build and flash](hosts/pi5-server/README.md#1-build-the-bootstrap-sd-image) |
+| `images.pi-bootstrap` | Generic AArch64 bootstrap SD image for Raspberry Pi 3B+ and Pi 5 | [Build and flash](hosts/pi5-server/README.md#1-build-the-bootstrap-sd-image) |
 
 ## Documentation
 
@@ -240,9 +240,9 @@ Evaluate the active outputs without activating them:
 nix eval --raw .#darwinConfigurations.mbp-personal.system.drvPath
 nix eval --raw .#nixosConfigurations.desktop.config.system.build.toplevel.drvPath
 nix eval --raw .#nixosConfigurations.pi5-server.config.system.build.toplevel.drvPath
-nix eval --raw .#nixosConfigurations.pi5-kiosk.config.system.build.toplevel.drvPath
+nix eval --raw .#nixosConfigurations.pi3-kiosk.config.system.build.toplevel.drvPath
 nix eval --raw .#homeConfigurations.deck.activationPackage.drvPath
-nix eval --raw .#images.pi5-bootstrap.drvPath
+nix eval --raw .#images.pi-bootstrap.drvPath
 ```
 
 Build an output with `nix build --no-link <installable>`.
@@ -273,8 +273,8 @@ nix run nixpkgs#nix-diff -- \
   --skip-already-compared --color auto --context 1
 ```
 
-Use `host=pi5-server` or `host=pi5-kiosk` for the Pi configurations. For
-nix-darwin, compare the `system` output:
+Use `host=pi5-server` or `pi3-kiosk` for the Pi configurations. For nix-darwin,
+compare the `system` output:
 
 ```bash
 host=mbp-personal

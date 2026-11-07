@@ -1,7 +1,7 @@
 # NixOS on Raspberry Pi 5
 
-Build and flash the bootstrap SD image, enroll the Pi's age key, then deploy
-`pi5-server`.
+Build and flash the generic Raspberry Pi bootstrap SD image, enroll the Pi's
+age key, then deploy `pi5-server`. The same AArch64 image also boots a Pi 3B+.
 
 ## Services
 
@@ -25,7 +25,7 @@ Build and flash the bootstrap SD image, enroll the Pi's age key, then deploy
   [`profiles/nixos-desktop/boot.nix`](../../profiles/nixos-desktop/boot.nix).
   This runs ARM binaries under emulation; it is not cross-compilation.
 - The private SSH key matching the public key in
-  [`profiles/pi5/users.nix`](../../profiles/pi5/users.nix).
+  [`profiles/pi/users.nix`](../../profiles/pi/users.nix).
 - An enrolled YubiKey for rekeying the secrets.
 
 Run build and deployment commands from the checkout root on the build machine.
@@ -39,8 +39,8 @@ export NIX_CONFIG='extra-experimental-features = nix-command flakes'
 ### 1. Build the bootstrap SD image
 
 ```bash
-nix build .#images.pi5-bootstrap
-zstd -d -f result/sd-image/*.img.zst -o pi5-bootstrap.img
+nix build .#images.pi-bootstrap
+zstd -d -f result/sd-image/*.img.zst -o pi-bootstrap.img
 ```
 
 ### 2. Flash and boot
@@ -51,7 +51,7 @@ Use `lsblk` to identify the SD card. Replace `/dev/sdX` with its device path:
 sudo umount /dev/sdX1
 sudo umount /dev/sdX2
 sudo dd \
-  if=pi5-bootstrap.img \
+  if=pi-bootstrap.img \
   of=/dev/sdX \
   bs=4M \
   status=progress \
@@ -60,11 +60,11 @@ sync
 udisksctl power-off -b /dev/sdX
 ```
 
-Insert the card, connect Ethernet, and boot the Pi. The bootstrap hostname is
-`pi5`. Connect using the authorized SSH key:
+Insert the card, connect Ethernet, and boot the Pi. The generic bootstrap
+hostname is `pi`. Connect using the authorized SSH key:
 
 ```bash
-ssh benjamin@pi5.fritz.box
+ssh benjamin@pi.fritz.box
 ```
 
 Password authentication is disabled. The bootstrap image allows passwordless
@@ -105,8 +105,8 @@ From the updated checkout on the build machine:
 
 ```bash
 nixos-rebuild switch --flake .#pi5-server \
-  --target-host benjamin@pi5.fritz.box \
-  --build-host benjamin@pi5.fritz.box \
+  --target-host benjamin@pi.fritz.box \
+  --build-host benjamin@pi.fritz.box \
   --sudo
 ```
 
@@ -114,7 +114,6 @@ The Pi builds the configuration and activates it using bootstrap sudo. Its
 hostname changes to `pi5-server`; subsequent connections use
 `pi5-server.fritz.box`.
 
-The same bootstrap image can deploy `pi5-kiosk` by changing the flake output.
 The Home Assistant instructions below apply to `pi5-server`.
 
 ## Rebuild the server

@@ -1,6 +1,11 @@
 {
   nixos =
-    { lib, pkgs, ... }:
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
     {
       users.users.kiosk = {
         isNormalUser = true;
@@ -10,23 +15,29 @@
         hashedPassword = "!";
       };
 
-      programs.chromium = {
+      programs.firefox = {
         enable = true;
-        initialPrefs.partition.default_zoom_level.x = 2.223901085741545;
+        autoConfig = ''
+          lockPref("layout.css.devPixelsPerPx", "1.5");
+        '';
       };
 
       services.cage = {
         enable = true;
         restartIfChanged = true;
         user = "kiosk";
-        program = pkgs.writeShellScript "chromium-kiosk" ''
-          exec ${lib.getExe pkgs.chromium} \
+        program = pkgs.writeShellScript "firefox-kiosk" ''
+          exec ${lib.getExe config.programs.firefox.finalPackage} \
             --kiosk \
-            --no-first-run \
-            --no-default-browser-check \
             https://ha.benjaminderksen.com/nixos-lovelace/infrastructure
         '';
       };
+
+      # Ignore only the Pi 3 HDMI remote's pointer device; keep the touchscreen
+      # and real mouse input available.
+      services.udev.extraRules = ''
+        ACTION=="add|change", SUBSYSTEM=="input", ENV{ID_PATH}=="platform-3f902000.hdmi", ENV{LIBINPUT_IGNORE_DEVICE}="1"
+      '';
 
       systemd.services = {
         "autovt@tty1".enable = false;

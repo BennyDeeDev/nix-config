@@ -9,11 +9,11 @@ in
     {
       imports = [
         profiles.nixos.nixos
-        profiles.pi5.nixos
+        profiles.pi.nixos
         "${modulesPath}/installer/sd-card/sd-image-aarch64.nix"
       ];
 
-      networking.hostName = "pi5";
+      networking.hostName = "pi";
 
       # Passwordless wheel only on the bootstrap image
       security.sudo.wheelNeedsPassword = false;

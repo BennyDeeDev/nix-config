@@ -23,7 +23,7 @@ in
   nixos = {
     imports = [
       profiles.nixos.nixos
-      profiles.pi5.nixos
+      profiles.pi.nixos
       nasModule.nixos
       resticModule.nixos
       beszelAgentModule.nixos
