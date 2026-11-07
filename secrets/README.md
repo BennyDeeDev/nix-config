@@ -147,17 +147,151 @@ For a Pi server key, update `shared.yaml`, `shared-server.yaml`, and
 `pi5-server.yaml`. For the Pi kiosk key, update `shared.yaml`,
 `shared-server.yaml`, and `pi3-kiosk.yaml`. Commit `.sops.yaml` and the affected
 encrypted files together. The base `pi5-router` needs `shared.yaml`; enabling
-WireGuard also needs `desktop.yaml` and `pi5-router.yaml`, each with a
-`wireguard-private-key` entry for that host. Their recipient rules are
-prepared, but create the encrypted files before importing either WireGuard
-feature. See the [router deployment guide](../hosts/pi5-router/README.md) and
-[desktop guide](../hosts/desktop/README.md).
+the router VPN uses `pi5-router.yaml`, and the desktop client uses
+`desktop.yaml`; each file contains its host's `wireguard-private-key`. The
+router file also holds the UI-managed VPN secrets. See
+[WireGuard secrets](#wireguard-secrets) before first deployment or key rotation.
 
 ### 4. Activate again
 
 Deploy the updated checkout and rebuild the host using its setup guide.
 Activation decrypts secrets with the enrolled host key; it does not require
 the YubiKey.
+
+## WireGuard secrets
+
+The router imports both VPN features. The desktop's `wg0` profile is declared
+in `hosts/desktop/wireguard.nix` and is managed by NetworkManager. Keep private
+keys in the existing host-specific SOPS files; do not create a separate
+encrypted file for wg-access-server.
+
+### 1. Generate three separate keypairs
+
+Generate keys locally in `/dev/shm`, a RAM-backed temporary directory. Set a
+restrictive umask **before creating the files** so their permissions are
+private. These commands write private keys; never use `cat` to display them or
+paste them into chat, Nix configuration, or plaintext Git files.
+
+If you already generated these files before setting the umask, restrict their
+permissions now (the umask does not change existing files):
+
+```bash
+chmod 600 /dev/shm/desktop-wg0.key /dev/shm/pi5-router-wg0.key \
+  /dev/shm/pi5-router-wg1.key
+```
+
+For fresh keys, run:
+
+```bash
+umask 077
+nix run nixpkgs#wireguard-tools -- genkey > /dev/shm/desktop-wg0.key
+nix run nixpkgs#wireguard-tools -- genkey > /dev/shm/pi5-router-wg0.key
+nix run nixpkgs#wireguard-tools -- genkey > /dev/shm/pi5-router-wg1.key
+```
+
+Check that each file is mode `600`:
+
+```bash
+stat -c '%a %n' /dev/shm/desktop-wg0.key /dev/shm/pi5-router-wg0.key \
+  /dev/shm/pi5-router-wg1.key
+```
+
+The key files are deliberately distinct: the desktop client uses `wg0`, the
+router has its own `wg0` server key, and wg-access-server owns the router's
+`wg1` server key. Do not rerun the generation commands unless you intend to
+replace those keys.
+
+Print only the public keys. The labels identify where each corresponding
+private key is used:
+
+```bash
+for name in desktop-wg0 pi5-router-wg0 pi5-router-wg1; do
+  printf '%s public key: ' "$name"
+  nix run nixpkgs#wireguard-tools -- pubkey < "/dev/shm/$name.key"
+done
+```
+
+### 2. Store the private keys in SOPS
+
+Select the enrolled YubiKey identity and edit the desktop secrets file:
+
+```bash
+export SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/identity.txt"
+nix run nixpkgs#sops -- secrets/desktop.yaml
+```
+
+Set its `wireguard-private-key` value to the contents of
+`/dev/shm/desktop-wg0.key`. Preserve all other entries.
+
+Edit the router secrets file:
+
+```bash
+nix run nixpkgs#sops -- secrets/pi5-router.yaml
+```
+
+Set the root `wireguard-private-key` to the contents of
+`/dev/shm/pi5-router-wg0.key`. In the existing `wg-access-server` block string,
+set `wireguard.privateKey` to the contents of
+`/dev/shm/pi5-router-wg1.key`. Preserve the admin password and other existing
+values. If creating that block for the first time, its shape is:
+
+```yaml
+wireguard-private-key: <ROUTER_WG0_PRIVATE_KEY>
+wg-access-server: |
+  adminPassword: "<STRONG_UNIQUE_PASSWORD>"
+  wireguard:
+    privateKey: "<ROUTER_WG1_PRIVATE_KEY>"
+  auth:
+    sessionStore:
+      secret: "<64_HEXADECIMAL_CHARACTERS>"
+```
+
+The `wg-access-server` value must remain a YAML block string (`|`), not a
+nested mapping. sops-nix extracts it to the service's runtime secrets file;
+the service does not receive the separate `wg0` key. Use a password manager
+for the admin password. Generate the session secret locally with:
+
+```bash
+nix run nixpkgs#openssl -- rand -hex 32
+```
+
+Enter generated secrets directly into the SOPS editor; do not pass them as
+command arguments or store them in shell history.
+
+### 3. Put public keys in their peer configuration
+
+- Put the public key derived from `desktop-wg0.key` in the router's desktop
+  peer in `hosts/pi5-router/wireguard.nix` (`allowedIPs` remains
+  `10.77.30.2/32`).
+- Put the public key derived from `pi5-router-wg0.key` in the
+  `wireguard-peer.<PUBLIC_KEY>` section name in
+  `hosts/desktop/wireguard.nix`.
+- wg-access-server derives its `wg1` public key from its SOPS private key and
+  includes it in UI-generated client profiles. There is no static Nix peer
+  entry for that key. Rotating `wg1` means updating/re-importing its clients.
+
+Only public keys go in Nix configuration. Never add per-device UI client
+private keys to Nix or SOPS; keep exported profiles private.
+
+### 4. Validate, deploy, and clean up
+
+Build the affected configurations before activating them. Deploy the router
+before switching the desktop profile; keep local recovery access available
+while rotating a key because the tunnel will be interrupted. Commit the
+encrypted SOPS files and public-key configuration changes, but never the
+plaintext keys.
+
+After both systems are working, remove the temporary private-key files:
+
+```bash
+rm /dev/shm/desktop-wg0.key /dev/shm/pi5-router-wg0.key \
+  /dev/shm/pi5-router-wg1.key
+```
+
+The router guide covers validation and the desktop guide covers manual
+NetworkManager activation:
+[router](../hosts/pi5-router/README.md#client-configuration-and-local-validation),
+[desktop](../hosts/desktop/README.md#wireguard-to-the-router).
 
 ## Set up a YubiKey
 

@@ -6,6 +6,8 @@ let
   networking = import ./networking.nix;
   dnsmasq = import ./dnsmasq.nix;
   firewall = import ./firewall.nix;
+  wireguard = import ./wireguard.nix;
+  wgAccessServer = import ./wg-access-server.nix;
 in
 {
   nixos = {
@@ -16,6 +18,8 @@ in
       networking.nixos
       dnsmasq.nixos
       firewall.nixos
+      wireguard.nixos
+      wgAccessServer.nixos
     ];
   };
 }

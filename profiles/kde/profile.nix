@@ -24,7 +24,10 @@ in
         kdePackages.khelpcenter
       ];
 
-      environment.systemPackages = nixosPackages pkgs;
+      environment.systemPackages = nixosPackages pkgs ++ [
+        # Plasma's NetworkManager tray widget is packaged separately.
+        pkgs.kdePackages.plasma-nm
+      ];
     };
 
   homeManager =

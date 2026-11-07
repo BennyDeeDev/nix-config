@@ -15,6 +15,8 @@
         internalInterfaces = [
           "enP1p3s0"
           "enP1p4s0"
+          "wg0"
+          "wg1"
         ];
       };
     };
@@ -75,13 +77,23 @@
             ConfigureWithoutCarrier = true;
           };
         };
-        "30-wg0" = {
+        # Merge with networking.wireguard's generated network so the address
+        # and these settings are applied by the same first matching file.
+        "40-wg0" = {
           matchConfig.Name = "wg0";
           linkConfig.RequiredForOnline = "no";
           networkConfig = {
             DHCP = "no";
             IPv6AcceptRA = false;
             LinkLocalAddressing = "no";
+          };
+        };
+        "40-wg1" = {
+          matchConfig.Name = "wg1";
+          # wg-access-server owns this interface, its address, and its routes.
+          linkConfig = {
+            RequiredForOnline = "no";
+            Unmanaged = true;
           };
         };
       };

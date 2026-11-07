@@ -188,11 +188,39 @@ keys and Microsoft's keys enrolled. The reported vendor keys include
 
 ## WireGuard to the router
 
-[`wireguard.nix`](wireguard.nix) configures the desktop as a client using the
-upstream `networking.wireguard` options. It is not imported until
-`secrets/desktop.yaml` contains the desktop private key and the router public
-key has replaced the placeholder in `modules/wireguard.nix`. The desktop
-supplies its SOPS source and tunnel IP; the shared module holds the common
-router endpoint, public key, `allowedIPs`, keepalive, and `privateKeyFile`
-settings. `allowedIPs` routes trusted, DMZ, and VPN subnets through the tunnel;
-the Fritz!Box subnet and ordinary internet routes stay unchanged.
+[`wireguard.nix`](wireguard.nix) configures the desktop's `wg0` as a declarative
+NetworkManager profile, using `networking.networkmanager.ensureProfiles`. The
+SOPS-backed environment file supplies the private key at runtime; it is not
+stored in the Nix store. The profile has autoconnect disabled so it can be
+toggled from Plasma's network tray widget. This host feature contains the
+profile and its SOPS wiring. The client has address
+`10.77.30.2/32`, DNS `10.77.30.1`, endpoint `192.168.178.2:51820`, and
+`AllowedIPs = 0.0.0.0/0`. NetworkManager installs IPv4 full-tunnel policy
+routing when the profile is connected; more-specific local routes still take
+precedence.
+
+Create the host's `wireguard-private-key` entry as described under
+[WireGuard secrets](../../secrets/README.md#wireguard-secrets). Put the desktop
+public key in the router's `hosts/pi5-router/wireguard.nix` peer, and the
+router's `wg0` public key in this host's `wireguard.nix`. The feature is
+imported by `default.nix`; rebuild normally after deploying the router.
+
+IPv6 routing and leak prevention are deferred. IPv6 may use the physical
+connection while this IPv4-only tunnel is connected. The tunnel does not
+autoconnect. Use the KDE system-tray network widget to connect or disconnect
+`wg0`, or use:
+
+```bash
+nmcli connection up wg0
+nmcli connection down wg0
+```
+
+Stopping the tunnel restores ordinary IPv4 routes and DNS; this is not a kill
+switch. The endpoint is only reachable from the home LAN with the current
+private address and no port forwarding. Inspect `ip -4 rule` and
+`ip -4 route show table all`, rather than just the main default route, to
+verify routing. Follow the
+[router validation guide](../pi5-router/README.md#client-configuration-and-local-validation)
+for handshake, DNS, network-access, and internet-egress checks. Neither VPN
+is reachable from outside home with the current private endpoint and no
+Fritz!Box port forwarding. macOS configuration is not included.
