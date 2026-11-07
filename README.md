@@ -44,6 +44,7 @@ can combine `nixos`, `nixosDesktop`, `apps`, `kde`, and `terminal`.
 | `nixosConfigurations.desktop` | Workstation and gaming host | [Installation and Secure Boot](hosts/desktop/README.md) |
 | `darwinConfigurations.mbp-personal` | Personal macOS workstation | [Bootstrap](hosts/mbp-personal/README.md) |
 | `nixosConfigurations.pi5-server` | Server | [Deployment](hosts/pi5-server/README.md) |
+| `nixosConfigurations.pi5-router` | IPv4 router lab with trusted and DMZ networks | [Bring-up and testing](hosts/pi5-router/README.md) |
 | `nixosConfigurations.pi3-kiosk` | Temporary Pi 3 kiosk test | — |
 | `homeConfigurations.deck` | SteamOS Home Manager configuration | [Bootstrap and SteamOS notes](hosts/deck/README.md) |
 | `images.pi-bootstrap` | Generic AArch64 bootstrap SD image for Raspberry Pi 3B+ and Pi 5 | [Build and flash](hosts/pi5-server/README.md#1-build-the-bootstrap-sd-image) |
@@ -53,6 +54,7 @@ can combine `nixos`, `nixosDesktop`, `apps`, `kde`, and `terminal`.
 - [Desktop installation and Secure Boot](hosts/desktop/README.md)
 - [MacBook bootstrap](hosts/mbp-personal/README.md)
 - [Raspberry Pi deployment and Home Assistant](hosts/pi5-server/README.md)
+- [Raspberry Pi router bring-up](hosts/pi5-router/README.md)
 - [Steam Deck bootstrap and SteamOS notes](hosts/deck/README.md)
 - [Gaming setup and troubleshooting](profiles/gaming/README.md)
 - [Package definitions and updates](packages/README.md)
@@ -240,6 +242,7 @@ Evaluate the active outputs without activating them:
 nix eval --raw .#darwinConfigurations.mbp-personal.system.drvPath
 nix eval --raw .#nixosConfigurations.desktop.config.system.build.toplevel.drvPath
 nix eval --raw .#nixosConfigurations.pi5-server.config.system.build.toplevel.drvPath
+nix eval --raw .#nixosConfigurations.pi5-router.config.system.build.toplevel.drvPath
 nix eval --raw .#nixosConfigurations.pi3-kiosk.config.system.build.toplevel.drvPath
 nix eval --raw .#homeConfigurations.deck.activationPackage.drvPath
 nix eval --raw .#images.pi-bootstrap.drvPath

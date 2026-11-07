@@ -64,6 +64,7 @@
       profiles = import ./profiles inputs;
       desktop = import ./hosts/desktop inputs;
       pi5Server = import ./hosts/pi5-server inputs;
+      pi5Router = import ./hosts/pi5-router inputs;
       pi3Kiosk = import ./hosts/pi3-kiosk inputs;
       deck = import ./hosts/deck inputs;
       mbpPersonal = import ./hosts/mbp-personal inputs;
@@ -93,6 +94,10 @@
         pi5-server = nixosSystem {
           system = "aarch64-linux";
           modules = [ pi5Server.nixos ];
+        };
+        pi5-router = nixosSystem {
+          system = "aarch64-linux";
+          modules = [ pi5Router.nixos ];
         };
         pi3-kiosk = nixosSystem {
           system = "aarch64-linux";
