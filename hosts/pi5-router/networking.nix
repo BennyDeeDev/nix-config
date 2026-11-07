@@ -75,6 +75,15 @@
             ConfigureWithoutCarrier = true;
           };
         };
+        "30-wg0" = {
+          matchConfig.Name = "wg0";
+          linkConfig.RequiredForOnline = "no";
+          networkConfig = {
+            DHCP = "no";
+            IPv6AcceptRA = false;
+            LinkLocalAddressing = "no";
+          };
+        };
       };
     };
   };

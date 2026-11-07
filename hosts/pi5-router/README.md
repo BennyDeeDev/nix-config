@@ -43,7 +43,128 @@ DMZ SSH. Do that before public exposure; until then DMZ clients can reach
 router SSH despite forwarding isolation. Diagnostic pings remain allowed.
 
 Keep this behind the Fritz!Box without Exposed Host or public port forwards.
-WireGuard and published DMZ services are not configured yet.
+WireGuard is prepared but not imported pending keys and peer details. Published
+DMZ services are not configured yet.
+
+## WireGuard management
+
+[`wireguard.nix`](wireguard.nix) contains the upstream WireGuard interface and
+SOPS key settings. It is not imported by `default.nix` yet. The interface's
+firewall, networkd, and DNS settings live in their existing files:
+[`firewall.nix`](firewall.nix), [`networking.nix`](networking.nix), and
+[`dnsmasq.nix`](dnsmasq.nix). UDP 51820 is allowed on `end0`, but the Fritz!Box
+still has no port forward or Exposed Host configured. There are no custom
+options, enable guards or configuration-merging wrappers.
+
+When enabled:
+
+| Item | Configuration |
+| --- | --- |
+| Router interface | `wg0`, `10.77.30.1/24` |
+| First client | `10.77.30.2/32`; subsequent clients use unique addresses |
+| Listener | UDP 51820 on `end0` |
+| Router access | All services |
+| Trusted/DMZ access | All services on routed hosts |
+| Internet/upstream forwarding | Not allowed through the VPN |
+
+WireGuard peers are trusted on the router and may forward any protocol to
+trusted and DMZ hosts. The existing trusted/DMZ isolation policy is unchanged;
+VPN peers do not get a route to the Fritz!Box or internet. Established replies
+to VPN connections are accepted. dnsmasq serves local and external DNS through
+`10.77.30.1`; it does not serve DHCP on the VPN. Client VPN addresses are
+static.
+
+### Pending keys and peers
+
+Create `secrets/pi5-router.yaml` with SOPS, using the prepared recipient rule
+for the router and both YubiKeys. Its decrypted YAML must contain:
+
+```yaml
+wireguard-private-key: <ROUTER_PRIVATE_KEY>
+```
+
+Do not commit plaintext private keys or put them in Nix configuration. Client
+private keys stay on their respective devices; only client public keys belong
+on the router. No keys or encrypted placeholder file have been generated.
+
+Once the real encrypted file and client public key are available, the host
+supplies the SOPS source and native upstream peer settings. The SOPS source is
+already set in `wireguard.nix`. Add the desktop peer there when its public key
+is available:
+
+```nix
+networking.wireguard.interfaces.wg0.peers = [
+  {
+    publicKey = "<DESKTOP_PUBLIC_KEY>";
+    allowedIPs = [ "10.77.30.2/32" ];
+  }
+];
+```
+
+The router's `wireguard.nix` uses upstream `networking.wireguard` options and
+sets its SOPS-backed `privateKeyFile` directly. The shared
+`modules/wireguard.nix` is for clients: it holds the common router endpoint,
+router public key, client `allowedIPs`, and keepalive settings. Each client
+host supplies only its own SOPS source and tunnel IP. Replace the router public
+key placeholder in that shared module after generating the router keypair.
+
+Bind `wireguard = import ./wireguard.nix;` in the existing `default.nix` `let`,
+then add `wireguard.nixos` to its imports after the encrypted router key file
+is ready. The feature file sets `networking.wireguard.enable = true`.
+
+The SOPS secret is passed to networkd through systemd credentials. Key
+rotation restarts networkd to reload the credential. Give each client a
+unique key and VPN `/32` in the router peer's `allowedIPs`; do not put default
+or LAN-subnet routes there. There is no custom peer schema or validation
+layer; these are the upstream WireGuard options.
+
+### Client configuration and local validation
+
+The initial desktop config routes the trusted, DMZ, and VPN subnets through
+the tunnel. DNS stays unchanged; query the router explicitly while testing:
+
+```ini
+[Interface]
+PrivateKey = <CLIENT_PRIVATE_KEY>
+Address = 10.77.30.2/32
+
+[Peer]
+PublicKey = <ROUTER_PUBLIC_KEY>
+Endpoint = 192.168.178.2:51820
+AllowedIPs = 10.77.10.0/24, 10.77.20.0/24, 10.77.30.0/24
+PersistentKeepalive = 25
+```
+
+Trusted, DMZ, and VPN traffic is routed through WireGuard. The Fritz!Box
+subnet (`192.168.178.0/24`) is deliberately excluded because it contains the
+WireGuard endpoint; ordinary internet and DNS traffic stay on the desktop's
+existing routes. Do not enable Exposed Host or public port forwarding for this
+test.
+
+After supplying keys and deploying, first test from Fritz!Box Wi-Fi/LAN:
+
+1. Check `networkctl status wg0` and the handshake on the Pi:
+
+   ```bash
+   sudo nix run nixpkgs#wireguard-tools -- show wg0
+   sudo nix run nixpkgs#wireguard-tools -- show wg0 public-key
+   ```
+
+2. Ping `10.77.30.1`, query DNS explicitly, and log in:
+
+   ```bash
+   dig @10.77.30.1 pi5-router.home.arpa
+   ssh benjamin@10.77.30.1
+   ```
+
+3. Verify access to intended services on trusted and DMZ hosts. VPN peers are
+   not restricted by port, while trusted/DMZ isolation remains in effect.
+4. Confirm the client's normal internet default route is unchanged.
+5. Only after actual SSH management through the tunnel works, set
+   `services.openssh.openFirewall = false` in `firewall.nix`. Trusted and
+   WireGuard retain explicit SSH allowances; WAN and DMZ lose global SSH.
+6. Reboot with working recovery access and repeat the tests before public
+   exposure.
 
 ## Fritz!Box IPv4 address range
 
@@ -88,8 +209,9 @@ sudo nix --extra-experimental-features 'nix-command flakes' \
   shell nixpkgs#age --command age-keygen -y /var/lib/sops-nix/key.txt
 ```
 
-Only `secrets/shared.yaml` is needed, for the password configured by the Pi
-profile. Apply the recipient change using an enrolled YubiKey on the PC:
+The base router needs `secrets/shared.yaml` for the password configured by
+the Pi profile. WireGuard additionally needs `secrets/pi5-router.yaml` when
+enabled. Apply the shared recipient change using an enrolled YubiKey on the PC:
 
 ```bash
 export SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/identity.txt"

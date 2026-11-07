@@ -185,3 +185,14 @@ bootctl status
 Expected: **Secure Boot: Enabled**, **Setup Mode: Disabled**, with the local
 keys and Microsoft's keys enrolled. The reported vendor keys include
 `microsoft builtin-db builtin-KEK builtin-PK`.
+
+## WireGuard to the router
+
+[`wireguard.nix`](wireguard.nix) configures the desktop as a client using the
+upstream `networking.wireguard` options. It is not imported until
+`secrets/desktop.yaml` contains the desktop private key and the router public
+key has replaced the placeholder in `modules/wireguard.nix`. The desktop
+supplies its SOPS source and tunnel IP; the shared module holds the common
+router endpoint, public key, `allowedIPs`, keepalive, and `privateKeyFile`
+settings. `allowedIPs` routes trusted, DMZ, and VPN subnets through the tunnel;
+the Fritz!Box subnet and ordinary internet routes stay unchanged.

@@ -8,6 +8,7 @@
         interface = [
           "enP1p3s0"
           "enP1p4s0"
+          "wg0"
         ];
         except-interface = [
           "end0"

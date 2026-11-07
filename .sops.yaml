@@ -66,6 +66,12 @@ creation_rules:
           - *yk-5-nfc
           - *yk-5c-nano
           - *pi5-server
+  - path_regex: secrets/pi5-router\.ya?ml$
+    key_groups:
+      - age:
+          - *yk-5-nfc
+          - *yk-5c-nano
+          - *pi5-router
   - path_regex: secrets/pi3-kiosk\.ya?ml$
     key_groups:
       - age:
