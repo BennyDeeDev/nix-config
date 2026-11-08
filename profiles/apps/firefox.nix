@@ -27,6 +27,7 @@
           FirefoxHome = {
             SponsoredTopSites = false;
             SponsoredStories = false;
+            Locked = true;
           };
 
           ExtensionSettings."uBlock0@raymondhill.net" = {
