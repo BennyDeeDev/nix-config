@@ -18,6 +18,20 @@
           "wg0"
           "wg1"
         ];
+        forwardPorts = [
+          {
+            sourcePort = 80;
+            destination = "10.77.20.10:80";
+          }
+          {
+            sourcePort = 443;
+            destination = "10.77.20.10:443";
+          }
+          {
+            sourcePort = 25565;
+            destination = "10.77.20.10:25565";
+          }
+        ];
       };
     };
 

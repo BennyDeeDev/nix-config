@@ -29,6 +29,7 @@
           "set:dmz,10.77.20.100,10.77.20.199,255.255.255.0,12h"
           "set:trusted,10.77.10.100,10.77.10.199,255.255.255.0,12h"
         ];
+        dhcp-host = [ "2c:cf:67:2f:91:ac,pi5-dmz,10.77.20.10,infinite" ];
         dhcp-option = [
           "tag:dmz,option:router,10.77.20.1"
           "tag:dmz,option:dns-server,10.77.20.1"

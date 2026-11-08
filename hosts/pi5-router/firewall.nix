@@ -47,6 +47,7 @@
           # Must precede NAT's WAN allowance to block private upstream access.
           extraForwardRules = lib.mkBefore ''
             iifname "enP1p3s0" ip daddr { 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 } counter drop comment "DMZ cannot reach private networks"
+            iifname "end0" oifname "enP1p3s0" ip saddr 192.168.178.0/24 ip daddr 10.77.20.0/24 accept comment "Home LAN may initiate connections into the DMZ"
             iifname { "wg0", "wg1" } accept comment "WireGuard peers may route to all networks"
           '';
         };

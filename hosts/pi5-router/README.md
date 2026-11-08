@@ -22,19 +22,20 @@ downstream interfaces, and DNS on those interfaces and both VPNs. It forwards
 external DNS queries to the Fritz!Box at `192.168.178.1`. The router uses
 networkd/resolved for its own DNS.
 
-Outbound IPv4 traffic is masqueraded through `end0`. No Fritz!Box static routes
-are needed; while the Fritz!Box remains upstream, internet access uses double
-NAT. IPv6 routing and public port forwarding are not configured.
+Outbound IPv4 traffic is masqueraded through `end0`. While the Fritz!Box remains
+upstream, internet access uses double NAT. To access the DMZ directly from the
+Fritz!Box home network, add a route for `10.77.20.0/24` via the router's
+Fritz!Box-side address `192.168.178.2`.
 
-The stateful nftables firewall allows both networks to reach the internet.
-New connections between trusted and DMZ are blocked in both directions; add
-service-specific port permissions when needed rather than a blanket allowance.
-New upstream connections into DMZ are also blocked. A single custom rule
-blocks DMZ forwarding to the three RFC 1918 private IPv4 ranges, including
-trusted and the Fritz!Box network. It precedes the forwarding permissions
-added by the NAT module, which would otherwise allow DMZ to reach upstream
-private devices. Established replies are allowed. Strict reverse path
-filtering validates source addresses against their return routes.
+The stateful nftables firewall allows both downstream networks to reach the
+internet. New connections between trusted and DMZ are blocked in both
+directions. The Fritz!Box home network (`192.168.178.0/24`) may initiate
+connections into the DMZ for management; DMZ-initiated access to private
+networks remains blocked. TCP ports 80, 443, and 25565 are forwarded to
+`pi5-dmz` at `10.77.20.10`. The private-network block precedes NAT forwarding
+permissions, preventing DMZ hosts from initiating connections to home devices.
+Established replies are allowed. Strict reverse path filtering validates
+source addresses against their return routes.
 
 Router DNS and DHCP are available on both downstream interfaces. SSH is
 temporarily open on all interfaces through `services.openssh.openFirewall`.
@@ -43,9 +44,10 @@ toggle to `false` later leaves trusted SSH available while closing WAN and
 DMZ SSH. Do that before public exposure; until then DMZ clients can reach
 router SSH despite forwarding isolation. Diagnostic pings remain allowed.
 
-Keep this behind the Fritz!Box without Exposed Host or public port forwards.
-Both WireGuard features are enabled in this configuration. Published DMZ
-services are not configured yet.
+Keep this behind the Fritz!Box without Exposed Host. To publish Minecraft,
+forward TCP 25565 on the Fritz!Box to `192.168.178.2`; do not forward 80 or 443
+unless intentionally publishing the Caddy site. Both WireGuard features are
+enabled in this configuration.
 
 ## Network monitoring
 
@@ -94,10 +96,10 @@ is routed without NAT. `disableIPTables = true` prevents wg-access-server from
 installing its own forwarding or NAT rules. dnsmasq serves DNS, not DHCP, on
 both VPNs. networkd leaves application-owned `wg1` unmanaged.
 
-UDP 51820 and 51821 are allowed on `end0`, but there is no Fritz!Box port
-forward or Exposed Host. Endpoints use the intended Pi reservation
-`192.168.178.2`. These VPNs are only reachable locally for now, not from mobile
-data or outside home.
+UDP 51820 and 51821 are allowed on `end0`, but there are no Fritz!Box forwards
+for the VPNs and no Exposed Host. Endpoints use the intended Pi reservation
+`192.168.178.2`. These VPNs remain reachable locally only, not from mobile data
+or outside home.
 
 ### Keys and peers
 

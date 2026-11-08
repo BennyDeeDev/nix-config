@@ -25,6 +25,38 @@ Normal rebuilds update the kernel, initrd, and boot generations, but leave Pi
 firmware, U-Boot, and `config.txt` as flashed. Reflashing destroys the existing
 installation; do not use it as a routine update procedure.
 
+## Services
+
+The host runs the vanilla Java server and a static placeholder site. The
+Minecraft server uses the accepted Mojang EULA, has no whitelist, and pauses
+world ticking 60 seconds after the last player leaves. Its process remains
+running so players can reconnect. TCP 25565 is forwarded by `pi5-router`.
+
+Caddy serves [`www/`](www/) on ports 80 and 443. It uses an internal CA for
+`pi5-dmz.home.arpa` and the router/DMZ IP aliases, so HTTPS clients must trust
+Caddy's local root certificate to avoid a browser warning. The site is not
+published through Fritz!Box WAN forwarding. While the Pi is still on the
+Fritz!Box LAN, test it at `https://pi5-dmz.fritz.box`.
+
+## Connect it to the DMZ
+
+For testing, the Pi can stay connected directly to the Fritz!Box. When ready,
+connect its Ethernet port to the Pi router's DMZ port (`enP1p3s0`). The router
+reserves `10.77.20.10` for this Pi's Ethernet MAC address. The router's NAT
+forwards TCP 80, 443, and 25565 from `192.168.178.2` to that address.
+
+To reach DMZ hosts directly from the Fritz!Box home network, add a Fritz!Box
+static route for `10.77.20.0/24` via `192.168.178.2`. The router permits
+home-network-initiated connections into the DMZ; DMZ-initiated access to home
+private networks stays blocked. After moving the cable, SSH directly to
+`benjamin@10.77.20.10`. The Caddy page is available at
+`https://10.77.20.10` or `https://192.168.178.2` from home.
+
+To let friends connect to Minecraft from outside, add a Fritz!Box WAN port
+forward for TCP 25565 to `192.168.178.2`. Do not forward WAN ports 80 or 443
+unless you intend to publish the Caddy site; public HTTPS also needs a public
+DNS name and a publicly trusted certificate.
+
 ## Build and flash
 
 Run from the repository root with the new files added to Git:
@@ -68,6 +100,10 @@ matching the upstream image.
 
 ## Enroll and deploy
 
+Stage the configuration files before using the normal `.#` flake reference;
+Nix's Git flake source omits untracked files. The generated `.img` image is
+ignored by `.gitignore`.
+
 On the Pi, print only its public age key:
 
 ```bash
@@ -85,7 +121,18 @@ nix run nixpkgs#sops -- updatekeys secrets/shared.yaml
 ```
 
 Keep the recipient-rule and encrypted metadata changes together. From the
-updated checkout on the build machine, deploy onto the existing NVMe root:
+updated checkout, first deploy the router rules while the router is still
+reachable on the Fritz!Box LAN at its reserved address `192.168.178.2`:
+
+```bash
+nixos-rebuild switch --flake .#pi5-router \
+  --target-host benjamin@192.168.178.2 \
+  --build-host benjamin@192.168.178.2 \
+  --sudo
+```
+
+Then deploy onto the Pi's existing NVMe root while it is still connected to the
+Fritz!Box:
 
 ```bash
 nixos-rebuild switch --flake .#pi5-dmz \
