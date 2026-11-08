@@ -45,9 +45,11 @@ can combine `nixos`, `nixosDesktop`, `apps`, `kde`, and `terminal`.
 | `darwinConfigurations.mbp-personal` | Personal macOS workstation | [Bootstrap](hosts/mbp-personal/README.md) |
 | `nixosConfigurations.pi5-server` | Server | [Deployment](hosts/pi5-server/README.md) |
 | `nixosConfigurations.pi5-router` | IPv4 router lab with trusted and DMZ networks | [Bring-up and testing](hosts/pi5-router/README.md) |
+| `nixosConfigurations.pi5-dmz` | NVMe-booted Pi 5 host | [Install](hosts/pi5-dmz/README.md) |
 | `nixosConfigurations.pi3-kiosk` | Temporary Pi 3 kiosk test | — |
 | `homeConfigurations.deck` | SteamOS Home Manager configuration | [Bootstrap and SteamOS notes](hosts/deck/README.md) |
 | `images.pi-bootstrap` | Generic AArch64 bootstrap SD image for Raspberry Pi 3B+ and Pi 5 | [Build and flash](hosts/pi5-server/README.md#1-build-the-bootstrap-sd-image) |
+| `images.pi-nvme-bootstrap` | Pi 5 NVMe bootstrap image with patched U-Boot | [Build and flash](hosts/pi5-dmz/README.md#build-and-flash) |
 
 ## Documentation
 
@@ -243,9 +245,11 @@ nix eval --raw .#darwinConfigurations.mbp-personal.system.drvPath
 nix eval --raw .#nixosConfigurations.desktop.config.system.build.toplevel.drvPath
 nix eval --raw .#nixosConfigurations.pi5-server.config.system.build.toplevel.drvPath
 nix eval --raw .#nixosConfigurations.pi5-router.config.system.build.toplevel.drvPath
+nix eval --raw .#nixosConfigurations.pi5-dmz.config.system.build.toplevel.drvPath
 nix eval --raw .#nixosConfigurations.pi3-kiosk.config.system.build.toplevel.drvPath
 nix eval --raw .#homeConfigurations.deck.activationPackage.drvPath
 nix eval --raw .#images.pi-bootstrap.drvPath
+nix eval --raw .#images.pi-nvme-bootstrap.drvPath
 ```
 
 Build an output with `nix build --no-link <installable>`.

@@ -65,10 +65,12 @@
       desktop = import ./hosts/desktop inputs;
       pi5Server = import ./hosts/pi5-server inputs;
       pi5Router = import ./hosts/pi5-router inputs;
+      pi5Dmz = import ./hosts/pi5-dmz inputs;
       pi3Kiosk = import ./hosts/pi3-kiosk inputs;
       deck = import ./hosts/deck inputs;
       mbpPersonal = import ./hosts/mbp-personal inputs;
       piBootstrap = import ./images/pi-bootstrap.nix inputs;
+      piNvmeBootstrap = import ./images/pi-nvme-bootstrap.nix inputs;
       nixosSystem = nixpkgs.lib.nixosSystem;
       darwinSystem = darwin.lib.darwinSystem;
       homeManagerConfiguration = home-manager.lib.homeManagerConfiguration;
@@ -99,6 +101,10 @@
           system = "aarch64-linux";
           modules = [ pi5Router.nixos ];
         };
+        pi5-dmz = nixosSystem {
+          system = "aarch64-linux";
+          modules = [ pi5Dmz.nixos ];
+        };
         pi3-kiosk = nixosSystem {
           system = "aarch64-linux";
           modules = [ pi3Kiosk.nixos ];
@@ -118,10 +124,17 @@
         modules = [ mbpPersonal.darwin ];
       };
 
-      images.pi-bootstrap =
-        (nixosSystem {
-          system = "aarch64-linux";
-          modules = [ piBootstrap.nixos ];
-        }).config.system.build.sdImage;
+      images = {
+        pi-bootstrap =
+          (nixosSystem {
+            system = "aarch64-linux";
+            modules = [ piBootstrap.nixos ];
+          }).config.system.build.sdImage;
+        pi-nvme-bootstrap =
+          (nixosSystem {
+            system = "aarch64-linux";
+            modules = [ piNvmeBootstrap.nixos ];
+          }).config.system.build.sdImage;
+      };
     };
 }

@@ -6,6 +6,7 @@ keys:
   - &mbp-personal-hm age1x9020a4agmru59p2g4efracjtn2cu8r3xm8k8774ql5mv3ez9afsjxgap0
   - &pi5-server age13sgj756jngug94tf3gcnjg79dsqcqm08x3tgrzphp2wj8gcd2ppqq3vucp
   - &pi5-router age1y80vjdldlt64t20th3f4z7a0knsqfal6xc80jklsnlmvv9cmt52qlzt053
+  - &pi5-dmz age1h3adj8ye5kj3p05xtgs6ym5cd8pgjzq8y87wx5w9ayvakq6z7ecsxnsj4u
   - &deck-hm age1fm2d3zx0d5fulqg92xmmndpy5u8pk84d7klj3gahs4z726a86fwsn00whu
   - &pi3-kiosk age12nnqm7pn8yla9mgp4eudj34lmkcl5m8u93myl8rsh9dvy7nlhumq2s8w4p
 creation_rules:
@@ -19,6 +20,7 @@ creation_rules:
           - *mbp-personal-hm
           - *pi5-server
           - *pi5-router
+          - *pi5-dmz
           - *deck-hm
           - *pi3-kiosk
   - path_regex: secrets/shared-desktop\.ya?ml$
@@ -72,6 +74,12 @@ creation_rules:
           - *yk-5-nfc
           - *yk-5c-nano
           - *pi5-router
+  - path_regex: secrets/pi5-dmz\.ya?ml$
+    key_groups:
+      - age:
+          - *yk-5-nfc
+          - *yk-5c-nano
+          - *pi5-dmz
   - path_regex: secrets/pi3-kiosk\.ya?ml$
     key_groups:
       - age:
