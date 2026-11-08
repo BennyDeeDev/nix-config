@@ -219,6 +219,10 @@ Repeat these steps for each NixOS host:
 4. Set `my.beszel.agent.hubUrl` and `tokenSopsFile` for the host,
    then deploy it.
 
+For `pi5-router`, use its reachable address `192.168.178.2` and store the
+router's unique agent token as `beszel-agent-token` in
+`secrets/pi5-router.yaml`.
+
 The Hub's public `KEY` is configured once in `modules/beszel-agent.nix`; it is
 not a secret. Use a different `TOKEN` for every system. Agents connect to the
 Hub over WebSocket with SSH disabled, so do not open port `45876`.
