@@ -30,15 +30,27 @@
             Locked = true;
           };
 
-          ExtensionSettings."uBlock0@raymondhill.net" = {
-            installation_mode = "normal_installed";
-            install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi";
-            default_area = "navbar";
-          };
-          ExtensionSettings."{446900e4-71c2-419f-a6a7-df9c091e268b}" = {
-            installation_mode = "normal_installed";
-            install_url = "https://addons.mozilla.org/firefox/downloads/latest/bitwarden-password-manager/latest.xpi";
-            default_area = "navbar";
+          ExtensionSettings = {
+            "uBlock0@raymondhill.net" = {
+              installation_mode = "normal_installed";
+              install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi";
+              default_area = "navbar";
+            };
+            "{446900e4-71c2-419f-a6a7-df9c091e268b}" = {
+              installation_mode = "normal_installed";
+              install_url = "https://addons.mozilla.org/firefox/downloads/latest/bitwarden-password-manager/latest.xpi";
+              default_area = "navbar";
+            };
+            "amptra@keepa.com" = {
+              installation_mode = "normal_installed";
+              install_url = "https://addons.mozilla.org/firefox/downloads/latest/keepa/latest.xpi";
+              default_area = "navbar";
+            };
+            "{76ef94a4-e3d0-4c6f-961a-d38a429a332b}" = {
+              installation_mode = "normal_installed";
+              install_url = "https://addons.mozilla.org/firefox/downloads/latest/ttv-lol-pro/latest.xpi";
+              default_area = "navbar";
+            };
           };
           "3rdparty".Extensions."{446900e4-71c2-419f-a6a7-df9c091e268b}".environment.base =
             "https://vault.benjaminderksen.com";
