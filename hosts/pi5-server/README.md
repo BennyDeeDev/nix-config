@@ -15,8 +15,34 @@ age key, then deploy `pi5-server`. The same AArch64 image also boots a Pi 3B+.
 | ntfy | 8060 | <https://ntfy.benjaminderksen.com> |
 | OTBR UI and REST | 8082 / 8081 | <https://otbr.benjaminderksen.com> (Basic Auth); REST remains loopback-only |
 | Matter.js UI and WebSocket API | 5580 | <https://matter.benjaminderksen.com> (Basic Auth); Home Assistant uses `ws://localhost:5580/ws` |
-| Blocky DNS | 53 | `192.168.178.52:53` |
+| Blocky DNS | 53 (TCP/UDP) | `192.168.178.10:53` and `[fd22:f689:1dae::2ecf:67ff:fe26:7db]:53` |
 | PostgreSQL | Unix socket | Pi only |
+
+## FRITZ!Box networking
+
+FRITZ!Box uses these networks for the LAN, guests, and internet connection:
+
+| Network | Purpose |
+| --- | --- |
+| IPv4 `192.168.178.0/24` | Main LAN. FRITZ!Box is `.1`; the Pi gets `.10` through a DHCP reservation tied to its Ethernet MAC. |
+| IPv6 ULA `fd22:f689:1dae::/64` | Private main-LAN addresses, independent of the ISP. The Pi's MAC-derived address is `fd22:f689:1dae::2ecf:67ff:fe26:7db`. |
+| IPv6 **Heimnetz** | Public `/64` for the main LAN, taken from the ISP's prefix. |
+| IPv6 **Gastnetz** | Separate public `/64` for the isolated guest network. Guests cannot directly reach the Pi on the main LAN. |
+| IPv6 **Delegiert** | Prefix allocated to a downstream router; the displayed `/62` contains four `/64` subnets. |
+| IPv6 **WAN** | Subnet on the FRITZ!Box's ISP-facing connection, not the LAN. |
+
+The public `2003:…` prefixes can change when the ISP reconnects. The ULA prefix
+normally survives router reboots and ISP reconnects, so use the Pi's ULA for
+local DNS. Its MAC-derived suffix stays the same while its Ethernet MAC stays
+the same. Changing the ULA prefix or adapter requires updating the DNS entries.
+Additional temporary IPv6 addresses are normal; do not use them for DNS.
+
+FRITZ!Box remains the gateway and advertises Blocky as the DNS server: IPv4
+through DHCP, IPv6 through DHCPv6 and Router Advertisements. Clients query the
+Pi directly; Blocky filters requests, answers local service names with the
+Pi's IPv4 and ULA addresses, and forwards other requests to Quad9 over HTTPS.
+Queries for `fritz.box` names go to FRITZ!Box instead. DNS over either IP
+version can return both IPv4 (`A`) and IPv6 (`AAAA`) records.
 
 ## Prerequisites
 
@@ -182,6 +208,31 @@ nix run nixpkgs#python3Packages.universal-silabs-flasher -- \
 The command-line flasher also needs access to the serial device.
 
 ## Service setup
+
+### Blocky DNS on FRITZ!Box
+
+1. Open **Heimnetz → Netzwerk → Netzwerkverbindungen** and edit the device
+   with Ethernet MAC `2c:cf:67:26:07:db`. Set its name to `pi5-server`. Check
+   that `192.168.178.10` is unused, enter it as **IPv4-Adresse**, enable
+   **IPv4-Adresse dauerhaft zuweisen**, and apply.
+2. Reboot the Pi to renew its lease. Reconnect at `benjamin@192.168.178.10`
+   if its hostname has not updated yet, then
+   [rebuild the server](#rebuild-the-server) before changing DNS settings.
+3. Open **Heimnetz → Netzwerk → Netzwerkeinstellungen → Erweiterte
+   Netzwerkeinstellungen → IPv4**. Set **Lokaler DNS-Server** to
+   `192.168.178.10` and apply.
+4. In **DNSv6-Server im Heimnetz**, leave **DNSv6-Server auch über Router
+   Advertisement bekanntgeben (RFC 5006)** checked. In **Lokaler DNSv6-Server**
+   directly underneath it, enter these eight boxes (without `/64`):
+
+   ```text
+   fd22 | f689 | 1dae | 0 | 2ecf | 67ff | fe26 | 7db
+   ```
+
+5. Click **Übernehmen** and reconnect clients. No other IPv6 changes are needed.
+
+Leave the upstream DNS settings under **Internet → Zugangsdaten → DNS-Server**
+unchanged. Do not expose port 53 to the internet.
 
 ### Cloudflare API token
 

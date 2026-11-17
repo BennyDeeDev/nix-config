@@ -1,10 +1,14 @@
+let
+  serverAddresses = "192.168.178.10,fd22:f689:1dae::2ecf:67ff:fe26:7db";
+in
 {
   nixos = {
     services.blocky = {
       enable = true;
       enableConfigCheck = true;
       settings = {
-        ports.dns = "0.0.0.0:53";
+        # A wildcard without an IP listens on both IPv4 and IPv6.
+        ports.dns = ":53";
 
         upstreams.groups.default = [ "https://dns.quad9.net/dns-query" ];
 
@@ -14,6 +18,8 @@
             ips = [
               "9.9.9.9"
               "149.112.112.112"
+              "2620:fe::fe"
+              "2620:fe::9"
             ];
           }
         ];
@@ -24,14 +30,14 @@
         };
 
         customDNS.mapping = {
-          "ha.benjaminderksen.com" = "192.168.178.52";
-          "immich.benjaminderksen.com" = "192.168.178.52";
-          "matter.benjaminderksen.com" = "192.168.178.52";
-          "ntfy.benjaminderksen.com" = "192.168.178.52";
-          "otbr.benjaminderksen.com" = "192.168.178.52";
-          "stats.benjaminderksen.com" = "192.168.178.52";
-          "status.benjaminderksen.com" = "192.168.178.52";
-          "vault.benjaminderksen.com" = "192.168.178.52";
+          "ha.benjaminderksen.com" = serverAddresses;
+          "immich.benjaminderksen.com" = serverAddresses;
+          "matter.benjaminderksen.com" = serverAddresses;
+          "ntfy.benjaminderksen.com" = serverAddresses;
+          "otbr.benjaminderksen.com" = serverAddresses;
+          "stats.benjaminderksen.com" = serverAddresses;
+          "status.benjaminderksen.com" = serverAddresses;
+          "vault.benjaminderksen.com" = serverAddresses;
         };
 
         blocking = {
@@ -47,6 +53,10 @@
         };
       };
     };
+
+    # Upstream wants network-online.target but does not order Blocky after it,
+    # so denylist loading can race DHCP at boot. Remove once upstream adds it.
+    systemd.services.blocky.after = [ "network-online.target" ];
 
     networking.firewall = {
       allowedTCPPorts = [ 53 ];

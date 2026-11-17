@@ -1,4 +1,3 @@
 .DS_Store
+*.img
 result
-pi-bootstrap.img
-pi5-bootstrap.img
