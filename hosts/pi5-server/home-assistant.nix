@@ -43,8 +43,8 @@
 
       my.restic.ha = {
         repository = "/mnt/nas/restic/ha-restic";
-        path = "/var/lib/hass";
-        service = "home-assistant.service";
+        paths = [ "/var/lib/hass" ];
+        services = [ "home-assistant.service" ];
         mountPoint = "/mnt/nas/restic";
       };
     };

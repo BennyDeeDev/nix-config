@@ -19,8 +19,8 @@
 
     my.restic.otbr = {
       repository = "/mnt/nas/restic/otbr-restic";
-      path = "/var/lib/thread";
-      service = "otbr-agent.service";
+      paths = [ "/var/lib/thread" ];
+      services = [ "otbr-agent.service" ];
       mountPoint = "/mnt/nas/restic";
     };
   };

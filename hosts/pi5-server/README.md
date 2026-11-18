@@ -8,7 +8,7 @@ age key, then deploy `pi5-server`. The same AArch64 image also boots a Pi 3B+.
 | Service | Port | Accessible at |
 | --- | ---: | --- |
 | Home Assistant | 8123 | <https://ha.benjaminderksen.com> |
-| Immich | 2283 | <https://immich.benjaminderksen.com> |
+| Immich | 2283 | <https://photos.benjaminderksen.com> |
 | Vaultwarden | 8222 | <https://vault.benjaminderksen.com> |
 | Gatus | 8080 | <https://status.benjaminderksen.com> |
 | Beszel Hub | 8090 | <https://stats.benjaminderksen.com> |
@@ -16,7 +16,7 @@ age key, then deploy `pi5-server`. The same AArch64 image also boots a Pi 3B+.
 | OTBR UI and REST | 8082 / 8081 | <https://otbr.benjaminderksen.com> (Basic Auth); REST remains loopback-only |
 | Matter.js UI and WebSocket API | 5580 | <https://matter.benjaminderksen.com> (Basic Auth); Home Assistant uses `ws://localhost:5580/ws` |
 | Blocky DNS | 53 (TCP/UDP) | `192.168.178.10:53` and `[fd22:f689:1dae::2ecf:67ff:fe26:7db]:53` |
-| PostgreSQL | Unix socket | Pi only |
+| PostgreSQL (Immich) | Unix socket | Pi only |
 
 ## FRITZ!Box networking
 

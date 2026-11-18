@@ -30,7 +30,7 @@
           '';
         };
 
-        virtualHosts."immich.benjaminderksen.com" = {
+        virtualHosts."photos.benjaminderksen.com" = {
           useACMEHost = "benjaminderksen.com";
           extraConfig = ''
             reverse_proxy 127.0.0.1:2283 {

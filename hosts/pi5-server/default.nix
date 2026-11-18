@@ -11,7 +11,6 @@ let
   immich = import ./immich.nix;
   otbr = import ./otbr.nix;
   matter = import ./matter.nix;
-  postgresql = import ./postgresql.nix;
   ntfy = import ./ntfy.nix;
   vaultwarden = import ./vaultwarden.nix;
   beszel = import ./beszel.nix;
@@ -35,7 +34,6 @@ in
       immich.nixos
       otbr.nixos
       matter.nixos
-      postgresql.nixos
       ntfy.nixos
       vaultwarden.nixos
       beszel.nixos

@@ -27,8 +27,8 @@
 
       my.restic.beszel = {
         repository = "/mnt/nas/restic/beszel-restic";
-        path = "/var/lib/beszel-hub";
-        service = "beszel-hub.service";
+        paths = [ "/var/lib/beszel-hub" ];
+        services = [ "beszel-hub.service" ];
         mountPoint = "/mnt/nas/restic";
       };
     };

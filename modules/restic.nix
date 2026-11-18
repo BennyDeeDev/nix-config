@@ -21,15 +21,24 @@
       mkResticBackup =
         _: value:
         {
-          inherit (value) repository;
-          paths = [ value.path ];
+          inherit (value) repository paths;
           initialize = true;
           passwordFile = resticPasswordFile;
           inherit pruneOpts timerConfig;
         }
-        // lib.optionalAttrs (value.service != null) {
-          backupPrepareCommand = "${systemctlExe} stop ${value.service}";
-          backupCleanupCommand = "${systemctlExe} start ${value.service}";
+        // lib.optionalAttrs (value.services != [ ] || value.prepareServices != [ ]) {
+          backupPrepareCommand = ''
+            set -e
+            ${lib.optionalString (value.services != [ ]) ''
+              ${systemctlExe} stop ${lib.escapeShellArgs value.services}
+            ''}
+            ${lib.optionalString (value.prepareServices != [ ]) ''
+              ${systemctlExe} start ${lib.escapeShellArgs value.prepareServices}
+            ''}
+          '';
+        }
+        // lib.optionalAttrs (value.services != [ ]) {
+          backupCleanupCommand = "${systemctlExe} start ${lib.escapeShellArgs value.services}";
         };
       mkResticBackupService = name: value: {
         "restic-backups-${name}" = lib.optionalAttrs (value.mountPoint != null) {
@@ -48,15 +57,21 @@
                 example = "/mnt/nas/homelab/backups/ha-restic";
               };
 
-              path = lib.mkOption {
-                type = lib.types.str;
-                description = "directory to back up";
+              paths = lib.mkOption {
+                type = lib.types.listOf lib.types.str;
+                description = "Directories to back up.";
               };
 
-              service = lib.mkOption {
-                type = lib.types.nullOr lib.types.str;
-                default = null;
-                description = "Optional systemd unit to stop before and start after backup.";
+              services = lib.mkOption {
+                type = lib.types.listOf lib.types.str;
+                default = [ ];
+                description = "Systemd units to stop before and start after backup.";
+              };
+
+              prepareServices = lib.mkOption {
+                type = lib.types.listOf lib.types.str;
+                default = [ ];
+                description = "Oneshot units to run after stopping services and before backup.";
               };
 
               mountPoint = lib.mkOption {

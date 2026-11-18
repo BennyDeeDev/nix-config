@@ -12,8 +12,8 @@
 
     my.restic.matter = {
       repository = "/mnt/nas/restic/matter-restic";
-      path = "/var/lib/private/matterjs-server";
-      service = "matterjs-server.service";
+      paths = [ "/var/lib/private/matterjs-server" ];
+      services = [ "matterjs-server.service" ];
       mountPoint = "/mnt/nas/restic";
     };
   };

@@ -31,10 +31,10 @@ in
 
         customDNS.mapping = {
           "ha.benjaminderksen.com" = serverAddresses;
-          "immich.benjaminderksen.com" = serverAddresses;
           "matter.benjaminderksen.com" = serverAddresses;
           "ntfy.benjaminderksen.com" = serverAddresses;
           "otbr.benjaminderksen.com" = serverAddresses;
+          "photos.benjaminderksen.com" = serverAddresses;
           "stats.benjaminderksen.com" = serverAddresses;
           "status.benjaminderksen.com" = serverAddresses;
           "vault.benjaminderksen.com" = serverAddresses;

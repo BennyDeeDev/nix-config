@@ -55,7 +55,7 @@
             }
             {
               name = "Immich";
-              url = "https://immich.benjaminderksen.com";
+              url = "https://photos.benjaminderksen.com";
               client.dns-resolver = "tcp://127.0.0.1:53";
               interval = "60s";
               conditions = [

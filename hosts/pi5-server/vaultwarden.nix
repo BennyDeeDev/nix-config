@@ -14,8 +14,8 @@
 
       my.restic.vaultwarden = {
         repository = "/mnt/nas/restic/vaultwarden-restic";
-        path = "/var/lib/vaultwarden";
-        service = "vaultwarden.service";
+        paths = [ "/var/lib/vaultwarden" ];
+        services = [ "vaultwarden.service" ];
         mountPoint = "/mnt/nas/restic";
       };
     };
