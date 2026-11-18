@@ -1,5 +1,6 @@
 {
   nixos = {
+    my.pi.bootMedium = "nvme";
     networking.hostName = "pi5-server";
     networking.firewall.enable = false;
     boot.loader = {

@@ -68,6 +68,7 @@
       deck = import ./hosts/deck inputs;
       mbpPersonal = import ./hosts/mbp-personal inputs;
       piBootstrap = import ./images/pi-bootstrap.nix inputs;
+      piNvmeBootstrap = import ./images/pi-nvme-bootstrap.nix inputs;
       nixosSystem = nixpkgs.lib.nixosSystem;
       darwinSystem = darwin.lib.darwinSystem;
       homeManagerConfiguration = home-manager.lib.homeManagerConfiguration;
@@ -113,10 +114,17 @@
         modules = [ mbpPersonal.darwin ];
       };
 
-      images.pi-bootstrap =
-        (nixosSystem {
-          system = "aarch64-linux";
-          modules = [ piBootstrap.nixos ];
-        }).config.system.build.sdImage;
+      images = {
+        pi-bootstrap =
+          (nixosSystem {
+            system = "aarch64-linux";
+            modules = [ piBootstrap.nixos ];
+          }).config.system.build.sdImage;
+        pi-nvme-bootstrap =
+          (nixosSystem {
+            system = "aarch64-linux";
+            modules = [ piNvmeBootstrap.nixos ];
+          }).config.system.build.sdImage;
+      };
     };
 }
