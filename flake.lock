@@ -506,11 +506,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1792707436,
-        "narHash": "sha256-NP6sl83oeK8NhkZ5b9214wdcJ9LFrldCGlwG4Rn/sBU=",
+        "lastModified": 1795039280,
+        "narHash": "sha256-Rz/GH1MMHBb41nBxakoZhAurf0ysBc1fhep2rNDS8MU=",
         "owner": "BennyDeeDev",
         "repo": "steamdex",
-        "rev": "7ee3db02375f2000a9c0f94ab3cd73d219c02319",
+        "rev": "101121c34872ea898586153bb198fc1ef31b3065",
         "type": "github"
       },
       "original": {

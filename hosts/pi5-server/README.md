@@ -260,6 +260,35 @@ age identity first. Do not put the token in Nix source or use a Global API Key.
 5. Upload documents through the web interface, or place them in
    `/var/lib/paperless/consume` with ownership set to `paperless:paperless`.
 
+#### Enable automatic AI tagging
+
+1. [Rebuild the server](#rebuild-the-server).
+2. Run `ollama list` on the Pi. Wait until `qwen3.5:2b` appears before testing
+   suggestions. Check the model download if it does not appear:
+
+   ```bash
+   journalctl -u ollama-model-loader.service -b --no-pager -n 30
+   ```
+
+3. Open **Settings → Application Configuration**. Check for stored AI settings
+   that override the environment configuration; use Ollama at
+   `http://127.0.0.1:11434` with `qwen3.5:2b` and German output. Set extra
+   parameters to `{"temperature":0}`. Leave the embedding backend unset.
+4. Create the tags you want to assign. Use one consistent tag vocabulary for
+   German and English documents, such as `Rechnung` for invoices in either
+   language, rather than separate translated tags.
+5. Test **Suggest** with AI suggestions on a few German and English documents.
+   Review accuracy, response time, and the Pi's memory usage before enabling
+   automatic tagging. Test long documents too before increasing the 2048-token
+   context size or the 300-second request timeout.
+6. Open **Workflows** and create a workflow with the **Document Added**
+   trigger. Add **Apply AI Suggestions**, select **Tags only**, and leave
+   **Create missing items** disabled.
+7. Upload a small batch of new documents in both languages. Check that the
+   workflow adds appropriate existing tags without creating new tags. Avoid
+   processing the whole library at once; AI tasks share the document-processing
+   queue.
+
 ### Beszel Hub
 
 After deploying the Hub, open <https://stats.benjaminderksen.com> and create the

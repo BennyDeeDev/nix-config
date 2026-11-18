@@ -9,6 +9,7 @@ let
   homeAssistant = import ./home-assistant.nix;
   lovelace = import ./lovelace.nix;
   immich = import ./immich.nix;
+  ollama = import ./ollama.nix;
   paperless = import ./paperless.nix;
   otbr = import ./otbr.nix;
   matter = import ./matter.nix;
@@ -33,6 +34,7 @@ in
       homeAssistant.nixos
       lovelace.nixos
       immich.nixos
+      ollama.nixos
       paperless.nixos
       otbr.nixos
       matter.nixos
