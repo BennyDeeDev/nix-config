@@ -65,6 +65,17 @@
               alerts = [ { type = "ntfy"; } ];
             }
             {
+              name = "Paperless-ngx";
+              url = "https://docs.benjaminderksen.com";
+              client.dns-resolver = "tcp://127.0.0.1:53";
+              interval = "60s";
+              conditions = [
+                "[STATUS] == 200"
+                "[CERTIFICATE_EXPIRATION] > 168h"
+              ];
+              alerts = [ { type = "ntfy"; } ];
+            }
+            {
               name = "Vaultwarden";
               url = "https://vault.benjaminderksen.com";
               client.dns-resolver = "tcp://127.0.0.1:53";

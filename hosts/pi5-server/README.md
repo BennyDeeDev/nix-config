@@ -9,6 +9,7 @@ age key, then deploy `pi5-server`. The same AArch64 image also boots a Pi 3B+.
 | --- | ---: | --- |
 | Home Assistant | 8123 | <https://ha.benjaminderksen.com> |
 | Immich | 2283 | <https://photos.benjaminderksen.com> |
+| Paperless-ngx | 28981 | <https://docs.benjaminderksen.com> |
 | Vaultwarden | 8222 | <https://vault.benjaminderksen.com> |
 | Gatus | 8080 | <https://status.benjaminderksen.com> |
 | Beszel Hub | 8090 | <https://stats.benjaminderksen.com> |
@@ -246,6 +247,18 @@ nix run nixpkgs#sops -- secrets/pi5-server.yaml
 
 Follow the [SOPS setup](../../secrets/README.md#edit-a-secret) to configure the
 age identity first. Do not put the token in Nix source or use a Global API Key.
+
+### Paperless-ngx
+
+1. [Rebuild the server](#rebuild-the-server).
+2. Open <https://docs.benjaminderksen.com>.
+3. Complete the [first-account setup](https://docs.paperless-ngx.com/setup/):
+   enter `admin` as the username, optionally enter an email, and enter a strong,
+   unique password twice. Create the account to receive superuser privileges.
+4. Sign in. To use a regular account day to day, create one under
+   **Settings → Users & Groups** and grant it the required permissions.
+5. Upload documents through the web interface, or place them in
+   `/var/lib/paperless/consume` with ownership set to `paperless:paperless`.
 
 ### Beszel Hub
 

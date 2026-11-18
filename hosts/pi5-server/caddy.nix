@@ -39,6 +39,13 @@
           '';
         };
 
+        virtualHosts."docs.benjaminderksen.com" = {
+          useACMEHost = "benjaminderksen.com";
+          extraConfig = ''
+            reverse_proxy 127.0.0.1:28981
+          '';
+        };
+
         virtualHosts."vault.benjaminderksen.com" = {
           useACMEHost = "benjaminderksen.com";
           extraConfig = ''

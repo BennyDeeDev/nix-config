@@ -30,6 +30,7 @@ in
         };
 
         customDNS.mapping = {
+          "docs.benjaminderksen.com" = serverAddresses;
           "ha.benjaminderksen.com" = serverAddresses;
           "matter.benjaminderksen.com" = serverAddresses;
           "ntfy.benjaminderksen.com" = serverAddresses;
